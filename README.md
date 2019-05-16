@@ -6,3 +6,6 @@ This git repository contains a system that enables the user to:
 
 
 ## Requirements
+
+This system is installed using the Django Python Web framework (https://www.djangoproject.com).
+It is advised to use Python with a version above 3.5.
