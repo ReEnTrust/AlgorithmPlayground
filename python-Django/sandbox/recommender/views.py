@@ -63,8 +63,21 @@ def index(request):
     #We create the dataframe for the features
     item_df = pd.DataFrame(feats,index=items,columns=cols)
 
+    #We fit the recommender system
     my_recommender = hybrid_recommender(item_clusters,top_results)
     my_recommender.fit(ratings,item_df)
 
-    print(my_recommender.predict([1,2]))
-    return HttpResponse()
+    #We make the prediction
+    df_all_recommendation = my_recommender.predict()
+
+    #We export it to html
+    result = []
+    user_id_unique = list(dict.fromkeys(user_id))
+    for i in user_id_unique:
+        result.append(df_all_recommendation[df_all_recommendation['User_id'] == str(i)].filter(items=["item_id","mean"]).to_html())
+
+    context = {'ratings': ratings.to_html(), 'item_df' : item_df.to_html(), 'result': zip(result, user_id_unique) }
+
+    return render(request, 'recommender/index.html', context)
+
+

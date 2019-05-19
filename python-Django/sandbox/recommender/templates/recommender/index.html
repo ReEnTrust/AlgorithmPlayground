@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Sandbox</title>
+</head>
+<body>
+
+<div style="width: 100%; overflow: hidden;">
+<div style="width: 30%; float: left;">
+    <h1>Input</h1>
+
+    <h2>Reviews from the users</h2>
+    {% autoescape off %}
+        {{ ratings }}
+    {% endautoescape %}
+
+    <h2>Item features</h2>
+    {% autoescape off %}
+    {{ item_df }}
+    {% endautoescape %}
+</div>
+
+<div style="margin-left: 40%;">
+    <h1>Output</h1>
+    {% for r,q in result %}
+        <h3>Recommendation for user {{ q }}</h3>
+        {% autoescape off %}
+            {{ r }}
+        {% endautoescape %}
+    {% endfor %}
+
+</div>
+</div>
+
+</body>
+</html>
