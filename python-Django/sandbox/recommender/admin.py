@@ -19,7 +19,7 @@ class ItemAdmin(admin.ModelAdmin):
         ])
     getFeatures.short_description = 'Features'
 
-    list_display = ('id', 'item_name', "item_description", getFeatures)
+    list_display = ('id', 'item_name', "item_description", getFeatures, 'item_picture')
 
 admin.site.register(Item,ItemAdmin)
 

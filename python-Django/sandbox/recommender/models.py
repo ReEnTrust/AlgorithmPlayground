@@ -11,6 +11,7 @@ class Item(models.Model):
     item_name = models.CharField(max_length=200)
     item_description = models.CharField(max_length=200)
     item_features = models.ManyToManyField(Feature)
+    item_picture = models.FileField(default= 'No picture', upload_to='uploads/')
 
 class Customer(models.Model):
     customer_name = models.CharField(max_length=200)
