@@ -8,6 +8,7 @@ urlpatterns = [
     path('polls/', include('polls.urls')),
     path('admin/', admin.site.urls),
     path('recommender/', include('recommender.urls')),
+    path('hotelrecommendation/', include('hotelrecommendation.urls')),
 ]
 
 urlpatterns += staticfiles_urlpatterns()

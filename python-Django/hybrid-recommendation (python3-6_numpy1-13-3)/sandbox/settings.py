@@ -33,6 +33,7 @@ ALLOWED_HOSTS = []
 INSTALLED_APPS = [
     'polls.apps.PollsConfig',
     'recommender.apps.RecommenderConfig',
+    'hotelrecommendation.apps.HotelrecommendationConfig',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -122,3 +123,4 @@ USE_TZ = True
 STATIC_URL = '/static/'
 MEDIA_URL = '/uploads/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'uploads')
+DATA_UPLOAD_MAX_NUMBER_FIELDS = 10240 # higher than the count of fields

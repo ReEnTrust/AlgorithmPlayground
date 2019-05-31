@@ -1,0 +1,325 @@
+<!DOCTYPE HTML>
+<!--
+	Stellar by HTML5 UP
+	html5up.net | @ajlkn
+	Free for personal and commercial use under the CCA 3.0 license (html5up.net/license)
+-->
+<html>
+<head>
+    <title>Hotel Recommendation</title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+
+    {% load static %}
+
+    <link rel="stylesheet" href="{% static 'hotelrecommendation/assets/css/main.css'%}" />
+    <noscript><link rel="stylesheet" href="{% static 'hotelrecommendation/assets/css/noscript.css'%}" /></noscript>
+</head>
+<body class="is-preload">
+
+<!-- Wrapper -->
+<div id="wrapper">
+
+    <!-- Header -->
+    <header id="header" class="alt">
+        <span class="logo"><img src="{% static 'hotelrecommendation/images/paris.png'%}" alt="" style="width: 170px"/></span>
+        <h1>Hotel Recommendation</h1>
+        <p>Personalised Booking System</p>
+    </header>
+
+    <!-- Nav -->
+    <nav id="nav">
+        <ul>
+            <li><a href="#intro" class="active">Profile</a></li>
+            <li><a href="#first">Our Recommendations</a></li>
+            <li><a href="#second">Browse Similar User</a></li>
+        </ul>
+    </nav>
+
+    <!-- Main -->
+    <div id="main">
+
+        <!-- Introduction -->
+        <section id="intro" class="main">
+            <div class="spotlight">
+                <div class="content">
+                    <header class="major">
+                        <h2>Your profile</h2>
+                    </header>
+                    <div>
+                        <ul>
+                            <li>Firstname: {{firstname}} </li>
+                            <li> Lastname: {{lastname}}</li>
+                            <li>Age: {{age}} </li>
+                            <li>Gender: {%if gender == "M"%}
+                                Male
+                                {% else %}
+                                Female
+                                {% endif %} </li>
+                            <li>Target price for a night: {{target_price}} </li>
+                            <li>Physically disabled:
+                                {% if physically_disabled == "True"%}
+                                <th><i class="fa fa-check-circle-o" aria-hidden="true" style="color: green;"></i></th>
+                                {% else %}
+                                <th><i class="fa fa-times-circle" aria-hidden="true" style="color: red;"></i></th>
+                                {% endif %}
+
+                            </li>
+                            <Li>Is married:
+                                {% if is_married == "True"%}
+                                <th><i class="fa fa-check-circle-o" aria-hidden="true" style="color: green;"></i></th>
+                                {% else %}
+                                <th><i class="fa fa-times-circle" aria-hidden="true" style="color: red;"></i></th>
+                                {% endif %}
+                            </Li>
+                            <li>Have kids:
+                                {% if have_kids == "True" %}
+                                <th><i class="fa fa-check-circle-o" aria-hidden="true" style="color: green;"></i></th>
+                                {% else %}
+                                <th><i class="fa fa-times-circle" aria-hidden="true" style="color: red;"></i></th>
+                                {% endif %}
+                            </li>
+                        </ul>
+                    </div>
+
+
+                    <ul class="actions">
+
+
+                        <li><a href = {% url 'hotelrecommendation:index'%} class="button">Modify</a></li>
+                    </ul>
+                </div>
+
+
+                <span class="image"><img src="{% static 'hotelrecommendation/images/pic01.jpg'%}" alt="" /></span>
+            </div>
+        </section>
+
+        <!-- First Section -->
+        <section id="first" class="main special">
+            <header class="major">
+                <h2>Recommendations</h2>
+            </header>
+            <div>
+                <table style="width:100%; border: solid;">
+
+                    <tr>
+                        <th>#</th>
+                        <th>Hotel Name</th>
+                        <th>Address</th>
+                        <th>City</th>
+                        <th>Night Price</th>
+                        <th>Room Type</th>
+                        <th>Access for disabled</th>
+                        <th>Swimming Pool</th>
+                        <th>Breakfast Available</th>
+                        <th>Reviews</th>
+                        <th>Michelin Restaurant</th>
+                    </tr>
+
+                    {% for l in L %}
+                    <tr>
+                        <th>{{ forloop.counter}}</th>
+                        <th>{{ l.hotel_name }}</th>
+                        <th>{{ l.hotel_address }}</th>
+                        <th>{{ l.hotel_location }}</th>
+                        <th>{{ l.hotel_night_price|floatformat:"1"  }}</th>
+
+                        {% if l.hotel_room_type == "D" %}
+                        <th> Double </th>
+                        {% elif l.hotel_room_type == "S" %}
+                        <th> Single </th>
+                        {% elif l.hotel_room_type == "T" %}
+                        <th> Twin </th>
+                        {% else %}
+                        <th> Family </th>
+                        {% endif %}
+
+                        {% if l.hotel_disability_access %}
+                        <th><i class="fa fa-check-circle-o" aria-hidden="true" style="color: green;"></i></th>
+                        {% else %}
+                        <th><i class="fa fa-times-circle" aria-hidden="true" style="color: red;"></i></th>
+                        {% endif %}
+
+                        {% if l.hotel_swimming_pool %}
+                        <th><i class="fa fa-check-circle-o" aria-hidden="true" style="color: green;"></i></th>
+                        {% else %}
+                        <th><i class="fa fa-times-circle" aria-hidden="true" style="color: red;"></i></th>
+                        {% endif %}
+
+                        {% if l.hotel_breakfast_available %}
+                        <th><i class="fa fa-check-circle-o" aria-hidden="true" style="color: green;"></i></th>
+                        {% else %}
+                        <th><i class="fa fa-times-circle" aria-hidden="true" style="color: red;"></i></th>
+                        {% endif %}
+
+                        <th>{% with ''|center:l.hotel_user_reviews as range %}
+                            {% for _ in range %}
+                            <i class="fa fa-star" aria-hidden="true" style="color: #CCCC00;"></i>
+                            {% endfor %}
+                            {% endwith %}
+                        </th>
+
+                        {% if l.hotel_michelin_restaurant %}
+                        <th><i class="fa fa-check-circle-o" aria-hidden="true" style="color: green;"></i></th>
+                        {% else %}
+                        <th><i class="fa fa-times-circle" aria-hidden="true" style="color: red;"></i></th>
+                        {% endif %}
+                    </tr>
+                    {% endfor %}
+
+                </table>
+
+
+
+
+            </div>
+            <footer class="major">
+                <ul class="actions special">
+                    <li><a href="#" class="button">Learn More About This</a></li>
+                </ul>
+            </footer>
+        </section>
+
+        <!-- Second Section -->
+        <section id="second" class="main special">
+            <header class="major">
+                <h2>Similar Users</h2>
+                <p>Our database regroups more than 1000+ users.</p>
+            </header>
+            <ul class="statistics">
+                <li class="style1">
+                    <span class="icon fa-bed"></span>
+                    <strong>1500+</strong> Hotels
+                </li>
+                <li class="style2">
+                    <span class="icon fa-folder-open-o"></span>
+                    <strong>1000+</strong> User Data
+                </li>
+                <li class="style3">
+                    <span class="icon fa-signal"></span>
+                    <strong>10,000+</strong> Ratings
+                </li>
+                <li class="style4">
+                    <span class="icon fa-laptop"></span>
+                    <strong>FAST</strong> Computation
+                </li>
+                <li class="style5">
+                    <span class="icon fa-diamond"></span>
+                    <strong>FREE</strong> Service
+                </li>
+            </ul>
+
+
+            <p class="content">The users below have been carefully picked to match the data in your profile. You can have view and access the ratings that these users have previously made on a selection of hotels. The first person on the list is the user that is the most similar to you.</p>
+
+
+            <table style="width:100%; border: solid;">
+                <tr>
+                    <th>Firstname</th>
+                    <th>Lastname</th>
+                    <th>Age</th>
+                    <th>Gender</th>
+                    <th>Target Price</th>
+                    <th>Is Married</th>
+                    <th>Physically Disabled</th>
+                    <th>Have Kids</th>
+                </tr>
+
+                {% for l in S %}
+                <tr>
+                    <th>{{ l.user_firstname }}</th>
+                    <th>{{ l.user_lastname }}</th>
+                    <th>{{ l.user_age }}</th>
+                    <th>{{ l.gender  }}</th>
+                    <th>{{ l.user_target_price|floatformat:"1"  }}</th>
+
+                    {% if l.user_is_married %}
+                    <th><i class="fa fa-check-circle-o" aria-hidden="true" style="color: green;"></i></th>
+                    {% else %}
+                    <th><i class="fa fa-times-circle" aria-hidden="true" style="color: red;"></i></th>
+                    {% endif %}
+
+
+                    {% if l.user_disable %}
+                    <th><i class="fa fa-check-circle-o" aria-hidden="true" style="color: green;"></i></th>
+                    {% else %}
+                    <th><i class="fa fa-times-circle" aria-hidden="true" style="color: red;"></i></th>
+                    {% endif %}
+
+                    {% if l.user_have_kids %}
+                    <th><i class="fa fa-check-circle-o" aria-hidden="true" style="color: green;"></i></th>
+                    {% else %}
+                    <th><i class="fa fa-times-circle" aria-hidden="true" style="color: red;"></i></th>
+                    {% endif %}
+                </tr>
+                {% endfor %}
+            </table>
+
+
+            <!--<footer class="major">-->
+                <!--<ul class="actions special">-->
+                    <!--<li><a href="generic.html" class="button">Learn More</a></li>-->
+                <!--</ul>-->
+            <!--</footer>-->
+        </section>
+
+    </div>
+
+    <!-- Footer -->
+    <footer id="footer">
+        <section>
+            <h2>What is this tool?</h2>
+            <p>Hotel Recommendation is a tool that recommends hotels by using your personal details. Your profile will be compared with thousands of other users. Our database of ratings and hotels will make sure that you find the perfect match.</p>
+
+        </section>
+        <section>
+            <h2>A problem? Contact Us</h2>
+            <dl class="alt">
+                <dt>Address</dt>
+                <dd>10 Crichton St, Edinburgh EH8 9AB, UK
+                </dd>
+                <dt>Phone</dt>
+                <dd>0131 650 1000
+                </dd>
+                <dt>Email</dt>
+                <dd><a href="mailto: school-office@inf.ed.ac.uk">school-office@inf.ed.ac.uk</a></dd>
+            </dl>
+            <!--<ul class="icons">-->
+            <!--<li><a href="#" class="icon fa-twitter alt"><span class="label">Twitter</span></a></li>-->
+            <!--<li><a href="#" class="icon fa-facebook alt"><span class="label">Facebook</span></a></li>-->
+            <!--<li><a href="#" class="icon fa-instagram alt"><span class="label">Instagram</span></a></li>-->
+            <!--<li><a href="#" class="icon fa-github alt"><span class="label">GitHub</span></a></li>-->
+            <!--<li><a href="#" class="icon fa-dribbble alt"><span class="label">Dribbble</span></a></li>-->
+            <!--</ul>-->
+        </section>
+        <p class="copyright">&copy; Hotel Recommendation.</p>
+    </footer>
+
+</div>
+
+
+
+<!-- Scripts -->
+<script src="{% static 'hotelrecommendation/assets/js/jquery.min.js'%}"></script>
+<script src="{% static 'hotelrecommendation/assets/js/jquery.scrollex.min.js'%}"></script>
+<script src="{% static 'hotelrecommendation/assets/js/jquery.scrolly.min.js'%}"></script>
+<script src="{% static 'hotelrecommendation/assets/js/browser.min.js'%}"></script>
+<script src="{% static 'hotelrecommendation/assets/js/breakpoints.min.js'%}"></script>
+<script src="{% static 'hotelrecommendation/assets/js/util.js'%}"></script>
+<script src="{% static 'hotelrecommendation/assets/js/main.js'%}"></script>
+
+</body>
+
+
+
+</html>
+
+
+
+
+
+
+
+
+

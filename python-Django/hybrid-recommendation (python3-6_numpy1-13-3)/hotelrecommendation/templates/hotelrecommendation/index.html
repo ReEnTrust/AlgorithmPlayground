@@ -1,0 +1,147 @@
+<!DOCTYPE HTML>
+<!--
+	Stellar by HTML5 UP
+	html5up.net | @ajlkn
+	Free for personal and commercial use under the CCA 3.0 license (html5up.net/license)
+-->
+<html>
+<head>
+    <title>Hotel Recommendation</title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+
+
+    {% load static %}
+
+    <link rel="stylesheet" href="{% static 'hotelrecommendation/assets/css/main.css'%}" />
+    <noscript><link rel="stylesheet" href="{% static 'hotelrecommendation/assets/css/noscript.css'%}" /></noscript>
+</head>
+<body class="is-preload">
+
+<!-- Wrapper -->
+<div id="wrapper">
+
+    <!-- Header -->
+    <header id="header">
+        <span class="logo"><img src="{% static 'hotelrecommendation/images/paris.png'%}" alt="" style="width: 170px"/></span>
+        <h1>Hotel Recommendation</h1>
+        <p>Paris For You</p>
+    </header>
+
+    <!-- Main -->
+    <div id="main">
+
+        <!-- Content -->
+        <section id="content" class="main">
+            <span class="image main"><img src="{%static 'hotelrecommendation/images/pic04.jpg'%}" alt="" /></span>
+
+
+
+            <form method="post">
+                {% csrf_token %}
+                <div class="row gtr-uniform">
+
+                    <div class="col-6 col-12-xsmall">
+                        <label for="id_firstname">Firstname:</label>
+                        <input type="text" name="firstname" maxlength="100" required="" id="id_firstname" placeholder="Firstname">
+                    </div>
+                    <div class="col-6 col-12-xsmall">
+                        <label for="id_lastname">Lastname:</label>
+                        <input type="text" name="lastname" maxlength="100" required="" id="id_lastname" placeholder="Lastname">
+                    </div>
+
+
+                    <div class="col-12">
+                        <label for="id_gender">Gender:</label>
+                        <select name="gender" id="id_gender">
+                            <option value="M">Male</option>
+                            <option value="F">Female</option>
+                        </select>
+                    </div>
+
+                    <div class="col-6 col-12-small">
+                    <label for="id_age">Age:</label>
+                        <input type="number" name="age" required="" id="id_age" min="18">
+                    </div>
+
+                    <div class="col-6 col-12-small">
+                    <label for="id_target_price">Target price:</label>
+                        <input type="number" name="target_price" required="" id="id_target_price" min="0">
+                    </div>
+
+                    <div class="col-4 col-12-small">
+                        <input type="checkbox" name="physically_disabled" id="id_physically_disabled">
+                        <label for="id_physically_disabled">Physically disabled</label>
+                    </div>
+                    <div class="col-4 col-12-small">
+                        <input type="checkbox" name="is_married" id="id_is_married">
+                        <label for="id_is_married">Is married</label>
+                    </div>
+                    <div class="col-4 col-12-small">
+                        <input type="checkbox" name="have_kids" id="id_have_kids">
+                        <label for="id_have_kids">Have kids</label>
+                    </div>
+
+
+                    <div class="col-12">
+                        <input type="submit" value="Submit" class="primary" style="margin-top: 2em;">
+                    </div>
+
+
+
+                </div>
+            </form>
+
+
+
+
+
+
+
+        </section>
+
+    </div>
+
+    <!-- Footer -->
+    <footer id="footer">
+        <section>
+            <h2>What is this tool?</h2>
+            <p>Hotel Recommendation is a tool that recommends hotels by using your personal details. Your profile will be compared with thousands of other users. Our database of ratings and hotels will make sure that you find the perfect match.</p>
+
+        </section>
+        <section>
+            <h2>A problem? Contact Us</h2>
+            <dl class="alt">
+                <dt>Address</dt>
+                <dd>10 Crichton St, Edinburgh EH8 9AB, UK
+                </dd>
+                <dt>Phone</dt>
+                <dd>0131 650 1000
+                </dd>
+                <dt>Email</dt>
+                <dd><a href="mailto: school-office@inf.ed.ac.uk">school-office@inf.ed.ac.uk</a></dd>
+            </dl>
+            <!--<ul class="icons">-->
+                <!--<li><a href="#" class="icon fa-twitter alt"><span class="label">Twitter</span></a></li>-->
+                <!--<li><a href="#" class="icon fa-facebook alt"><span class="label">Facebook</span></a></li>-->
+                <!--<li><a href="#" class="icon fa-instagram alt"><span class="label">Instagram</span></a></li>-->
+                <!--<li><a href="#" class="icon fa-github alt"><span class="label">GitHub</span></a></li>-->
+                <!--<li><a href="#" class="icon fa-dribbble alt"><span class="label">Dribbble</span></a></li>-->
+            <!--</ul>-->
+        </section>
+        <p class="copyright">&copy; Hotel Recommendation.</p>
+    </footer>
+
+</div>
+
+<!-- Scripts -->
+<script src="{% static 'hotelrecommendation/assets/js/jquery.min.js'%}"></script>
+<script src="{% static 'hotelrecommendation/assets/js/jquery.scrollex.min.js'%}"></script>
+<script src="{% static 'hotelrecommendation/assets/js/jquery.scrolly.min.js'%}"></script>
+<script src="{% static 'hotelrecommendation/assets/js/browser.min.js'%}"></script>
+<script src="{% static 'hotelrecommendation/assets/js/breakpoints.min.js'%}"></script>
+<script src="{% static 'hotelrecommendation/assets/js/util.js'%}"></script>
+<script src="{% static 'hotelrecommendation/assets/js/main.js'%}"></script>
+
+</body>
+</html>
