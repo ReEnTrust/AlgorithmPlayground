@@ -1,0 +1,220 @@
+<!DOCTYPE HTML>
+<!--
+	Stellar by HTML5 UP
+	html5up.net | @ajlkn
+	Free for personal and commercial use under the CCA 3.0 license (html5up.net/license)
+-->
+<html>
+<head>
+    <title>Hotel Recommendation</title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+
+
+    {% load static %}
+
+    <link rel="stylesheet" href="{% static 'hotelrecommendation/assets/css/main.css'%}" />
+    <noscript><link rel="stylesheet" href="{% static 'hotelrecommendation/assets/css/noscript.css'%}" /></noscript>
+</head>
+<body class="is-preload">
+
+<!-- Wrapper -->
+<div id="wrapper">
+
+    <!-- Header -->
+    <header id="header">
+        <span class="logo"><img src="{% static 'hotelrecommendation/images/paris.png'%}" alt="" style="width: 170px"/></span>
+        <h1>Hotel Recommendation</h1>
+        <p>Personalised Booking System</p>
+    </header>
+
+    <!-- Main -->
+    <div id="main">
+
+        <!-- Content -->
+        <section id="content" class="main">
+            <ul class="actions special">
+                <li><a href="{% url 'hotelrecommendation:result_view' firstname lastname age target_price physically_disabled is_married have_kids gender%}#second" class="button">Go Back</a></li>
+            </ul>
+
+            <section id="intro" class="main">
+                <div class="spotlight">
+                    <div class="content">
+                        <header class="major">
+                            <h2>User Profile</h2>
+                        </header>
+                        <div>
+                            <ul>
+                                <li>Firstname: {{rater.user_firstname}} </li>
+                                <li> Lastname: {{rater.user_lastname}}</li>
+                                <li>Age: {{rater.user_age}} </li>
+                                <li>Gender: {%if rater.gender == "M"%}
+                                    Male
+                                    {% else %}
+                                    Female
+                                    {% endif %} </li>
+                                <li>Target price for a night: {{rater.user_target_price|floatformat:"1"}} </li>
+                                <li>Physically disabled:
+                                    {% if rater.user_disable%}
+                                    <th><i class="fa fa-check-circle-o" aria-hidden="true" style="color: green;"></i></th>
+                                    {% else %}
+                                    <th><i class="fa fa-times-circle" aria-hidden="true" style="color: red;"></i></th>
+                                    {% endif %}
+
+                                </li>
+                                <Li>Is married:
+                                    {% if rater.is_married%}
+                                    <th><i class="fa fa-check-circle-o" aria-hidden="true" style="color: green;"></i></th>
+                                    {% else %}
+                                    <th><i class="fa fa-times-circle" aria-hidden="true" style="color: red;"></i></th>
+                                    {% endif %}
+                                </Li>
+                                <li>Have kids:
+                                    {% if rater.have_kids%}
+                                    <th><i class="fa fa-check-circle-o" aria-hidden="true" style="color: green;"></i></th>
+                                    {% else %}
+                                    <th><i class="fa fa-times-circle" aria-hidden="true" style="color: red;"></i></th>
+                                    {% endif %}
+                                </li>
+                            </ul>
+                        </div>
+
+
+                    </div>
+
+
+                    <span class="image"><img src="{% static 'hotelrecommendation/images/pic01.jpg'%}" alt="" /></span>
+                </div>
+            </section>
+
+
+
+            <section id="user-rating" class="main special">
+                <header class="major">
+                    <h2>User History</h2>
+                    <p>Ratings from this user.</p>
+
+
+
+
+
+
+
+
+                    <table style="width:100%; border: solid;">
+                        <tr>
+                            <th>Hotel Name</th>
+                            <th>Price Per Night</th>
+                            <th>Room Type</th>
+                            <th>Breakfast Available</th>
+                            <th>Swimming Pool</th>
+                            <th>Michelin</th>
+                            <th>Disable Access</th>
+                            <th>Rating</th>
+                        </tr>
+
+                        {% for r in rater_rating %}
+                        <tr>
+                            <th>{{r.rating_hotel.hotel_name }}</th>
+                            <th>{{r.rating_hotel.hotel_night_price|floatformat:"1" }}</th>
+                            <th>
+                                {% if r.rating_hotel.hotel_room_type == "D" %}
+                                    Double
+                                {% elif r.rating_hotel.hotel_room_type == "S" %}
+                                    Single
+                                {% elif r.rating_hotel.hotel_room_type == "T" %}
+                                    Twin
+                                {% else %}
+                                    Family
+                                {% endif %}</th>
+
+                            {% if r.rating_hotel.hotel_breakfast_available %}
+                            <th><i class="fa fa-check-circle-o" aria-hidden="true" style="color: green;"></i></th>
+                            {% else %}
+                            <th><i class="fa fa-times-circle" aria-hidden="true" style="color: red;"></i></th>
+                            {% endif %}
+
+                            {% if r.rating_hotel.hotel_swimming_pool %}
+                            <th><i class="fa fa-check-circle-o" aria-hidden="true" style="color: green;"></i></th>
+                            {% else %}
+                            <th><i class="fa fa-times-circle" aria-hidden="true" style="color: red;"></i></th>
+                            {% endif %}
+
+
+                            {% if r.rating_hotel.hotel_michelin_restaurant %}
+                            <th><i class="fa fa-check-circle-o" aria-hidden="true" style="color: green;"></i></th>
+                            {% else %}
+                            <th><i class="fa fa-times-circle" aria-hidden="true" style="color: red;"></i></th>
+                            {% endif %}
+
+                            {% if r.rating_hotel.hotel_disability_access %}
+                            <th><i class="fa fa-check-circle-o" aria-hidden="true" style="color: green;"></i></th>
+                            {% else %}
+                            <th><i class="fa fa-times-circle" aria-hidden="true" style="color: red;"></i></th>
+                            {% endif %}
+
+                            <th>{{r.rating_note}}</th>
+                        </tr>
+                        {% endfor %}
+                    </table>
+
+
+                </header>
+
+
+
+            </section>
+
+
+        </section>
+
+    </div>
+
+    <!-- Footer -->
+    <footer id="footer">
+        <section>
+            <h2>What is this tool?</h2>
+            <p>Hotel Recommendation is a tool that recommends hotels by using your personal details. Your profile will be compared with thousands of other users. Our database of ratings and hotels will make sure that you find the perfect match.</p>
+
+        </section>
+        <section>
+            <h2>A problem? Contact Us</h2>
+            <dl class="alt">
+                <dt>Address</dt>
+                <dd>10 Crichton St, Edinburgh EH8 9AB, UK
+                </dd>
+                <dt>Phone</dt>
+                <dd>0131 650 1000
+                </dd>
+                <dt>Email</dt>
+                <dd><a href="mailto: school-office@inf.ed.ac.uk">school-office@inf.ed.ac.uk</a></dd>
+            </dl>
+            <!--<ul class="icons">-->
+                <!--<li><a href="#" class="icon fa-twitter alt"><span class="label">Twitter</span></a></li>-->
+                <!--<li><a href="#" class="icon fa-facebook alt"><span class="label">Facebook</span></a></li>-->
+                <!--<li><a href="#" class="icon fa-instagram alt"><span class="label">Instagram</span></a></li>-->
+                <!--<li><a href="#" class="icon fa-github alt"><span class="label">GitHub</span></a></li>-->
+                <!--<li><a href="#" class="icon fa-dribbble alt"><span class="label">Dribbble</span></a></li>-->
+            <!--</ul>-->
+        </section>
+        <p class="copyright">&copy; Hotel Recommendation.</p>
+    </footer>
+
+</div>
+
+
+<script>
+    console.log("Hello world!");
+</script>
+
+<!-- Scripts -->
+<script src="{% static 'hotelrecommendation/assets/js/jquery.min.js'%}"></script>
+<script src="{% static 'hotelrecommendation/assets/js/jquery.scrollex.min.js'%}"></script>
+<script src="{% static 'hotelrecommendation/assets/js/jquery.scrolly.min.js'%}"></script>
+<script src="{% static 'hotelrecommendation/assets/js/browser.min.js'%}"></script>
+<script src="{% static 'hotelrecommendation/assets/js/breakpoints.min.js'%}"></script>
+<script src="{% static 'hotelrecommendation/assets/js/util.js'%}"></script>
+<script src="{% static 'hotelrecommendation/assets/js/main.js'%}"></script>
+
+</body>
+</html>

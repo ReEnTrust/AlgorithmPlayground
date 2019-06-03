@@ -117,5 +117,29 @@ class ResultView(View):
 
 
 
+class ResultRatingUser(View):
+    def get(self, request, firstname, lastname, age, target_price,physically_disabled,is_married,have_kids,gender,id_user):
 
+        #We need to display the ratings from a specific user
+        rater = User.objects.filter(id = id_user).first()
+
+        #We need to get the hotels that he rated
+        rater_rating = Rating.objects.filter(rating_user = id_user)
+        rater_rating = list(rater_rating)
+
+
+
+        context ={'firstname': firstname,
+                  'lastname': lastname,
+                  'target_price': target_price,
+                  'physically_disabled': physically_disabled,
+                  'is_married': is_married,
+                  'have_kids': have_kids,
+                  'age' : age,
+                  'gender': gender,
+                  'rater' : rater,
+                  'rater_rating': rater_rating,
+                  }
+
+        return render(request, 'hotelrecommendation/rating_detail.html', context)
 

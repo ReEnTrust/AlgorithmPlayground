@@ -57,7 +57,7 @@
                                 Female
                                 {% endif %} </li>
                             <li>Target price for a night: {{target_price}} </li>
-                            <li>Physically disabled:
+                            <li>Wheelchair User:
                                 {% if physically_disabled == "True"%}
                                 <th><i class="fa fa-check-circle-o" aria-hidden="true" style="color: green;"></i></th>
                                 {% else %}
@@ -110,7 +110,7 @@
                         <th>City</th>
                         <th>Night Price</th>
                         <th>Room Type</th>
-                        <th>Access for disabled</th>
+                        <th>Wheelchair Accessible</th>
                         <th>Swimming Pool</th>
                         <th>Breakfast Available</th>
                         <th>Reviews</th>
@@ -216,20 +216,18 @@
 
             <table style="width:100%; border: solid;">
                 <tr>
-                    <th>Firstname</th>
-                    <th>Lastname</th>
+                    <th>Name</th>
                     <th>Age</th>
                     <th>Gender</th>
                     <th>Target Price</th>
                     <th>Is Married</th>
-                    <th>Physically Disabled</th>
+                    <th>Wheelchair User</th>
                     <th>Have Kids</th>
                 </tr>
 
                 {% for l in S %}
                 <tr>
-                    <th>{{ l.user_firstname }}</th>
-                    <th>{{ l.user_lastname }}</th>
+                    <th><a href="{% url 'hotelrecommendation:result_user_rating' firstname lastname age target_price physically_disabled is_married have_kids gender l.id%}">{{ l.user_firstname }} {{ l.user_lastname }}</a></th>
                     <th>{{ l.user_age }}</th>
                     <th>{{ l.gender  }}</th>
                     <th>{{ l.user_target_price|floatformat:"1"  }}</th>
