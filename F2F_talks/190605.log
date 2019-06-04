@@ -1,9 +1,9 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.16 (TeX Live 2015/Debian) (preloaded format=pdflatex 2018.8.2)  4 JUN 2019 15:21
+This is pdfTeX, Version 3.14159265-2.6-1.40.16 (TeX Live 2015/Debian) (preloaded format=pdflatex 2018.8.2)  4 JUN 2019 15:26
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
-**190604.tex
-(./190604.tex
+**190605.tex
+(./190605.tex
 LaTeX2e <2016/02/01>
 Babel <3.9q> and hyphenation patterns for 81 language(s) loaded.
 (/usr/share/texlive/texmf-dist/tex/latex/beamer/beamer.cls
@@ -1049,8 +1049,8 @@ Package frenchb.ldf Info: No list customisation for the beamer class,
 (/usr/share/texlive/texmf-dist/tex/latex/multirow/multirow.sty
 \bigstrutjot=\dimen191
 )
-(./beamercolorthemeARA.sty) (./190604.aux)
-\openout1 = `190604.aux'.
+(./beamercolorthemeARA.sty) (./190605.aux)
+\openout1 = `190605.aux'.
 
 LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 50.
 LaTeX Font Info:    ... okay on input line 50.
@@ -1145,9 +1145,9 @@ LaTeX Info: Redefining \ref on input line 50.
 LaTeX Info: Redefining \pageref on input line 50.
 LaTeX Info: Redefining \nameref on input line 50.
 
-(./190604.out) (./190604.out)
+(./190605.out) (./190605.out)
 \@outlinefile=\write5
-\openout5 = `190604.out'.
+\openout5 = `190605.out'.
 
 
 (/usr/share/texlive/texmf-dist/tex/latex/beamer/translator/dicts/translator-bas
@@ -1208,7 +1208,7 @@ Package frenchb.ldf Warning: OT1 encoding should not be used for French.
 (frenchb.ldf)                Add \usepackage[T1]{fontenc} to the preamble
 (frenchb.ldf)                of your document, on input line 50.
 
-(./190604.nav)
+(./190605.nav)
 LaTeX Font Info:    Try loading font information for U+msa on input line 50.
  (/usr/share/texlive/texmf-dist/tex/latex/amsfonts/umsa.fd
 File: umsa.fd 2013/01/14 v3.01 AMS symbols A
@@ -1252,20 +1252,20 @@ LaTeX Font Warning: Font shape `OMS/cmss/m/n' undefined
 
 ]
 \tf@nav=\write6
-\openout6 = `190604.nav'.
+\openout6 = `190605.nav'.
 
 \tf@toc=\write7
-\openout7 = `190604.toc'.
+\openout7 = `190605.toc'.
 
 \tf@snm=\write8
-\openout8 = `190604.snm'.
+\openout8 = `190605.snm'.
 
 Package atveryend Info: Empty hook `BeforeClearDocument' on input line 141.
 Package atveryend Info: Empty hook `AfterLastShipout' on input line 141.
- (./190604.aux)
+ (./190605.aux)
 Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 141.
 Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 141.
-Package rerunfilecheck Info: File `190604.out' has not changed.
+Package rerunfilecheck Info: File `190605.out' has not changed.
 (rerunfilecheck)             Checksum: D41D8CD98F00B204E9800998ECF8427E;0.
 
 
@@ -1293,7 +1293,7 @@ mf-dist/fonts/type1/public/amsfonts/cm/cmss9.pfb></usr/share/texlive/texmf-dist
 /fonts/type1/public/amsfonts/cm/cmsy10.pfb></usr/share/texlive/texmf-dist/fonts
 /type1/public/amsfonts/cm/cmsy9.pfb></usr/share/texlive/texmf-dist/fonts/type1/
 public/amsfonts/symbols/msam10.pfb>
-Output written on 190604.pdf (6 pages, 89509 bytes).
+Output written on 190605.pdf (6 pages, 89533 bytes).
 PDF statistics:
  99 PDF objects out of 1000 (max. 8388607)
  71 compressed objects within 1 object stream
