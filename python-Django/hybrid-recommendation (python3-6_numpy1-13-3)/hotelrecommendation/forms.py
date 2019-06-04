@@ -2,8 +2,6 @@ from django import forms
 
 
 class UserForm(forms.Form):
-    firstname = forms.CharField(label='Firstname', max_length=100)
-    lastname = forms.CharField(label='Lastname', max_length=100)
     age = forms.IntegerField(label='Age')
     target_price= forms.IntegerField(label='Target price')
     physically_disabled = forms.BooleanField(label='Physically disabled', required=False)
@@ -14,3 +12,9 @@ class UserForm(forms.Form):
         ('F', 'Female'),
     ]
     gender = forms.ChoiceField(choices = GENDER_CHOICES, label="Gender", widget=forms.Select(), required=True)
+    ALGO_CHOICES = [
+        (1, 'Algorithm 1'),
+        (2, 'Algorithm 2'),
+        (3, 'Algorithm 3'),
+    ]
+    algo = forms.ChoiceField(choices = ALGO_CHOICES, label="algo", widget=forms.RadioSelect, required=True)

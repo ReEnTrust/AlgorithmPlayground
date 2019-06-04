@@ -33,65 +33,26 @@
 
         <!-- Content -->
         <section id="content" class="main">
-            <span class="image main"><img src="{%static 'hotelrecommendation/images/pic04.jpg'%}" alt="" /></span>
+            <!--<span class="image main"><img src="{%static 'hotelrecommendation/images/pic04.jpg'%}" alt="" /></span>-->
 
 
-
-            <form method="post">
-                {% csrf_token %}
-                <div class="row gtr-uniform">
-
-                    <div class="col-6 col-12-xsmall">
-                        <label for="id_firstname">Firstname:</label>
-                        <input type="text" name="firstname" maxlength="100" required="" id="id_firstname" placeholder="Firstname">
-                    </div>
-                    <div class="col-6 col-12-xsmall">
-                        <label for="id_lastname">Lastname:</label>
-                        <input type="text" name="lastname" maxlength="100" required="" id="id_lastname" placeholder="Lastname">
-                    </div>
-
-
-                    <div class="col-12">
-                        <label for="id_gender">Gender:</label>
-                        <select name="gender" id="id_gender">
-                            <option value="M">Male</option>
-                            <option value="F">Female</option>
-                        </select>
-                    </div>
-
-                    <div class="col-6 col-12-small">
-                    <label for="id_age">Age:</label>
-                        <input type="number" name="age" required="" id="id_age" min="18">
-                    </div>
-
-                    <div class="col-6 col-12-small">
-                    <label for="id_target_price">Target price:</label>
-                        <input type="number" name="target_price" required="" id="id_target_price" min="0">
-                    </div>
-
-                    <div class="col-4 col-12-small">
-                        <input type="checkbox" name="physically_disabled" id="id_physically_disabled">
-                        <label for="id_physically_disabled">Physically disabled</label>
-                    </div>
-                    <div class="col-4 col-12-small">
-                        <input type="checkbox" name="is_married" id="id_is_married">
-                        <label for="id_is_married">Is married</label>
-                    </div>
-                    <div class="col-4 col-12-small">
-                        <input type="checkbox" name="have_kids" id="id_have_kids">
-                        <label for="id_have_kids">Have kids</label>
-                    </div>
-
-
-                    <div class="col-12">
-                        <input type="submit" value="Submit" class="primary" style="margin-top: 2em;">
-                    </div>
-
-
+            <section id="first" class="main special">
+                <header class="major">
+                    <h2>Sandbox Scenario</h2>
+                </header>
+                <div>
+                    <p>You want to find a hotel for your next journey in Paris.
+                        In the next page, we provide you with a new tool that recommends hotels with respect to your profile.
+                        You are free to interact with the different parameters available.</p>
 
                 </div>
-            </form>
 
+                <footer class="major">
+                    <ul class="actions special">
+                        <li><a href="{% url 'hotelrecommendation:result_view' 18 200 False False False "M" 1%}" class="button">Enter</a></li>
+                    </ul>
+                </footer>
+            </section>
 
 
 

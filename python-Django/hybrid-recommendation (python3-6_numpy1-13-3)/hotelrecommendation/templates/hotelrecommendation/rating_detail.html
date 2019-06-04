@@ -34,7 +34,7 @@
         <!-- Content -->
         <section id="content" class="main">
             <ul class="actions special">
-                <li><a href="{% url 'hotelrecommendation:result_view' firstname lastname age target_price physically_disabled is_married have_kids gender%}#second" class="button">Go Back</a></li>
+                <li><a href="{% url 'hotelrecommendation:result_view' age target_price physically_disabled is_married have_kids gender algo%}" class="button">Go Back</a></li>
             </ul>
 
             <section id="intro" class="main">
@@ -54,7 +54,7 @@
                                     Female
                                     {% endif %} </li>
                                 <li>Target price for a night: {{rater.user_target_price|floatformat:"1"}} </li>
-                                <li>Physically disabled:
+                                <li>Wheelchair User:
                                     {% if rater.user_disable%}
                                     <th><i class="fa fa-check-circle-o" aria-hidden="true" style="color: green;"></i></th>
                                     {% else %}
@@ -82,8 +82,6 @@
 
                     </div>
 
-
-                    <span class="image"><img src="{% static 'hotelrecommendation/images/pic01.jpg'%}" alt="" /></span>
                 </div>
             </section>
 

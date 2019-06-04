@@ -23,9 +23,7 @@ feats = []
 #Other parameters
 item_clusters=4
 top_results=10
-ratings_weightage=1
-content_weightage=0.2
-null_rating_replace='mean' #can be replaced by 'zero', 'one' or 'min'
+
 
 #We fill the tabular for the reviews and build the dataframe
 for r in Rating.objects.all():
@@ -58,8 +56,12 @@ for i in Hotel.objects.all():
 item_df = pd.DataFrame(feats,index=items,columns=cols)
 
 #We fit the recommender system
-my_recommender = hybrid_recommender(item_clusters,top_results,ratings_weightage,content_weightage, null_rating_replace)
-my_recommender.fit(ratings,item_df)
+my_recommender1 = hybrid_recommender(item_clusters,top_results,ratings_weightage=1,content_weightage=1, null_rating_replace='mean') #can be replaced by 'zero', 'one' or 'min'
+my_recommender2 = hybrid_recommender(item_clusters,top_results,ratings_weightage=1,content_weightage=0.2, null_rating_replace='mean') #can be replaced by 'zero', 'one' or 'min'
+my_recommender3 = hybrid_recommender(item_clusters,top_results,ratings_weightage=0.2,content_weightage=1, null_rating_replace='mean') #can be replaced by 'zero', 'one' or 'min'
+my_recommender1.fit(ratings,item_df)
+my_recommender2.fit(ratings,item_df)
+my_recommender3.fit(ratings,item_df)
 
 
 def results(request, age):
@@ -71,22 +73,26 @@ class IndexView(FormView):
     form_class = UserForm
 
     def form_valid(self, form):
-        firstname = form.cleaned_data.get('firstname')
-        lastname = form.cleaned_data.get('lastname')
         age = form.cleaned_data.get('age')
         target_price = form.cleaned_data.get('target_price')
         physically_disabled = form.cleaned_data.get('physically_disabled')
         is_married = form.cleaned_data.get('is_married')
         have_kids = form.cleaned_data.get('have_kids')
         gender = form.cleaned_data.get('gender')
-        return redirect('hotelrecommendation:result_view', firstname, lastname, age, target_price, physically_disabled,is_married,have_kids,gender)
+        return redirect('hotelrecommendation:result_view', age, target_price, physically_disabled,is_married,have_kids,gender)
 
 
 class ResultView(View):
-    def get(self, request, firstname, lastname, age, target_price,physically_disabled,is_married,have_kids,gender):
+    def get(self, request, age, target_price,physically_disabled,is_married,have_kids,gender, algo):
 
         #We get the users with the same status
-        relevant_users = User.objects.filter(user_disable = physically_disabled, user_is_married = is_married, user_have_kids = have_kids, gender= gender, user_target_price__gte = target_price-20, user_target_price__lte = target_price+20)
+        amplitude = 0
+        while True:
+            relevant_users = User.objects.filter(user_disable = physically_disabled, user_is_married = is_married, user_have_kids = have_kids, gender= gender, user_target_price__gte = target_price-amplitude, user_target_price__lte = target_price+amplitude)
+            if not relevant_users:
+                amplitude=amplitude+5
+            else:
+                break
 
         #We have to rank them and take the closest user and the similar users
         ordered_age = relevant_users.annotate(age_diff=Func(F('user_age') - age, function='ABS')).order_by('age_diff')
@@ -94,15 +100,67 @@ class ResultView(View):
         closest_user = ordered_age.first()
 
 
+        #We take the predictions for the closest user
+        if algo == 1:
+            hotel_id_recommendation = my_recommender1.predict([closest_user.id]).values.tolist()
+        elif algo == 2:
+            hotel_id_recommendation = my_recommender2.predict([closest_user.id]).values.tolist()
+        else:
+            hotel_id_recommendation = my_recommender3.predict([closest_user.id]).values.tolist()
 
-        hotel_id_recommendation = my_recommender.predict([closest_user.id]).values.tolist()
-        listHotelT = [] = []
+        #We take the hotels that correspond
+        listHotelT = []
         for l in hotel_id_recommendation:
             listHotelT.append(Hotel.objects.filter(id = l[0]).first())
 
+        #We take statistics on those hotels
+        averagePrice = 0
+        averageReview = 0
+        percentageSingle = 0
+        percentageTwin = 0
+        percentageFamily = 0
+        percentageDouble = 0
+        percentageSwim = 0
+        percentageBreak = 0
+        percentageAccessible = 0
+        for l in listHotelT:
+            averagePrice += l.hotel_night_price
+            averageReview +=l.hotel_user_reviews
+            if l.hotel_room_type == "S":
+                percentageSingle = percentageSingle+1
+            elif l.hotel_room_type == "T":
+                percentageTwin = percentageTwin+1
+            elif l.hotel_room_type == "F":
+                percentageFamily = percentageFamily+1
+            else:
+                percentageDouble = percentageDouble+1
 
-        context ={'firstname': firstname,
-                  'lastname': lastname,
+            if l.hotel_disability_access:
+                percentageAccessible = percentageAccessible +1
+
+            if l.hotel_swimming_pool:
+                percentageSwim = percentageSwim +1
+
+            if l.hotel_breakfast_available:
+                percentageBreak = percentageBreak +1
+
+
+        percentageAccessible /= (top_results/100)
+        percentageNotAccessible = 100- percentageAccessible
+        percentageSingle /= (top_results/100)
+        percentageTwin /= (top_results/100)
+        percentageFamily /= (top_results/100)
+        percentageDouble /= (top_results/100)
+        percentageSwim /= (top_results/100)
+        percentageBreak /= (top_results/100)
+        percentageNotSwim = 100 - percentageSwim
+        percentageNotBreak = 100 - percentageBreak
+        averagePrice /= top_results
+        averageReview /= top_results
+
+        testForm = UserForm()
+
+        context ={
                   'target_price': target_price,
                   'physically_disabled': physically_disabled,
                   'is_married': is_married,
@@ -111,14 +169,43 @@ class ResultView(View):
                   'gender': gender,
                   "L" : listHotelT,
                   'S' : similarUsers,
+                  'algo' : algo,
+            'testForm' : testForm,
+            'averagePrice' : averagePrice,
+            'averageReview' : averageReview,
+            'percentageDouble' : percentageDouble,
+            'percentageTwin' : percentageTwin,
+            'percentageSingle' : percentageSingle,
+            'percentageFamily' : percentageFamily,
+            'percentageAccessible' : percentageAccessible,
+            'percentageNotAccessible' : percentageNotAccessible,
+            'percentageSwim' : percentageSwim,
+            'percentageNotSwim' : percentageNotSwim,
+            'percentageBreak' : percentageBreak,
+            'percentageNotBreak' : percentageNotBreak,
                   }
 
         return render(request, 'hotelrecommendation/results.html', context)
 
 
+    def post(self, request, age, target_price, physically_disabled, is_married, have_kids, gender, algo):
+        form = UserForm(data = request.POST)
+        if form.is_valid():
+            age = form.cleaned_data.get('age')
+            target_price = form.cleaned_data.get('target_price')
+            physically_disabled = form.cleaned_data.get('physically_disabled')
+            is_married = form.cleaned_data.get('is_married')
+            have_kids = form.cleaned_data.get('have_kids')
+            gender = form.cleaned_data.get('gender')
+            algo =  form.cleaned_data.get('algo')
+        print(form.errors)
+
+        return redirect('hotelrecommendation:result_view', age, target_price, physically_disabled,is_married,have_kids,gender,algo)
+
+
 
 class ResultRatingUser(View):
-    def get(self, request, firstname, lastname, age, target_price,physically_disabled,is_married,have_kids,gender,id_user):
+    def get(self, request, age, target_price,physically_disabled,is_married,have_kids,gender,algo, id_user):
 
         #We need to display the ratings from a specific user
         rater = User.objects.filter(id = id_user).first()
@@ -129,13 +216,13 @@ class ResultRatingUser(View):
 
 
 
-        context ={'firstname': firstname,
-                  'lastname': lastname,
+        context ={
                   'target_price': target_price,
                   'physically_disabled': physically_disabled,
                   'is_married': is_married,
                   'have_kids': have_kids,
                   'age' : age,
+                  'algo': algo,
                   'gender': gender,
                   'rater' : rater,
                   'rater_rating': rater_rating,
