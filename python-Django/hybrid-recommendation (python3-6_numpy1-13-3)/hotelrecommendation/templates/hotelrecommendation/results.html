@@ -131,7 +131,7 @@
                                     <label for="id_algo_2">Algorithm 3</label>
                                 </div>
 
-                                <div class="col-12">
+                                <div class="col-12" id="update-button-div">
                                     <input type="submit" value="Update" class="primary" style="margin-top: 2em;">
                                 </div>
                             </div>
@@ -156,31 +156,31 @@
 
                             <div class="row gtr-uniform">
                                 {% if percentageSingle != 0 %}
-                                    <div style="background: cadetblue; text-align: center; width: {{percentageSingle}}%">
+                                    <div style="background: cadetblue; text-align: center; width: {{percentageSingle}}%" title="{{percentageSingle}}%">
                                     Single
                                     </div>
                                 {% endif %}
 
                                 {% if percentageDouble != 0 %}
-                                    <div style="background: #7ec3ee; text-align: center; width: {{percentageDouble}}%">
+                                    <div style="background: #7ec3ee; text-align: center; width: {{percentageDouble}}%" title="{{percentageDouble}}%">
                                     Double
                                     </div>
                                 {% endif %}
 
                                 {% if percentageTwin != 0 %}
-                                    <div style="background:#a89cc8; text-align: center; width: {{percentageTwin}}%">
+                                    <div style="background:#a89cc8; text-align: center; width: {{percentageTwin}}%" title="{{percentageTwin}}%">
                                         Twin
                                     </div>
                                 {% endif %}
 
                                 {% if percentageFamily != 0 %}
-                                    <div style="background: #e37682; text-align: center; width: {{percentageFamily}}%">
+                                    <div style="background: #e37682; text-align: center; width: {{percentageFamily}}%" title="{{percentageFamily}}%">
                                         Family
                                     </div>
                                 {% endif %}
 
                                 {% if percentageAccessible != 0 %}
-                                <div style="background: aquamarine; text-align: center; width: {{percentageAccessible}}%">
+                                <div style="background: aquamarine; text-align: center; width: {{percentageAccessible}}%" title="{{percentageAccessible}}%">
                                     {% if percentageAccessible >= 40 %}
                                         Wheelchair Accessible
                                     {% else %}
@@ -190,7 +190,7 @@
                                 {% endif %}
 
                                 {% if percentageNotAccessible != 0 %}
-                                <div style="background:hotpink; width: {{percentageNotAccessible}}%">
+                                <div style="background:hotpink; width: {{percentageNotAccessible}}%" title="{{percentageNotAccessible}}%">
                                     {% if percentageNotAccessible >= 40 %}
                                     Not Wheelchair Accessible
                                     {% else %}
@@ -200,7 +200,7 @@
                                 {% endif %}
 
                                 {% if percentageSwim != 0 %}
-                                <div style="background: greenyellow; text-align: center; width: {{percentageSwim}}%">
+                                <div style="background: greenyellow; text-align: center; width: {{percentageSwim}}%" title="{{percentageSwim}}%">
                                     {% if percentageSwim >= 30 %}
                                     Swimming Pool
                                     {% else %}
@@ -210,7 +210,7 @@
                                 {% endif %}
 
                                 {% if percentageNotSwim != 0 %}
-                                <div style="background: aliceblue; text-align: center; width: {{percentageNotSwim}}%">
+                                <div style="background: aliceblue; text-align: center; width: {{percentageNotSwim}}%" title="{{percentageNotSwim}}%">
                                     {% if percentageNotSwim >= 30 %}
                                     No Swimming Pool
                                     {% else %}
@@ -220,7 +220,7 @@
                                 {% endif %}
 
                                 {% if percentageBreak != 0 %}
-                                <div style="background:violet; text-align: center; width: {{percentageBreak}}%">
+                                <div style="background:violet; text-align: center; width: {{percentageBreak}}%" title="{{percentageBreak}}%">
                                     {% if percentageBreak >= 20 %}
                                     Breakfast
                                     {% else %}
@@ -230,7 +230,7 @@
                                 {% endif %}
 
                                 {% if percentageNotBreak != 0 %}
-                                <div style="background: aquamarine; text-align: center; width: {{percentageNotBreak}}%">
+                                <div style="background: aquamarine; text-align: center; width: {{percentageNotBreak}}%" title="{{percentageNotBreak}}%">
                                     {% if percentageNotBreak >= 30 %}
                                     No Breakfast
                                     {% else %}
@@ -331,11 +331,11 @@
 
 
             </div>
-            <footer class="major">
-                <ul class="actions special">
-                    <li><a href="#" class="button">Learn More About This</a></li>
-                </ul>
-            </footer>
+            <!--<footer class="major">-->
+                <!--<ul class="actions special">-->
+                    <!--<li><a href="#" class="button">Learn More About This</a></li>-->
+                <!--</ul>-->
+            <!--</footer>-->
         </section>
 
         <!-- Second Section -->
@@ -384,7 +384,7 @@
 
                 {% for l in S %}
                 <tr>
-                    <th><a href="{% url 'hotelrecommendation:result_user_rating' age target_price physically_disabled is_married have_kids gender algo l.id%}">{{ l.user_firstname }} {{ l.user_lastname }}</a></th>
+                    <th><a href="{% url 'hotelrecommendation:result_user_rating' log age target_price physically_disabled is_married have_kids gender algo l.id%}">{{ l.user_firstname }} {{ l.user_lastname }}</a></th>
                     <th>{{ l.user_age }}</th>
                     <th>{{ l.gender  }}</th>
                     <th>{{ l.user_target_price|floatformat:"1"  }}</th>

@@ -3,6 +3,8 @@ from django.contrib import admin
 # Register your models here.
 from .models import User
 from .models import Hotel
+from .models import LogInstance
+from .models import LogAction
 from .models import Rating
 
 
@@ -11,6 +13,13 @@ class UserAdmin(admin.ModelAdmin):
     search_fields = ['id', 'user_firstname',"user_lastname"]
 admin.site.register(User,UserAdmin)
 
+class LogInstanceAdmin(admin.ModelAdmin):
+    list_display = ('id', 'log_instance_creation_date')
+admin.site.register(LogInstance,LogInstanceAdmin)
+
+class LogActionAdmin(admin.ModelAdmin):
+    list_display = ('log_instance_id','log_action_date','log_action_description')
+admin.site.register(LogAction,LogActionAdmin)
 
 class HotelAdmin(admin.ModelAdmin):
     list_display = ('id', 'hotel_name', "hotel_address", 'hotel_location', 'hotel_room_type', 'hotel_night_price', 'hotel_swimming_pool', 'hotel_breakfast_available','hotel_disability_access',"hotel_michelin_restaurant",'hotel_user_reviews', 'hotel_latitude', 'hotel_longitude')

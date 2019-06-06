@@ -8,6 +8,8 @@ from django.views.generic.edit import FormView
 from .forms import UserForm
 from .models import User
 from .models import Hotel
+from .models import LogInstance
+from .models import LogAction
 from .models import Rating
 # Create your views here.
 
@@ -64,26 +66,35 @@ my_recommender2.fit(ratings,item_df)
 my_recommender3.fit(ratings,item_df)
 
 
-def results(request, age):
-    return render(request, 'hotelrecommendation/results.html', {})
+# def results(request, age):
+#     return render(request, 'hotelrecommendation/results.html', {})
 
 
-class IndexView(FormView):
-    template_name = 'hotelrecommendation/index.html'
-    form_class = UserForm
+class IndexView(View):
 
-    def form_valid(self, form):
-        age = form.cleaned_data.get('age')
-        target_price = form.cleaned_data.get('target_price')
-        physically_disabled = form.cleaned_data.get('physically_disabled')
-        is_married = form.cleaned_data.get('is_married')
-        have_kids = form.cleaned_data.get('have_kids')
-        gender = form.cleaned_data.get('gender')
-        return redirect('hotelrecommendation:result_view', age, target_price, physically_disabled,is_married,have_kids,gender)
+    def get(self,request):
+        context = {}
+        return render(request, 'hotelrecommendation/index.html', context)
 
+    def post(self,request):
+
+        #We create a new instance
+        newLogInstance = LogInstance()
+        newLogInstance.save()
+
+        #We create a logAction that the user has logged In
+        newLogAction = LogAction(log_instance_id= newLogInstance.id, log_action_description="User has logged in, redirecting to default page.")
+        newLogAction.save()
+
+        return redirect('hotelrecommendation:result_view', newLogInstance.id, 18, 200, False,False,False,"M",1)
 
 class ResultView(View):
-    def get(self, request, age, target_price,physically_disabled,is_married,have_kids,gender, algo):
+
+    def get(self, request,log, age, target_price,physically_disabled,is_married,have_kids,gender, algo):
+
+        #We create a logAction that the page was shown to the user
+        newLogAction = LogAction(log_instance_id= log, log_action_description="User is shown the page (age,price,wheelchair,married,kids,gender,algo) = ("+str(age)+","+str(target_price)+","+str(physically_disabled)+","+str(is_married)+","+str(have_kids)+","+gender+str(algo)+").")
+        newLogAction.save()
 
         #We get the users with the same status
         amplitude = 0
@@ -161,15 +172,16 @@ class ResultView(View):
         testForm = UserForm()
 
         context ={
-                  'target_price': target_price,
-                  'physically_disabled': physically_disabled,
-                  'is_married': is_married,
-                  'have_kids': have_kids,
-                  'age' : age,
-                  'gender': gender,
-                  "L" : listHotelT,
-                  'S' : similarUsers,
-                  'algo' : algo,
+            'target_price': target_price,
+            'physically_disabled': physically_disabled,
+            'is_married': is_married,
+            'have_kids': have_kids,
+            'age' : age,
+            'log' : log,
+            'gender': gender,
+            "L" : listHotelT,
+            'S' : similarUsers,
+            'algo' : algo,
             'testForm' : testForm,
             'averagePrice' : averagePrice,
             'averageReview' : averageReview,
@@ -188,7 +200,12 @@ class ResultView(View):
         return render(request, 'hotelrecommendation/results.html', context)
 
 
-    def post(self, request, age, target_price, physically_disabled, is_married, have_kids, gender, algo):
+    def post(self, request, log, age, target_price, physically_disabled, is_married, have_kids, gender, algo):
+
+        #We create a logAction that the page was shown to the user
+        newLogAction = LogAction(log_instance_id= log, log_action_description="User requested a new recommendation.")
+        newLogAction.save()
+
         form = UserForm(data = request.POST)
         if form.is_valid():
             age = form.cleaned_data.get('age')
@@ -200,12 +217,16 @@ class ResultView(View):
             algo =  form.cleaned_data.get('algo')
         print(form.errors)
 
-        return redirect('hotelrecommendation:result_view', age, target_price, physically_disabled,is_married,have_kids,gender,algo)
+
+
+        return redirect('hotelrecommendation:result_view', log, age, target_price, physically_disabled,is_married,have_kids,gender,algo)
 
 
 
 class ResultRatingUser(View):
-    def get(self, request, age, target_price,physically_disabled,is_married,have_kids,gender,algo, id_user):
+    def get(self, request, log, age, target_price,physically_disabled,is_married,have_kids,gender,algo, id_user):
+
+
 
         #We need to display the ratings from a specific user
         rater = User.objects.filter(id = id_user).first()
@@ -214,18 +235,21 @@ class ResultRatingUser(View):
         rater_rating = Rating.objects.filter(rating_user = id_user)
         rater_rating = list(rater_rating)
 
-
+        #We create a logAction that the page was shown to the user
+        newLogAction = LogAction(log_instance_id= log, log_action_description="We show the page of user "+str(rater.id)+".")
+        newLogAction.save()
 
         context ={
-                  'target_price': target_price,
-                  'physically_disabled': physically_disabled,
-                  'is_married': is_married,
-                  'have_kids': have_kids,
-                  'age' : age,
-                  'algo': algo,
-                  'gender': gender,
-                  'rater' : rater,
-                  'rater_rating': rater_rating,
+            'log' : log,
+            'target_price': target_price,
+            'physically_disabled': physically_disabled,
+            'is_married': is_married,
+            'have_kids': have_kids,
+            'age' : age,
+            'algo': algo,
+            'gender': gender,
+            'rater' : rater,
+            'rater_rating': rater_rating,
                   }
 
         return render(request, 'hotelrecommendation/rating_detail.html', context)

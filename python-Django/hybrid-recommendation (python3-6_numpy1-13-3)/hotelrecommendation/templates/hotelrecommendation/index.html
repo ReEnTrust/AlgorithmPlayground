@@ -48,9 +48,12 @@
                 </div>
 
                 <footer class="major">
-                    <ul class="actions special">
-                        <li><a href="{% url 'hotelrecommendation:result_view' 18 200 False False False "M" 1%}" class="button">Enter</a></li>
-                    </ul>
+
+
+                    <form method="post">
+                        {% csrf_token %}
+                        <button type="submit" >Enter</button>
+                    </form>
                 </footer>
             </section>
 
