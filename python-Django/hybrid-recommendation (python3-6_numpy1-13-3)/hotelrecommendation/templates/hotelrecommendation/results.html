@@ -11,6 +11,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
 
     {% load static %}
+    {% load template_extra_toolkits %}
 
     <link rel="stylesheet" href="{% static 'hotelrecommendation/assets/css/main.css'%}" />
     <noscript><link rel="stylesheet" href="{% static 'hotelrecommendation/assets/css/noscript.css'%}" /></noscript>
@@ -60,9 +61,9 @@
                                     <label for="id_gender">Gender:</label>
                                     <select name="gender" id="id_gender">
                                         {% if gender == "M" %}
-                                            <option value="M" selected="selected">Male</option>
+                                        <option value="M" selected="selected">Male</option>
                                         {% else %}
-                                            <option value="M">Male</option>
+                                        <option value="M">Male</option>
                                         {% endif %}
 
                                         {% if gender == "F" %}
@@ -87,9 +88,9 @@
 
                                 <div class="col-4 col-12-small">
                                     {% if physically_disabled == "True"%}
-                                        <input type="checkbox" name="physically_disabled" id="id_physically_disabled" checked>
+                                    <input type="checkbox" name="physically_disabled" id="id_physically_disabled" checked>
                                     {% else %}
-                                        <input type="checkbox" name="physically_disabled" id="id_physically_disabled">
+                                    <input type="checkbox" name="physically_disabled" id="id_physically_disabled">
                                     {% endif %}
                                     <label for="id_physically_disabled">Wheelchair User</label>
                                 </div>
@@ -98,18 +99,18 @@
 
                                 <div class="col-4 col-12-small">
                                     {% if is_married == "True"%}
-                                        <input type="checkbox" name="is_married" id="id_is_married" checked>
+                                    <input type="checkbox" name="is_married" id="id_is_married" checked>
                                     {% else %}
-                                        <input type="checkbox" name="is_married" id="id_is_married">
+                                    <input type="checkbox" name="is_married" id="id_is_married">
                                     {% endif %}
                                     <label for="id_is_married">Is married</label>
                                 </div>
 
                                 <div class="col-4 col-12-small">
                                     {% if have_kids == "True" %}
-                                        <input type="checkbox" name="have_kids" id="id_have_kids" checked>
+                                    <input type="checkbox" name="have_kids" id="id_have_kids" checked>
                                     {% else %}
-                                        <input type="checkbox" name="have_kids" id="id_have_kids">
+                                    <input type="checkbox" name="have_kids" id="id_have_kids">
                                     {% endif %}
                                     <label for="id_have_kids">Have kids</label>
                                 </div>
@@ -136,120 +137,8 @@
                                 </div>
                             </div>
                         </form>
-
-
-
-
-
-
                     </div>
-
-                    <div class="content">
-                        <header class="major">
-                            <h2>Recommendation statistics</h2>
-                        </header>
-                        <div>
-                            <ul>
-                                <li>Average price per night: £{{averagePrice|floatformat:"1"}}</li>
-                                <li>Average review: {{averageReview|floatformat:"1"}}/5</li>
-                            </ul>
-
-                            <div class="row gtr-uniform">
-                                {% if percentageSingle != 0 %}
-                                    <div style="background: cadetblue; text-align: center; width: {{percentageSingle}}%" title="{{percentageSingle}}%">
-                                    Single
-                                    </div>
-                                {% endif %}
-
-                                {% if percentageDouble != 0 %}
-                                    <div style="background: #7ec3ee; text-align: center; width: {{percentageDouble}}%" title="{{percentageDouble}}%">
-                                    Double
-                                    </div>
-                                {% endif %}
-
-                                {% if percentageTwin != 0 %}
-                                    <div style="background:#a89cc8; text-align: center; width: {{percentageTwin}}%" title="{{percentageTwin}}%">
-                                        Twin
-                                    </div>
-                                {% endif %}
-
-                                {% if percentageFamily != 0 %}
-                                    <div style="background: #e37682; text-align: center; width: {{percentageFamily}}%" title="{{percentageFamily}}%">
-                                        Family
-                                    </div>
-                                {% endif %}
-
-                                {% if percentageAccessible != 0 %}
-                                <div style="background: aquamarine; text-align: center; width: {{percentageAccessible}}%" title="{{percentageAccessible}}%">
-                                    {% if percentageAccessible >= 40 %}
-                                        Wheelchair Accessible
-                                    {% else %}
-                                        WA
-                                    {% endif %}
-                                </div>
-                                {% endif %}
-
-                                {% if percentageNotAccessible != 0 %}
-                                <div style="background:hotpink; width: {{percentageNotAccessible}}%" title="{{percentageNotAccessible}}%">
-                                    {% if percentageNotAccessible >= 40 %}
-                                    Not Wheelchair Accessible
-                                    {% else %}
-                                    NWA
-                                    {% endif %}
-                                </div>
-                                {% endif %}
-
-                                {% if percentageSwim != 0 %}
-                                <div style="background: greenyellow; text-align: center; width: {{percentageSwim}}%" title="{{percentageSwim}}%">
-                                    {% if percentageSwim >= 30 %}
-                                    Swimming Pool
-                                    {% else %}
-                                    SP
-                                    {% endif %}
-                                </div>
-                                {% endif %}
-
-                                {% if percentageNotSwim != 0 %}
-                                <div style="background: aliceblue; text-align: center; width: {{percentageNotSwim}}%" title="{{percentageNotSwim}}%">
-                                    {% if percentageNotSwim >= 30 %}
-                                    No Swimming Pool
-                                    {% else %}
-                                    NSP
-                                    {% endif %}
-                                </div>
-                                {% endif %}
-
-                                {% if percentageBreak != 0 %}
-                                <div style="background:violet; text-align: center; width: {{percentageBreak}}%" title="{{percentageBreak}}%">
-                                    {% if percentageBreak >= 20 %}
-                                    Breakfast
-                                    {% else %}
-                                    B
-                                    {% endif %}
-                                </div>
-                                {% endif %}
-
-                                {% if percentageNotBreak != 0 %}
-                                <div style="background: aquamarine; text-align: center; width: {{percentageNotBreak}}%" title="{{percentageNotBreak}}%">
-                                    {% if percentageNotBreak >= 30 %}
-                                    No Breakfast
-                                    {% else %}
-                                    NB
-                                    {% endif %}
-                                </div>
-                                {% endif %}
-
-
-
-                            </div>
-
-
-
-                        </div>
-
                 </div>
-
-            </div>
         </section>
 
         <!-- First Section -->
@@ -258,13 +147,129 @@
                 <h2>Recommendations</h2>
             </header>
             <div>
-                <table style="width:100%; border: solid;">
+                {% for Z, P, averagePrice, averageReview ,percentageSingle ,percentageTwin ,percentageFamily ,percentageDouble ,percentageSwim ,percentageBreak ,percentageAccessible in L reversed %}
+
+                <div style="width: 100%; overflow: hidden; margin-bottom: 2em;">
+                    <div style="width: 30%;float: left; padding-top: 3em;">
+                        <ul style="text-align: left;">
+                            <li>Age: {{P|key:'age'}}</li>
+                            <li>Ideal price: {{P|key:'price'}}</li>
+                            <li>Wheelchair user: {{P|key:'wheelchair'}}</li>
+                            <li>Marital status: {{P|key:'married'}}</li>
+                            <li>Have kids: {{P|key:'kids'}}</li>
+                            <li>Gender: {{P|key:'gender'}}</li>
+                            <li>Algorithm used: {{P|key:'algo'}}</li>
+                        </ul>
+                    </div>
+
+                    <div style="margin-left: 35%">
+                        <ul style="list-style: none;">
+                            <li>Average price per night: £{{averagePrice|floatformat:"1"}}</li>
+                            <li>Average review: {{averageReview|floatformat:"1"}}/5</li>
+                        </ul>
+
+                        <div class="row gtr-uniform">
+                            {% if percentageSingle != 0 %}
+                            <div style="background: cadetblue; text-align: center; width: {{percentageSingle}}%;" title="{{percentageSingle}}%">
+                                Single
+                            </div>
+                            {% endif %}
+
+                            {% if percentageDouble != 0 %}
+                            <div style="background: #7ec3ee; text-align: center; width: {{percentageDouble}}%" title="{{percentageDouble}}%">
+                                Double
+                            </div>
+                            {% endif %}
+
+                            {% if percentageTwin != 0 %}
+                            <div style="background:#a89cc8; text-align: center; width: {{percentageTwin}}%" title="{{percentageTwin}}%">
+                                Twin
+                            </div>
+                            {% endif %}
+
+                            {% if percentageFamily != 0 %}
+                            <div style="background: #e37682; text-align: center; width: {{percentageFamily}}%" title="{{percentageFamily}}%">
+                                Family
+                            </div>
+                            {% endif %}
+
+                            {% if percentageAccessible != 0 %}
+                            <div style="background: aquamarine; text-align: center; width: {{percentageAccessible}}%" title="{{percentageAccessible}}%">
+                                {% if percentageAccessible >= 40 %}
+                                Wheelchair Accessible
+                                {% else %}
+                                WA
+                                {% endif %}
+                            </div>
+                            {% endif %}
+
+                            {% if 100|subtract:percentageAccessible != 0 %}
+                            <div style="background:hotpink; width: {{100|subtract:percentageAccessible}}%" title="{{100|subtract:percentageAccessible}}%">
+                                {% if percentageNotAccessible >= 40 %}
+                                Not Wheelchair Accessible
+                                {% else %}
+                                NWA
+                                {% endif %}
+                            </div>
+                            {% endif %}
+
+                            {% if percentageSwim != 0 %}
+                            <div style="background: greenyellow; text-align: center; width: {{percentageSwim}}%" title="{{percentageSwim}}%">
+                                {% if percentageSwim >= 30 %}
+                                Swimming Pool
+                                {% else %}
+                                SP
+                                {% endif %}
+                            </div>
+                            {% endif %}
+
+                            {% if 100|subtract:percentageSwim != 0 %}
+                            <div style="background: aliceblue; text-align: center; width: {{100|subtract:percentageSwim}}%" title="{{100|subtract:percentageSwim}}%">
+                                {% if percentageNotSwim >= 30 %}
+                                No Swimming Pool
+                                {% else %}
+                                NSP
+                                {% endif %}
+                            </div>
+                            {% endif %}
+
+                            {% if percentageBreak != 0 %}
+                            <div style="background:violet; text-align: center; width: {{percentageBreak}}%" title="{{percentageBreak}}%">
+                                {% if percentageBreak >= 20 %}
+                                Breakfast
+                                {% else %}
+                                B
+                                {% endif %}
+                            </div>
+                            {% endif %}
+
+                            {% if 100|subtract:percentageBreak != 0 %}
+                            <div style="background: aquamarine; text-align: center; width: {{100|subtract:percentageBreak}}%" title="{{100|subtract:percentageBreak}}%">
+                                {% if percentageNotBreak >= 30 %}
+                                No Breakfast
+                                {% else %}
+                                NB
+                                {% endif %}
+                            </div>
+                            {% endif %}
+
+
+
+                        </div>
+                    </div>
+                </div>
+
+                <a class="collapsible">See the hotels</a>
+
+
+
+                <table style="width:100%; border: solid;margin-top: 2em;">
 
                     <tr>
                         <th>#</th>
                         <th>Hotel Name</th>
-                        <th>Address</th>
-                        <th>City</th>
+                        <!--<th>Address</th>-->
+                        <!--<th>City</th>-->
                         <th>Night Price</th>
                         <th>Room Type</th>
                         <th>Wheelchair Accessible</th>
@@ -274,12 +279,12 @@
                         <th>Michelin Restaurant</th>
                     </tr>
 
-                    {% for l in L %}
+                    {% for l in Z %}
                     <tr>
                         <th>{{ forloop.counter}}</th>
                         <th>{{ l.hotel_name }}</th>
-                        <th>{{ l.hotel_address }}</th>
-                        <th>{{ l.hotel_location }}</th>
+                        <!--<th>{{ l.hotel_address }}</th>-->
+                        <!--<th>{{ l.hotel_location }}</th>-->
                         <th>{{ l.hotel_night_price|floatformat:"1"  }}</th>
 
                         {% if l.hotel_room_type == "D" %}
@@ -326,15 +331,15 @@
                     {% endfor %}
 
                 </table>
-
+                {% endfor %}
 
 
 
             </div>
             <!--<footer class="major">-->
-                <!--<ul class="actions special">-->
-                    <!--<li><a href="#" class="button">Learn More About This</a></li>-->
-                <!--</ul>-->
+            <!--<ul class="actions special">-->
+            <!--<li><a href="#" class="button">Learn More About This</a></li>-->
+            <!--</ul>-->
             <!--</footer>-->
         </section>
 
@@ -370,7 +375,7 @@
 
             <p class="content">The users below have been carefully picked to match the data in your profile. You can have view and access the ratings that these users have previously made on a selection of hotels. The first person on the list is the user that is the most similar to you.</p>
 
-
+            {% if S|length > 0 %}
             <table style="width:100%; border: solid;">
                 <tr>
                     <th>Name</th>
@@ -410,12 +415,12 @@
                 </tr>
                 {% endfor %}
             </table>
-
+            {% endif %}
 
             <!--<footer class="major">-->
-                <!--<ul class="actions special">-->
-                    <!--<li><a href="generic.html" class="button">Learn More</a></li>-->
-                <!--</ul>-->
+            <!--<ul class="actions special">-->
+            <!--<li><a href="generic.html" class="button">Learn More</a></li>-->
+            <!--</ul>-->
             <!--</footer>-->
         </section>
 
@@ -463,6 +468,10 @@
 <script src="{% static 'hotelrecommendation/assets/js/breakpoints.min.js'%}"></script>
 <script src="{% static 'hotelrecommendation/assets/js/util.js'%}"></script>
 <script src="{% static 'hotelrecommendation/assets/js/main.js'%}"></script>
+
+<script type="text/javascript">
+
+</script>
 
 </body>
 

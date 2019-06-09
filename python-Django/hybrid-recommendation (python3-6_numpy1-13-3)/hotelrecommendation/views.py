@@ -1,6 +1,7 @@
 from django.shortcuts import render
 from hybrid_recommender import hybrid_recommender
 import pandas as pd
+from decimal import *
 from django.shortcuts import redirect
 from django.db.models import Func, F
 from django.views import View
@@ -93,83 +94,139 @@ class ResultView(View):
     def get(self, request,log, age, target_price,physically_disabled,is_married,have_kids,gender, algo):
 
         #We create a logAction that the page was shown to the user
-        newLogAction = LogAction(log_instance_id= log, log_action_description="User is shown the page (age,price,wheelchair,married,kids,gender,algo) = ("+str(age)+","+str(target_price)+","+str(physically_disabled)+","+str(is_married)+","+str(have_kids)+","+gender+str(algo)+").")
+        newLogAction = LogAction(log_instance_id= log, log_action_description="User is shown the page (age,price,wheelchair,married,kids,gender,algo) = ("+str(age)+","+str(target_price)+","+str(physically_disabled)+","+str(is_married)+","+str(have_kids)+","+gender+","+str(algo)+").")
         newLogAction.save()
 
-        #We get the users with the same status
-        amplitude = 0
-        while True:
-            relevant_users = User.objects.filter(user_disable = physically_disabled, user_is_married = is_married, user_have_kids = have_kids, gender= gender, user_target_price__gte = target_price-amplitude, user_target_price__lte = target_price+amplitude)
-            if not relevant_users:
-                amplitude=amplitude+5
-            else:
-                break
+        #We have to find old instances of this user
+        OldActionsUpdate = [s for s in list(LogAction.objects.filter(log_instance_id=log)) if "User requested the page (age,price,wheelchair,married,kids,gender,algo)" in s.log_action_description]
+        OldPresetsString = [s.log_action_description[75:-2] for s in OldActionsUpdate]
+        OldPresets = []
+        for s in OldPresetsString:
+            splitted = s.split(',')
+            OldPresets.append({
+                'age' : int(splitted[0]),
+                'price': Decimal(splitted[1]),
+                'wheelchair': splitted[2] == "True",
+                'married': splitted[3] == "True",
+                'kids': splitted[4] == "True",
+                'gender': splitted[5],
+                'algo': int(splitted[6]),
+            })
 
+        #We get the users with the same status
+        set_relevant_users = []
+        for o in OldPresets:
+            amplitude = 0
+            while True:
+                relevant_users = User.objects.filter(user_disable = o['wheelchair'], user_is_married = o['married'], user_have_kids = o['kids'], gender= o['gender'], user_target_price__gte = o['price']-amplitude, user_target_price__lte = o['price']+amplitude)
+                if not relevant_users:
+                    amplitude=amplitude+5
+                else:
+                    set_relevant_users.append(relevant_users)
+                    break
+
+        set_ordered_age = []
         #We have to rank them and take the closest user and the similar users
-        ordered_age = relevant_users.annotate(age_diff=Func(F('user_age') - age, function='ABS')).order_by('age_diff')
-        similarUsers = (list(ordered_age[:5]))
-        closest_user = ordered_age.first()
+        for s in set_relevant_users:
+            set_ordered_age.append(s.annotate(age_diff=Func(F('user_age') - age, function='ABS')).order_by('age_diff'))
+
+        similarUsers = []
+        if set_ordered_age:
+            similarUsers = (list(set_ordered_age[-1][:5]))
+
+        set_closest = []
+        for s in set_ordered_age:
+            set_closest.append(s.last())
 
 
         #We take the predictions for the closest user
-        if algo == 1:
-            hotel_id_recommendation = my_recommender1.predict([closest_user.id]).values.tolist()
-        elif algo == 2:
-            hotel_id_recommendation = my_recommender2.predict([closest_user.id]).values.tolist()
-        else:
-            hotel_id_recommendation = my_recommender3.predict([closest_user.id]).values.tolist()
+        set_predictions = []
+        for o,s in zip(OldPresets,set_closest):
+            if o['algo'] == 1:
+                set_predictions.append(my_recommender1.predict([s.id]).values.tolist())
+            elif o['algo'] == 2:
+                set_predictions.append(my_recommender2.predict([s.id]).values.tolist())
+            else:
+                set_predictions.append(my_recommender3.predict([s.id]).values.tolist())
 
         #We take the hotels that correspond
-        listHotelT = []
-        for l in hotel_id_recommendation:
-            listHotelT.append(Hotel.objects.filter(id = l[0]).first())
+        set_list_hotels = []
+        for s in set_predictions:
+            listHotelT = []
+            for l in s:
+                listHotelT.append(Hotel.objects.filter(id = l[0]).first())
+            set_list_hotels.append(listHotelT)
+
 
         #We take statistics on those hotels
-        averagePrice = 0
-        averageReview = 0
-        percentageSingle = 0
-        percentageTwin = 0
-        percentageFamily = 0
-        percentageDouble = 0
-        percentageSwim = 0
-        percentageBreak = 0
-        percentageAccessible = 0
-        for l in listHotelT:
-            averagePrice += l.hotel_night_price
-            averageReview +=l.hotel_user_reviews
-            if l.hotel_room_type == "S":
-                percentageSingle = percentageSingle+1
-            elif l.hotel_room_type == "T":
-                percentageTwin = percentageTwin+1
-            elif l.hotel_room_type == "F":
-                percentageFamily = percentageFamily+1
-            else:
-                percentageDouble = percentageDouble+1
+        set_averagePrice = []
+        set_averageReview = []
+        set_percentageSingle = []
+        set_percentageTwin = []
+        set_percentageFamily = []
+        set_percentageDouble = []
+        set_percentageSwim = []
+        set_percentageBreak = []
+        set_percentageAccessible = []
 
-            if l.hotel_disability_access:
-                percentageAccessible = percentageAccessible +1
+        for Q in set_list_hotels:
+            averagePrice = 0
+            averageReview = 0
+            percentageSingle = 0
+            percentageTwin = 0
+            percentageFamily = 0
+            percentageDouble = 0
+            percentageSwim = 0
+            percentageBreak = 0
+            percentageAccessible = 0
+            for l in Q:
+                averagePrice += l.hotel_night_price
+                averageReview +=l.hotel_user_reviews
+                if l.hotel_room_type == "S":
+                    percentageSingle = percentageSingle+1
+                elif l.hotel_room_type == "T":
+                    percentageTwin = percentageTwin+1
+                elif l.hotel_room_type == "F":
+                    percentageFamily = percentageFamily+1
+                else:
+                    percentageDouble = percentageDouble+1
 
-            if l.hotel_swimming_pool:
-                percentageSwim = percentageSwim +1
+                if l.hotel_disability_access:
+                    percentageAccessible = percentageAccessible +1
 
-            if l.hotel_breakfast_available:
-                percentageBreak = percentageBreak +1
+                if l.hotel_swimming_pool:
+                    percentageSwim = percentageSwim +1
 
+                if l.hotel_breakfast_available:
+                    percentageBreak = percentageBreak +1
 
-        percentageAccessible /= (top_results/100)
-        percentageNotAccessible = 100- percentageAccessible
-        percentageSingle /= (top_results/100)
-        percentageTwin /= (top_results/100)
-        percentageFamily /= (top_results/100)
-        percentageDouble /= (top_results/100)
-        percentageSwim /= (top_results/100)
-        percentageBreak /= (top_results/100)
-        percentageNotSwim = 100 - percentageSwim
-        percentageNotBreak = 100 - percentageBreak
-        averagePrice /= top_results
-        averageReview /= top_results
+            percentageAccessible /= (top_results/100)
+            set_percentageAccessible.append(percentageAccessible)
 
-        testForm = UserForm()
+            percentageSingle /= (top_results/100)
+            set_percentageSingle.append(percentageSingle)
+
+            percentageTwin /= (top_results/100)
+            set_percentageTwin.append(percentageTwin)
+
+            percentageFamily /= (top_results/100)
+            set_percentageFamily.append(percentageFamily)
+
+            percentageDouble /= (top_results/100)
+            set_percentageDouble.append(percentageDouble)
+
+            percentageSwim /= (top_results/100)
+            set_percentageSwim.append(percentageSwim)
+
+            percentageBreak /= (top_results/100)
+            set_percentageBreak.append(percentageBreak)
+
+            averagePrice /= top_results
+            set_averagePrice.append(averagePrice)
+
+            averageReview /= top_results
+            set_averageReview.append(averageReview)
+
 
         context ={
             'target_price': target_price,
@@ -179,22 +236,21 @@ class ResultView(View):
             'age' : age,
             'log' : log,
             'gender': gender,
-            "L" : listHotelT,
+            "L" : zip(set_list_hotels,OldPresets,set_averagePrice, set_averageReview ,set_percentageSingle ,set_percentageTwin ,set_percentageFamily ,set_percentageDouble ,set_percentageSwim ,set_percentageBreak ,set_percentageAccessible),
             'S' : similarUsers,
             'algo' : algo,
-            'testForm' : testForm,
-            'averagePrice' : averagePrice,
-            'averageReview' : averageReview,
-            'percentageDouble' : percentageDouble,
-            'percentageTwin' : percentageTwin,
-            'percentageSingle' : percentageSingle,
-            'percentageFamily' : percentageFamily,
-            'percentageAccessible' : percentageAccessible,
-            'percentageNotAccessible' : percentageNotAccessible,
-            'percentageSwim' : percentageSwim,
-            'percentageNotSwim' : percentageNotSwim,
-            'percentageBreak' : percentageBreak,
-            'percentageNotBreak' : percentageNotBreak,
+            # 'averagePrice' : averagePrice,
+            # 'averageReview' : averageReview,
+            # 'percentageDouble' : percentageDouble,
+            # 'percentageTwin' : percentageTwin,
+            # 'percentageSingle' : percentageSingle,
+            # 'percentageFamily' : percentageFamily,
+            # 'percentageAccessible' : percentageAccessible,
+            # 'percentageNotAccessible' : percentageNotAccessible,
+            # 'percentageSwim' : percentageSwim,
+            # 'percentageNotSwim' : percentageNotSwim,
+            # 'percentageBreak' : percentageBreak,
+            # 'percentageNotBreak' : percentageNotBreak,
                   }
 
         return render(request, 'hotelrecommendation/results.html', context)
@@ -202,9 +258,6 @@ class ResultView(View):
 
     def post(self, request, log, age, target_price, physically_disabled, is_married, have_kids, gender, algo):
 
-        #We create a logAction that the page was shown to the user
-        newLogAction = LogAction(log_instance_id= log, log_action_description="User requested a new recommendation.")
-        newLogAction.save()
 
         form = UserForm(data = request.POST)
         if form.is_valid():
@@ -217,7 +270,9 @@ class ResultView(View):
             algo =  form.cleaned_data.get('algo')
         print(form.errors)
 
-
+        #We create a logAction that the page was shown to the user
+        newLogAction = LogAction(log_instance_id= log, log_action_description="User requested the page (age,price,wheelchair,married,kids,gender,algo) = ("+str(age)+","+str(target_price)+","+str(physically_disabled)+","+str(is_married)+","+str(have_kids)+","+gender+","+str(algo)+").")
+        newLogAction.save()
 
         return redirect('hotelrecommendation:result_view', log, age, target_price, physically_disabled,is_married,have_kids,gender,algo)
 
