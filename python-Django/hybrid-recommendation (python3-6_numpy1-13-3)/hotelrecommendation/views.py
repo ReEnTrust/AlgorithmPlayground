@@ -45,9 +45,11 @@ for i in Hotel.objects.all():
     T.append(1 if i.hotel_room_type == "T" else 0) #Twin
     T.append(1 if i.hotel_room_type == "D" else 0) #Double
     T.append(1 if i.hotel_room_type == "F" else 0) #Family
+
     T.append(1 if i.hotel_night_price <=120 else 0) #Budget
     T.append(1 if i.hotel_night_price >= 100 and i.hotel_night_price <= 220 else 0) #Confortable
     T.append(1 if i.hotel_night_price >= 220 else 0) #Deluxe
+
     T.append(1 if i.hotel_disability_access else 0) #Accessible for disable persons
     T.append(1 if i.hotel_user_reviews >= 3 else 0) #Good reviews
     T.append(1 if i.hotel_swimming_pool else 0) #Swimming pool

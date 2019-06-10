@@ -259,11 +259,11 @@
                     </div>
                 </div>
 
+                <div style="margin: 2em;">
                 <a class="collapsible">See the hotels</a>
+                </div>
 
-
-
-                <table style="width:100%; border: solid;margin-top: 2em;">
+                <table class="content-hotel" style="width:100%; border: solid;margin-top: 2em;">
 
                     <tr>
                         <th>#</th>
@@ -331,6 +331,9 @@
                     {% endfor %}
 
                 </table>
+                <div style="margin: 2em;">
+                <hr>
+                </div>
                 {% endfor %}
 
 
@@ -415,6 +418,8 @@
                 </tr>
                 {% endfor %}
             </table>
+
+
             {% endif %}
 
             <!--<footer class="major">-->
@@ -469,8 +474,23 @@
 <script src="{% static 'hotelrecommendation/assets/js/util.js'%}"></script>
 <script src="{% static 'hotelrecommendation/assets/js/main.js'%}"></script>
 
+<!-- Script for hidding and showing the table -->
 <script type="text/javascript">
+    var coll = document.getElementsByClassName("collapsible");
+    var i;
 
+    for (i = 0; i < coll.length; i++) {
+        coll[i].addEventListener("click", function() {
+            this.classList.toggle("active");
+            var content = this.parentNode.nextElementSibling;
+
+            if (content.style.display === "block") {
+                content.style.display = "none";
+            } else {
+                content.style.display = "block";
+            }
+        });
+    }
 </script>
 
 </body>
