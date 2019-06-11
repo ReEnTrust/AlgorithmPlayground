@@ -6,13 +6,15 @@
 -->
 <html>
 <head>
-    <title>Hotel Recommendation</title>
+    <title>Hotel Recommender</title>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
 
     {% load static %}
     {% load template_extra_toolkits %}
 
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.9.0/css/all.css">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.9.0/css/v4-shims.css">
     <link rel="stylesheet" href="{% static 'hotelrecommendation/assets/css/main.css'%}" />
     <noscript><link rel="stylesheet" href="{% static 'hotelrecommendation/assets/css/noscript.css'%}" /></noscript>
 </head>
@@ -24,14 +26,14 @@
     <!-- Header -->
     <header id="header" class="alt">
         <span class="logo"><img src="{% static 'hotelrecommendation/images/paris.png'%}" alt="" style="width: 170px"/></span>
-        <h1>Hotel Recommendation</h1>
+        <h1>Hotel Recommender</h1>
         <p>Personalised Booking System</p>
     </header>
 
     <!-- Nav -->
     <nav id="nav">
         <ul>
-            <li><a href="#intro" class="active">Profile</a></li>
+            <li><a href="#intro" class="active">Input</a></li>
             <li><a href="#first">Our Recommendations</a></li>
             <li><a href="#second">Browse Similar User</a></li>
         </ul>
@@ -45,7 +47,7 @@
             <div class="spotlight">
                 <div class="content">
                     <header class="major">
-                        <h2>Your profile</h2>
+                        <h2>User's input</h2>
                     </header>
                     <div>
 
@@ -76,14 +78,18 @@
                                     </select>
                                 </div>
 
-                                <div class="col-4 col-12-small">
+                                <div class="col-4 col-12-small ">
                                     <label for="id_age">Age:</label>
                                     <input type="number" name="age" required="" id="id_age" min="18" value={{age}}>
                                 </div>
 
-                                <div class="col-4 col-12-small">
-                                    <label for="id_target_price">Ideal price per night & per person (£):</label>
-                                    <input type="number" name="target_price" required="" id="id_target_price" min="60" max="400" value={{target_price}}>
+                                <div class="col-4 col-12-small slidecontainer">
+                                    <label for="id_target_price">Ideal price per night & per person (£ <span id="span-range-target-price"></span>)</label>
+
+                                    <!--<input type="number" name="target_price" required="" id="id_target_price" min="60" max="400" value={{target_price}}>-->
+
+                                    <input type="range" min="60" max="400" value={{target_price}} class="slider" id="id_target_price" name="target_price">
+
                                 </div>
 
                                 <div class="col-4 col-12-small">
@@ -132,8 +138,12 @@
                                     <label for="id_algo_2">Algorithm 3</label>
                                 </div>
 
+                                <p style="background: #cccccc; width: 100%; margin-top: 2em;border-radius: 1em; padding: 1em;" id="paragraph-explain-algo">
+                                </p>
+
+
                                 <div class="col-12" id="update-button-div">
-                                    <input type="submit" value="Update" class="primary" style="margin-top: 2em;">
+                                    <input type="submit" value="Update" class="primary" style="margin-top: 1em;">
                                 </div>
                             </div>
                         </form>
@@ -151,22 +161,43 @@
 
                 <div style="width: 100%; overflow: hidden; margin-bottom: 2em;">
                     <div style="width: 30%;float: left; padding-top: 3em;">
-                        <ul style="text-align: left;">
-                            <li>Age: {{P|key:'age'}}</li>
-                            <li>Ideal price: {{P|key:'price'}}</li>
-                            <li>Wheelchair user: {{P|key:'wheelchair'}}</li>
-                            <li>Marital status: {{P|key:'married'}}</li>
-                            <li>Have kids: {{P|key:'kids'}}</li>
-                            <li>Gender: {{P|key:'gender'}}</li>
-                            <li>Algorithm used: {{P|key:'algo'}}</li>
-                        </ul>
+
+                        <p>
+                            Algorithm {{P|key:'algo'}} gives the following recommendation for a {{P|key:'age'}} years old
+                            {% if P|key:'gender' == "M" %}
+                            male
+                            {% else %}
+                            female
+                            {% endif %}
+                            person that
+                            {% if P|key:'wheelchair' == True %}
+                            is
+                            {% else %}
+                            is not
+                            {% endif %}
+                            a wheelchair user,
+                            {% if P|key:'married' == True %}
+                            is
+                            {% else %}
+                            is not
+                            {% endif %}
+                            married,
+                            {% if P|key:'kids' == True %}
+                            does
+                            {% else %}
+                            does not
+                            {% endif %}
+                            have kids and have an ideal price of £{{P|key:'price'}}.
+
+                        </p>
+
+                        <p>
+                            The average price per night for the recommended hotels is £{{averagePrice|floatformat:"1"}} and the average review is {{averageReview|floatformat:"1"}}/5.
+                        </p>
                     </div>
 
-                    <div style="margin-left: 35%">
-                        <ul style="list-style: none;">
-                            <li>Average price per night: £{{averagePrice|floatformat:"1"}}</li>
-                            <li>Average review: {{averageReview|floatformat:"1"}}/5</li>
-                        </ul>
+                    <div style="margin-left: 35%; margin-top: 5em;">
+
 
                         <div class="row gtr-uniform">
                             {% if percentageSingle != 0 %}
@@ -194,62 +225,58 @@
                             {% endif %}
 
                             {% if percentageAccessible != 0 %}
-                            <div style="background: aquamarine; text-align: center; width: {{percentageAccessible}}%" title="{{percentageAccessible}}%">
-                                {% if percentageAccessible >= 40 %}
-                                Wheelchair Accessible
-                                {% else %}
-                                WA
-                                {% endif %}
+                            <div style="background: aquamarine; text-align: center; width: {{percentageAccessible}}%; padding-top: 0;" title="{{percentageAccessible}}%">
+                                <span style="font-size: 2em; color: #444444; ">
+                                    <i class="fas fa-wheelchair"></i>
+                                </span>
+
                             </div>
                             {% endif %}
 
                             {% if 100|subtract:percentageAccessible != 0 %}
-                            <div style="background:hotpink; width: {{100|subtract:percentageAccessible}}%" title="{{100|subtract:percentageAccessible}}%">
-                                {% if percentageNotAccessible >= 40 %}
-                                Not Wheelchair Accessible
-                                {% else %}
-                                NWA
-                                {% endif %}
+                            <div style="background:bisque; padding-top:0; width: {{100|subtract:percentageAccessible}}%" title="{{100|subtract:percentageAccessible}}%">
+                                <span style="font-size: 2em; color: #444444; ">
+                                    <i class="fas fa-wheelchair to-be-crossed-icon">
+                                        <i class="fa fa-ban ban-crossed" style="top: -0.2em; left: -0.2em;"></i>
+                                    </i>
+                                </span>
                             </div>
                             {% endif %}
 
                             {% if percentageSwim != 0 %}
-                            <div style="background: greenyellow; text-align: center; width: {{percentageSwim}}%" title="{{percentageSwim}}%">
-                                {% if percentageSwim >= 30 %}
-                                Swimming Pool
-                                {% else %}
-                                SP
-                                {% endif %}
+                            <div style="background: greenyellow; text-align: center; width: {{percentageSwim}}%;padding-top: 0;" title="{{percentageSwim}}%">
+                                <span style="font-size: 2em; color: #444444; ">
+                                    <i class="fas fa-swimming-pool"></i>
+                                </span>
+
                             </div>
                             {% endif %}
 
                             {% if 100|subtract:percentageSwim != 0 %}
-                            <div style="background: aliceblue; text-align: center; width: {{100|subtract:percentageSwim}}%" title="{{100|subtract:percentageSwim}}%">
-                                {% if percentageNotSwim >= 30 %}
-                                No Swimming Pool
-                                {% else %}
-                                NSP
-                                {% endif %}
+                            <div style="background: aliceblue; padding-top:0;text-align: center; width: {{100|subtract:percentageSwim}}%" title="{{100|subtract:percentageSwim}}%">
+                                <span style="font-size: 2em; color: #444444; ">
+                                    <i class="fas fa-swimming-pool to-be-crossed-icon">
+                                        <i class="fa fa-ban ban-crossed" style="top: -0.2em; left: -0.07em;"></i>
+                                    </i>
+                                </span>
                             </div>
                             {% endif %}
 
                             {% if percentageBreak != 0 %}
-                            <div style="background:violet; text-align: center; width: {{percentageBreak}}%" title="{{percentageBreak}}%">
-                                {% if percentageBreak >= 20 %}
-                                Breakfast
-                                {% else %}
-                                B
-                                {% endif %}
+                            <div style="background:violet; padding-top:0; text-align: center; width: {{percentageBreak}}%" title="{{percentageBreak}}%">
+                                <span style="font-size: 2em; color: #444444; ">
+                                    <i class="fas fa-coffee"></i>
+                                </span>
                             </div>
                             {% endif %}
 
                             {% if 100|subtract:percentageBreak != 0 %}
-                            <div style="background: aquamarine; text-align: center; width: {{100|subtract:percentageBreak}}%" title="{{100|subtract:percentageBreak}}%">
-                                {% if percentageNotBreak >= 30 %}
-                                No Breakfast
-                                {% else %}
-                                NB
-                                {% endif %}
+                            <div style="background: aquamarine; padding-top:0;text-align: center; width: {{100|subtract:percentageBreak}}%" title="{{100|subtract:percentageBreak}}%">
+                                <span style="font-size: 2em; color: #444444; ">
+                                    <i class="fas fa-coffee to-be-crossed-icon">
+                                        <i class="fa fa-ban ban-crossed" style="top: -0.2em; left: -0.07em;"></i>
+                                    </i>
+                                </span>
                             </div>
                             {% endif %}
 
@@ -258,6 +285,7 @@
                         </div>
                     </div>
                 </div>
+
 
                 <div style="margin: 2em;">
                 <a class="collapsible">See the hotels</a>
@@ -339,11 +367,6 @@
 
 
             </div>
-            <!--<footer class="major">-->
-            <!--<ul class="actions special">-->
-            <!--<li><a href="#" class="button">Learn More About This</a></li>-->
-            <!--</ul>-->
-            <!--</footer>-->
         </section>
 
         <!-- Second Section -->
@@ -352,28 +375,7 @@
                 <h2>Similar Users</h2>
                 <p>Our database regroups more than 1000+ users.</p>
             </header>
-            <ul class="statistics">
-                <li class="style1">
-                    <span class="icon fa-bed"></span>
-                    <strong>1500+</strong> Hotels
-                </li>
-                <li class="style2">
-                    <span class="icon fa-folder-open-o"></span>
-                    <strong>1000+</strong> User Data
-                </li>
-                <li class="style3">
-                    <span class="icon fa-signal"></span>
-                    <strong>10,000+</strong> Ratings
-                </li>
-                <li class="style4">
-                    <span class="icon fa-laptop"></span>
-                    <strong>FAST</strong> Computation
-                </li>
-                <li class="style5">
-                    <span class="icon fa-diamond"></span>
-                    <strong>FREE</strong> Service
-                </li>
-            </ul>
+
 
 
             <p class="content">The users below have been carefully picked to match the data in your profile. You can have view and access the ratings that these users have previously made on a selection of hotels. The first person on the list is the user that is the most similar to you.</p>
@@ -435,7 +437,7 @@
     <footer id="footer">
         <section>
             <h2>What is this tool?</h2>
-            <p>Hotel Recommendation is a tool that recommends hotels by using your personal details. Your profile will be compared with thousands of other users. Our database of ratings and hotels will make sure that you find the perfect match.</p>
+            <p>Hotel Recommender is a tool that recommends hotels by using your personal details. Your profile will be compared with thousands of other users. Our database of ratings and hotels will make sure that you find the perfect match.</p>
 
         </section>
         <section>
@@ -481,7 +483,7 @@
 
     for (i = 0; i < coll.length; i++) {
         coll[i].addEventListener("click", function() {
-            this.classList.toggle("active");
+            this.classList.toggle("active-button-collapse");
             var content = this.parentNode.nextElementSibling;
 
             if (content.style.display === "block") {
@@ -491,6 +493,57 @@
             }
         });
     }
+
+
+    // The part below is for controling the sliders
+    var slider = document.getElementById("id_target_price");
+    var output = document.getElementById("span-range-target-price");
+    output.innerHTML = slider.value; // Display the default slider value
+
+    // Update the current slider value (each time you drag the slider handle)
+    slider.oninput = function() {
+        output.innerHTML = this.value;
+    }
+
+    //This part is for explaining the algo at refreshing the page
+    var paraExplain = document.getElementById("paragraph-explain-algo");
+    var radios = document.getElementsByName('algo');
+    var explanationAlgo1 = "This algorithm uses both the ratings on hotels from the users and the similarity between hotels to recommend the best hotels. <br/><b>The importance of the ratings and the similarity between hotels is equal with this algorithm.</b>";
+    var explanationAlgo2 = "This algorithm uses both the ratings on hotels from the users and the similarity between hotels to recommend the best hotels. <br/><b>The importance of the ratings is higher than the importance of the similarity between hotels with this algorithm.</b>";
+    var explanationAlgo3 = "This algorithm uses both the ratings on hotels from the users and the similarity between hotels to recommend the best hotels. <br/><b>The importance of the ratings is lower than the importance of the similarity between hotels with this algorithm.</b>";
+
+    for (var i = 0, length = radios.length; i < length; i++)
+    {
+
+        if (radios[i].checked && radios[i].value =="1" )
+        {
+            paraExplain.innerHTML = explanationAlgo1;
+        }
+        else if (radios[i].checked && radios[i].value ==2)
+        {
+            paraExplain.innerHTML =explanationAlgo2;
+        }
+        else if (radios[i].checked && radios[i].value ==3)
+        {
+            paraExplain.innerHTML =explanationAlgo3;
+        }
+    }
+
+
+    //This part is for explaining the algo at changing the page
+    $('input[type=radio][name=algo]').change(function() {
+        if (this.value == 1) {
+            paraExplain.innerHTML = explanationAlgo1;
+        }
+        else if (this.value == 2) {
+            paraExplain.innerHTML = explanationAlgo2;
+        }
+        else if (this.value ==3){
+            paraExplain.innerHTML = explanationAlgo3;
+        }
+    });
+
+
 </script>
 
 </body>

@@ -20,13 +20,13 @@ user_id = []
 rating = []
 item_id = []
 items = []
-cols = ['isSingle', 'isTwin', 'isDouble', 'isFamily', 'isBudget', 'isConfortable', 'isDeluxe', 'isAccessible', 'isGoodReviews', 'hasSwimmingPool', 'hasBreakfast', 'isMichelinRestaurant']
+cols = ['isSingle', 'isTwin', 'isDouble', 'isFamily', 'isAccessible', 'isGoodReviews', 'hasSwimmingPool', 'hasBreakfast', 'isMichelinRestaurant', 'price']
 feats = []
+max_price_hotel = Hotel.objects.latest('hotel_night_price').hotel_night_price #This is the highest price
 
 #Other parameters
 item_clusters=4
 top_results=10
-
 
 #We fill the tabular for the reviews and build the dataframe
 for r in Rating.objects.all():
@@ -45,16 +45,13 @@ for i in Hotel.objects.all():
     T.append(1 if i.hotel_room_type == "T" else 0) #Twin
     T.append(1 if i.hotel_room_type == "D" else 0) #Double
     T.append(1 if i.hotel_room_type == "F" else 0) #Family
-
-    T.append(1 if i.hotel_night_price <=120 else 0) #Budget
-    T.append(1 if i.hotel_night_price >= 100 and i.hotel_night_price <= 220 else 0) #Confortable
-    T.append(1 if i.hotel_night_price >= 220 else 0) #Deluxe
-
     T.append(1 if i.hotel_disability_access else 0) #Accessible for disable persons
     T.append(1 if i.hotel_user_reviews >= 3 else 0) #Good reviews
     T.append(1 if i.hotel_swimming_pool else 0) #Swimming pool
     T.append(1 if i.hotel_breakfast_available else 0) #Breakfast
     T.append(1 if i.hotel_michelin_restaurant else 0) #Michelin restaurant
+    T.append(i.hotel_night_price / max_price_hotel) #This correspond to the price
+
     feats.append(T)
 
 #We create the dataframe for the features
