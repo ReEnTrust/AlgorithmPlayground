@@ -38,10 +38,13 @@
             <!--<span class="image main"><img src="{%static 'hotelrecommendation/images/pic04.jpg'%}" alt="" /></span>-->
 
 
+
             <section id="first" class="main special">
+
                 <header class="major">
-                    <h2>Sandbox Scenario</h2>
+                    <h2>Introduction</h2>
                 </header>
+
                 <div>
                     <p>Welcome to the Hotel Recommender! A platform for gathering a human perspective on decisions made by recommender algorithms.
                     </p>
@@ -51,13 +54,9 @@
 
                 </div>
 
-                <footer class="major">
-                    <form method="post">
-                        {% csrf_token %}
-                        <button type="submit" style="font-size: 100%;" >Enter</button>
-                    </form>
-                </footer>
-
+                <header class="major">
+                    <h2>How it works?</h2>
+                </header>
 
                 <ul class="statistics">
                     <li class="style1">
@@ -81,6 +80,23 @@
                         <strong>FREE</strong> Service
                     </li>
                 </ul>
+
+                <p>
+                    The system is using a hybrid recommendation system. It means that it takes into account both the ratings on hotels from the users in our database and how similar hotels are from each others. This ensures that you get a personalised hotel recommendation.
+
+                </p>
+
+                <img src="{% static 'hotelrecommendation/images/recommendation.png'%}" alt="" style="width: 100%;margin-left: auto; margin-right: auto;display: block;"/>
+
+                <footer class="major">
+                    <form method="post">
+                        {% csrf_token %}
+                        <button type="submit" style="font-size: 100%;" >Begin here!</button>
+                    </form>
+                </footer>
+
+
+
 
             </section>
 
