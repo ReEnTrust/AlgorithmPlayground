@@ -75,3 +75,4 @@ class LogAction(models.Model):
     log_action_description = models.CharField(max_length=2000)
     def __str__(self):
         return str(self.log_instance_id)+"|"+str(self.log_action_description)+"|"+str(self.log_action_date)
+

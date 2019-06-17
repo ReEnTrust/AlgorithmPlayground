@@ -359,6 +359,39 @@
                     {% endfor %}
 
                 </table>
+
+                <form id="form-feedback-{{forloop.counter}}">
+
+                    <h3>Do you feel that the recommendation above will be helpful for the user?</h3>
+                    <input type="radio" name="algo" value="1" id="id_feed_0_{{forloop.counter}}" >
+                    <label for="id_feed_0_{{forloop.counter}}"> Totally disagree</label>
+
+                    <input type="radio" name="algo" value="2" id="id_feed_1_{{forloop.counter}}" >
+                    <label for="id_feed_1_{{forloop.counter}}"> Disagree </label>
+
+                    <input type="radio" name="algo" value="3" id="id_feed_2_{{forloop.counter}}" >
+                    <label for="id_feed_2_{{forloop.counter}}"> Neutral </label>
+
+                    <input type="radio" name="algo" value="3" id="id_feed_3_{{forloop.counter}}" >
+                    <label for="id_feed_3_{{forloop.counter}}"> I do not know </label>
+
+                    <input type="radio" name="algo" value="3" id="id_feed_4_{{forloop.counter}}" >
+                    <label for="id_feed_4_{{forloop.counter}}"> Agree </label>
+
+                    <input type="radio" name="algo" value="3" id="id_feed_5_{{forloop.counter}}" >
+                    <label for="id_feed_5_{{forloop.counter}}"> Totally agree</label>
+
+                    <h3>Do you have any remarks about the results?</h3>
+                    <textarea name="comment" style="width: 100%;resize: none;" placeholder="Enter your comments here"></textarea>
+
+                    <div class="col-12" id="update-button-div">
+                        <input type="submit" value="Save answers" class="primary" style="margin-top: 1em;">
+                    </div>
+
+                </form>
+
+
+
                 <div style="margin: 2em;">
                 <hr>
                 </div>
