@@ -655,7 +655,6 @@
     for( var i=0; i < buttonsMod.length; i++){
         buttonsMod[i].addEventListener("click", function(e){
             e.preventDefault();
-            console.log(e.currentTarget.parentNode.parentNode.children[3].children)
             e.currentTarget.style.display = "none"; //Make the button disapear
             e.currentTarget.previousElementSibling.disabled = false; //Enable the other button
             e.currentTarget.parentNode.previousElementSibling.disabled = false; //Enable the text area
