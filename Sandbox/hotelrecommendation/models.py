@@ -75,3 +75,11 @@ class LogAction(models.Model):
     log_action_description = models.CharField(max_length=2000)
     def __str__(self):
         return str(self.log_instance_id)+"|"+str(self.log_action_description)+"|"+str(self.log_action_date)
+
+class LogComment(models.Model):
+    log_instance_id = models.BigIntegerField(default=-1)
+    log_comment = models.CharField(max_length=2000)
+    log_radio1 = models.CharField(max_length=2000, default='')
+    log_about = models.CharField(max_length=2000)
+    def __str__(self):
+        return str(self.log_instance_id)+"|"+str(self.log_comment)+"|"+str(self.log_radio1)+"|"+str(self.log_about)

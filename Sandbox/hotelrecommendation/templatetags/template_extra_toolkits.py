@@ -10,3 +10,8 @@ key = register.filter('key', key)
 def subtract(value, arg):
     return value - arg
 subtract = register.filter('subtract', subtract)
+
+@register.filter
+def addstr(arg1, arg2):
+    """concatenate arg1 & arg2"""
+    return str(arg1) + str(arg2)

@@ -359,6 +359,113 @@
                     {% endfor %}
 
                 </table>
+
+                <form method="post" id="form-feedback-{{forloop.counter}}">
+                    {% csrf_token %}
+
+                    <input type="hidden" value="{{P|key:'algo'}}+{{P|key:'age'}}+{{P|key:'gender'}}+{{P|key:'wheelchair'}}+{{P|key:'married'}}+{{P|key:'kids'}}+{{P|key:'price'}}" name="data-instance">
+
+                    <h3>Do you feel that the recommendation above will be helpful for the user?</h3>
+
+                    {% with algo=P|key:'algo' age=P|key:'age' gender=P|key:'gender' wheelchair=P|key:'wheelchair' married=P|key:'married' kids=P|key:'kids' price=P|key:'price'%}
+                    {% with algo|addstr:"+"|addstr:age|addstr:"+"|addstr:gender|addstr:"+"|addstr:wheelchair|addstr:"+"|addstr:married|addstr:"+"|addstr:kids|addstr:"+"|addstr:price as stemp%}
+                    <div>
+                    <input type="radio" name="feed" value="1" id="id_feed_0_{{forloop.counter}}"
+                           {% for key, value in set_comments.items %}
+                           {% if key == stemp%}
+                           disabled
+                           {% if value|key:'log_radio1' == 'Totally disagree'%}
+                    checked
+                    {% endif %}
+                    {% endif %}
+                    {% endfor %}>
+                    <label for="id_feed_0_{{forloop.counter}}"> Totally disagree</label>
+
+                    <input type="radio" name="feed" value="2" id="id_feed_1_{{forloop.counter}}"
+                           {% for key, value in set_comments.items %}
+                           {% if key == stemp%}
+                           disabled
+                           {% if value|key:'log_radio1' == 'Disagree'%}
+                    checked
+                    {% endif %}
+                    {% endif %}
+                    {% endfor %}>
+                    <label for="id_feed_1_{{forloop.counter}}"> Disagree </label>
+
+                    <input type="radio" name="feed" value="3" id="id_feed_2_{{forloop.counter}}"
+                           {% for key, value in set_comments.items %}
+                           {% if key == stemp%}
+                           disabled
+                           {% if value|key:'log_radio1' == 'Neutral'%}
+                         checked
+                         {% endif %}
+                         {% endif %}
+                            {% endfor %}>
+                    <label for="id_feed_2_{{forloop.counter}}"> Neutral </label>
+
+                    <input type="radio" name="feed" value="4" id="id_feed_3_{{forloop.counter}}"
+                           {% for key, value in set_comments.items %}
+                           {% if key == stemp%}
+                           disabled
+                           {% if value|key:'log_radio1' == 'I do not know'%}
+                            checked
+                           {% endif %}
+                            {% endif %}
+                            {% endfor %}>
+                    <label for="id_feed_3_{{forloop.counter}}"> I do not know </label>
+
+                    <input type="radio" name="feed" value="5" id="id_feed_4_{{forloop.counter}}"
+                    {% for key, value in set_comments.items %}
+                    {% if key == stemp%}
+                    disabled
+                    {% if value|key:'log_radio1' == 'Agree'%}
+                    checked
+                    {% endif %}
+                    {% endif %}
+                    {% endfor %}>
+                    <label for="id_feed_4_{{forloop.counter}}"> Agree </label>
+
+                    <input type="radio" name="feed" value="6" id="id_feed_5_{{forloop.counter}}"
+                            {% for key, value in set_comments.items %}
+                            {% if key == stemp%}
+                             disabled
+                            {% if value|key:'log_radio1' == 'Totally Agree'%}
+                            checked
+                            {% endif %}
+                            {% endif %}
+                            {% endfor %}>
+                    <label for="id_feed_5_{{forloop.counter}}"> Totally agree</label>
+                    </div>
+
+                    <h3>Do you have any remarks about the results?</h3>
+                    <textarea name="comment" style="width: 100%;resize: none;" placeholder="Enter your comments here"
+                              {% for key, value in set_comments.items %}{% if key == stemp%}disabled{% endif %}{% endfor %}>{% for key, value in set_comments.items %}{% if key == stemp%}{{value|key:'log_comment'}}{% endif %}{% endfor %}</textarea>
+
+
+
+                    <div class="col-12" id="update-button-div">
+                        <input type="submit" value="Save answers" class="primary" style="margin-top: 1em;"
+                                {% for key, value in set_comments.items %}
+                                {% if key == stemp%}
+                                disabled
+                                {% endif %}
+                                {% endfor %}>
+
+                        {% for key, value in set_comments.items %}
+                        {% if key == stemp%}
+                        <span class="modify-answer" style="margin: 1em; padding: 0.7em; border-radius: 0.5em; background: #e37682; color: white;">Modify my answer</span>
+                        {% endif %}
+                        {% endfor %}
+
+
+                    </div>
+                    {% endwith %}
+                    {% endwith %}
+
+                </form>
+
+
+
                 <div style="margin: 2em;">
                 <hr>
                 </div>
@@ -543,6 +650,21 @@
         }
     });
 
+    //The part below manages the interaction with the "Modify my answer" buttons
+    var buttonsMod = document.getElementsByClassName("modify-answer");
+    for( var i=0; i < buttonsMod.length; i++){
+        buttonsMod[i].addEventListener("click", function(e){
+            e.preventDefault();
+            console.log(e.currentTarget.parentNode.parentNode.children[3].children)
+            e.currentTarget.style.display = "none"; //Make the button disapear
+            e.currentTarget.previousElementSibling.disabled = false; //Enable the other button
+            e.currentTarget.parentNode.previousElementSibling.disabled = false; //Enable the text area
+
+            for(var j=0; j<e.currentTarget.parentNode.parentNode.children[3].children.length; j++){
+                e.currentTarget.parentNode.parentNode.children[3].children[j].disabled = false;
+            }
+        });
+    }
 
 </script>
 
