@@ -7,9 +7,11 @@ from django.db.models import Func, F
 from django.views import View
 from django.views.generic.edit import FormView
 from .forms import UserForm
+from .forms import FeedbackForm
 from .models import User
 from .models import Hotel
 from .models import LogInstance
+from .models import LogComment
 from .models import LogAction
 from .models import Rating
 # Create your views here.
@@ -95,6 +97,12 @@ class ResultView(View):
         #We create a logAction that the page was shown to the user
         newLogAction = LogAction(log_instance_id= log, log_action_description="User is shown the page (age,price,wheelchair,married,kids,gender,algo) = ("+str(age)+","+str(target_price)+","+str(physically_disabled)+","+str(is_married)+","+str(have_kids)+","+gender+","+str(algo)+").")
         newLogAction.save()
+
+        #We get the comments from the user
+        set_comments = {}
+        for c in LogComment.objects.filter(log_instance_id = log):
+            set_comments[c.log_about] = { 'log_radio1' : c.log_radio1,
+                                          'log_comment' : c.log_comment,}
 
         #We have to find old instances of this user
         OldActionsUpdate = [s for s in list(LogAction.objects.filter(log_instance_id=log)) if "User requested the page (age,price,wheelchair,married,kids,gender,algo)" in s.log_action_description]
@@ -238,18 +246,7 @@ class ResultView(View):
             "L" : zip(set_list_hotels,OldPresets,set_averagePrice, set_averageReview ,set_percentageSingle ,set_percentageTwin ,set_percentageFamily ,set_percentageDouble ,set_percentageSwim ,set_percentageBreak ,set_percentageAccessible),
             'S' : similarUsers,
             'algo' : algo,
-            # 'averagePrice' : averagePrice,
-            # 'averageReview' : averageReview,
-            # 'percentageDouble' : percentageDouble,
-            # 'percentageTwin' : percentageTwin,
-            # 'percentageSingle' : percentageSingle,
-            # 'percentageFamily' : percentageFamily,
-            # 'percentageAccessible' : percentageAccessible,
-            # 'percentageNotAccessible' : percentageNotAccessible,
-            # 'percentageSwim' : percentageSwim,
-            # 'percentageNotSwim' : percentageNotSwim,
-            # 'percentageBreak' : percentageBreak,
-            # 'percentageNotBreak' : percentageNotBreak,
+            'set_comments' : set_comments,
                   }
 
         return render(request, 'hotelrecommendation/results.html', context)
@@ -257,21 +254,47 @@ class ResultView(View):
 
     def post(self, request, log, age, target_price, physically_disabled, is_married, have_kids, gender, algo):
 
+        if request.POST.__contains__('comment'): #This means that we are saving a comment
+            form = FeedbackForm(data = request.POST)
+            feed = '0'
+            comment = ''
+            instance = request.POST.__getitem__('data-instance')
+            if form.is_valid():
+                feed = form.cleaned_data.get('feed')
+                comment = form.cleaned_data.get('comment')
+            print(form.errors)
 
-        form = UserForm(data = request.POST)
-        if form.is_valid():
-            age = form.cleaned_data.get('age')
-            target_price = form.cleaned_data.get('target_price')
-            physically_disabled = form.cleaned_data.get('physically_disabled')
-            is_married = form.cleaned_data.get('is_married')
-            have_kids = form.cleaned_data.get('have_kids')
-            gender = form.cleaned_data.get('gender')
-            algo =  form.cleaned_data.get('algo')
-        print(form.errors)
+            feed = 'No answers' if feed == "" else 'Totally disagree' if feed == "1" else 'Disagree' if feed == "2" else 'Neutral' if feed == "3" else 'I do not know' if feed == "4" else 'Agree' if feed == "5" else 'Totally Agree'
 
-        #We create a logAction that the page was shown to the user
-        newLogAction = LogAction(log_instance_id= log, log_action_description="User requested the page (age,price,wheelchair,married,kids,gender,algo) = ("+str(age)+","+str(target_price)+","+str(physically_disabled)+","+str(is_married)+","+str(have_kids)+","+gender+","+str(algo)+").")
-        newLogAction.save()
+            if not LogComment.objects.filter(log_instance_id = log, log_about= instance).exists(): #We never saw such object
+                newLogComment = LogComment(log_instance_id = log, log_comment = comment, log_radio1 = feed, log_about= instance)
+                newLogComment.save()
+
+                #We save the action of giving a feedback
+                newLogAction = LogAction(log_instance_id= log, log_action_description="User gave his feedback for "+instance+".")
+                newLogAction.save()
+            else: #We have such objects, in this case, we update the database
+                LogComment.objects.filter(log_instance_id = log, log_about= instance).update(log_comment = comment, log_radio1 = feed)
+
+                #We save the action of updating a feedback
+                newLogAction = LogAction(log_instance_id= log, log_action_description="User updated his feedback for "+instance+".")
+                newLogAction.save()
+
+        elif request.POST.__contains__('algo'): #This means that we are changin a profile
+            form = UserForm(data = request.POST)
+            if form.is_valid():
+                age = form.cleaned_data.get('age')
+                target_price = form.cleaned_data.get('target_price')
+                physically_disabled = form.cleaned_data.get('physically_disabled')
+                is_married = form.cleaned_data.get('is_married')
+                have_kids = form.cleaned_data.get('have_kids')
+                gender = form.cleaned_data.get('gender')
+                algo =  form.cleaned_data.get('algo')
+            print(form.errors)
+
+            #We create a logAction that the page was shown to the user
+            newLogAction = LogAction(log_instance_id= log, log_action_description="User requested the page (age,price,wheelchair,married,kids,gender,algo) = ("+str(age)+","+str(target_price)+","+str(physically_disabled)+","+str(is_married)+","+str(have_kids)+","+gender+","+str(algo)+").")
+            newLogAction.save()
 
         return redirect('hotelrecommendation:result_view', log, age, target_price, physically_disabled,is_married,have_kids,gender,algo)
 
