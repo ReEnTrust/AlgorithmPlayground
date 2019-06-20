@@ -38,11 +38,15 @@ class RatingAdmin(admin.ModelAdmin):
         return concerned_user.user_firstname+" "+concerned_user.user_lastname+" ("+str(concerned_user.id)+")"
     getUserName.short_description = 'User Name'
 
+    def RatingType(self):
+        concerned_rating_type = Rating.objects.filter(id=self.id).first().rating_type
+        return "All equal" if concerned_rating_type==0 else "Location preferred" if concerned_rating_type==1 else "Rating preferred" if concerned_rating_type==2 else "Price preferred"
+    RatingType.short_description = 'Rating type'
 
     def getHotelName(self):
         concerned_hotel = Rating.objects.filter(id=self.id).first().rating_hotel
         return concerned_hotel.hotel_name+" ("+str(concerned_hotel.id)+")"
     getHotelName.short_description = 'Hotel Name'
 
-    list_display = ('id', getUserName, getHotelName, 'rating_note')
+    list_display = ('id', getUserName, getHotelName, 'rating_note', RatingType)
 admin.site.register(Rating,RatingAdmin)

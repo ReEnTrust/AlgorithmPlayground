@@ -63,6 +63,7 @@ class Rating(models.Model):
     rating_user = models.ForeignKey(User, on_delete=models.CASCADE)
     rating_hotel = models.ForeignKey(Hotel, on_delete=models.CASCADE)
     rating_note = models.IntegerField()
+    rating_type = models.IntegerField(default=-1)
 
 class LogInstance(models.Model):
     log_instance_creation_date = models.DateTimeField(auto_now_add=True)
