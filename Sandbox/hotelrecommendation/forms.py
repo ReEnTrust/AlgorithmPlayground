@@ -18,6 +18,20 @@ class UserForm(forms.Form):
         (3, 'Algorithm 3'),
     ]
     algo = forms.ChoiceField(choices = ALGO_CHOICES, label="algo", widget=forms.RadioSelect, required=True)
+    TYPE_CHOICES = [
+        ('L', 'Leisure'),
+        ('B', 'Business'),
+    ]
+    type = forms.ChoiceField(choices = TYPE_CHOICES, label="type", widget=forms.Select(), required=True)
+
+    DATA_CHOICES = [
+        ('0', 'All equally preferred'),
+        ('1', 'Location preferred'),
+        ('2', 'Rating preferred'),
+        ('3', 'Price preferred'),
+    ]
+    data = forms.ChoiceField(choices = DATA_CHOICES, label="data", widget=forms.RadioSelect, required=True)
+
 
 class FeedbackForm(forms.Form):
     comment= forms.CharField(widget=forms.Textarea, required=False)

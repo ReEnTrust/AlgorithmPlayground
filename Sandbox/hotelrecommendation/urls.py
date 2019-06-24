@@ -11,9 +11,9 @@ urlpatterns = [
     path('', views.IndexView.as_view(), name='index'),
 
     #The page where the user sees his recommendation
-    path('<int:log>/<int:age>/<int:target_price>/<str:physically_disabled>/<str:is_married>/<str:have_kids>/<str:gender>/<int:algo>',views.ResultView.as_view(), name='result_view'),
+    path('<int:log>/<int:age>/<int:target_price>/<str:physically_disabled>/<str:is_married>/<str:have_kids>/<str:gender>/<int:algo>/<str:type>/<int:data>',views.ResultView.as_view(), name='result_view'),
 
     #The page where he can see the ratings from a user in the database
-    path('<int:log>/<int:age>/<int:target_price>/<str:physically_disabled>/<str:is_married>/<str:have_kids>/<str:gender>/<int:algo>/<int:id_user>',views.ResultRatingUser.as_view(), name='result_user_rating'),
+    path('<int:log>/<int:age>/<int:target_price>/<str:physically_disabled>/<str:is_married>/<str:have_kids>/<str:gender>/<int:algo>/<int:id_user>/<str:type>/<int:data>',views.ResultRatingUser.as_view(), name='result_user_rating'),
 ]
 

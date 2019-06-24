@@ -14,12 +14,20 @@ class User(models.Model):
         ('M', 'Male'),
         ('F', 'Female'),
     ]
+    TYPE_CHOICES = [
+        ('L', 'Leisure'),
+        ('B', 'Business'),
+    ]
     gender = models.CharField(
         max_length=1,
         choices = GENDER_CHOICES,
         default = 'M',
     )
-
+    type = models.CharField(
+        max_length=1,
+        choices = TYPE_CHOICES,
+        default = 'L',
+    )
     def __str__(self):
         disabilitystatus = ("disabled" if self.user_disable else "not_disabled")
         maritalstatus = ("married" if self.user_is_married else "not_married")

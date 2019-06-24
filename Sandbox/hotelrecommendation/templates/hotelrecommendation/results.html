@@ -78,19 +78,29 @@
                                     </select>
                                 </div>
 
+                                <div class="col-4 col-12-small">
+                                    <label for="id_type">Reason for trip:</label>
+                                    <select name="type" id="id_type">
+                                        {% if type == "L" %}
+                                        <option value="L" selected="selected">Leisure</option>
+                                        {% else %}
+                                        <option value="L">Leisure</option>
+                                        {% endif %}
+
+                                        {% if type == "B" %}
+                                        <option value="B" selected="selected">Business</option>
+                                        {% else %}
+                                        <option value="B">Business</option>
+                                        {% endif %}
+                                    </select>
+                                </div>
+
                                 <div class="col-4 col-12-small ">
                                     <label for="id_age">Age:</label>
                                     <input type="number" name="age" required="" id="id_age" min="18" value={{age}}>
                                 </div>
 
-                                <div class="col-4 col-12-small slidecontainer">
-                                    <label for="id_target_price">Ideal price per night & per person (£ <span id="span-range-target-price"></span>)</label>
 
-                                    <!--<input type="number" name="target_price" required="" id="id_target_price" min="60" max="400" value={{target_price}}>-->
-
-                                    <input type="range" min="60" max="400" value={{target_price}} class="slider" id="id_target_price" name="target_price">
-
-                                </div>
 
                                 <div class="col-4 col-12-small">
                                     {% if physically_disabled == "True"%}
@@ -109,7 +119,7 @@
                                     {% else %}
                                     <input type="checkbox" name="is_married" id="id_is_married">
                                     {% endif %}
-                                    <label for="id_is_married">Is married</label>
+                                    <label for="id_is_married">Traveling with partner</label>
                                 </div>
 
                                 <div class="col-4 col-12-small">
@@ -118,7 +128,16 @@
                                     {% else %}
                                     <input type="checkbox" name="have_kids" id="id_have_kids">
                                     {% endif %}
-                                    <label for="id_have_kids">Have kids</label>
+                                    <label for="id_have_kids">Traveling with kids</label>
+                                </div>
+
+                                <div class="col-12 col-12-small slidecontainer">
+                                    <label for="id_target_price">Ideal price per night & per person (£ <span id="span-range-target-price"></span>)</label>
+
+                                    <!--<input type="number" name="target_price" required="" id="id_target_price" min="60" max="400" value={{target_price}}>-->
+
+                                    <input type="range" min="60" max="400" value={{target_price}} class="slider" id="id_target_price" name="target_price">
+
                                 </div>
 
                                 <h2 style="width: 100%;">Algorithm selection:</h2>
@@ -141,6 +160,27 @@
                                 <p style="background: #cccccc; width: 100%; margin-top: 2em;border-radius: 1em; padding: 1em;" id="paragraph-explain-algo">
                                 </p>
 
+                                <h2 style="width: 100%;">Data selection:</h2>
+
+                                <div class="col-3 col-12-small">
+                                    <input type="radio" name="data" value="0" id="id_data_0" {% if data == 0%} checked {%endif %}>
+                                    <label for="id_data_0"> No preference</label>
+                                </div>
+
+                                <div class="col-3 col-12-small">
+                                    <input type="radio" name="data" value="1" id="id_data_1" {% if data == 1 %} checked {%endif %}>
+                                    <label for="id_data_1">Location preferred</label>
+                                </div>
+
+                                <div class="col-3 col-12-small">
+                                    <input type="radio" name="data" value="2" id="id_data_2" {% if data == 2 %} checked {%endif %}>
+                                    <label for="id_data_2">Rating preferred</label>
+                                </div>
+
+                                <div class="col-3 col-12-small">
+                                    <input type="radio" name="data" value="3" id="id_data_3" {% if data == 3 %} checked {%endif %}>
+                                    <label for="id_data_3">Price preferred</label>
+                                </div>
 
                                 <div class="col-12" id="update-button-div">
                                     <input type="submit" value="Update" class="primary" style="margin-top: 1em;">
@@ -163,7 +203,17 @@
                     <div style="width: 30%;float: left; padding-top: 3em;">
 
                         <p>
-                            Algorithm {{P|key:'algo'}} gives the following recommendation for a {{P|key:'age'}} years old
+                            Algorithm {{P|key:'algo'}} with
+                            {% if P|key:'data' == 0 %}
+                            no preferences,
+                            {% elif P|key:'data' == 1 %}
+                            location preferred,
+                            {% elif P|key:'data' == 2 %}
+                            rating preferred,
+                            {% else %}
+                            price preferred,
+                            {% endif %}
+                            gives the following recommendation for a {{P|key:'age'}} years old
                             {% if P|key:'gender' == "M" %}
                             male
                             {% else %}
@@ -175,7 +225,12 @@
                             {% else %}
                             is not
                             {% endif %}
-                            a wheelchair user,
+                            a wheelchair user, is traveling for
+                            {% if P|key:'type' == "B"%}
+                            business,
+                            {% else %}
+                            leisure,
+                            {% endif %}
                             {% if P|key:'married' == True %}
                             is
                             {% else %}
@@ -363,12 +418,12 @@
                 <form method="post" id="form-feedback-{{forloop.counter}}">
                     {% csrf_token %}
 
-                    <input type="hidden" value="{{P|key:'algo'}}+{{P|key:'age'}}+{{P|key:'gender'}}+{{P|key:'wheelchair'}}+{{P|key:'married'}}+{{P|key:'kids'}}+{{P|key:'price'}}" name="data-instance">
+                    <input type="hidden" value="{{P|key:'algo'}}+{{P|key:'age'}}+{{P|key:'gender'}}+{{P|key:'wheelchair'}}+{{P|key:'married'}}+{{P|key:'kids'}}+{{P|key:'price'}}+{{P|key:'type'}}+{{P|key:'data'}}" name="data-instance">
 
                     <h3>Do you feel that the recommendation above will be helpful for the user?</h3>
 
-                    {% with algo=P|key:'algo' age=P|key:'age' gender=P|key:'gender' wheelchair=P|key:'wheelchair' married=P|key:'married' kids=P|key:'kids' price=P|key:'price'%}
-                    {% with algo|addstr:"+"|addstr:age|addstr:"+"|addstr:gender|addstr:"+"|addstr:wheelchair|addstr:"+"|addstr:married|addstr:"+"|addstr:kids|addstr:"+"|addstr:price as stemp%}
+                    {% with algo=P|key:'algo' age=P|key:'age' gender=P|key:'gender' wheelchair=P|key:'wheelchair' married=P|key:'married' kids=P|key:'kids' price=P|key:'price' type=P|key:'type' data=P|key:'data'%}
+                    {% with algo|addstr:"+"|addstr:age|addstr:"+"|addstr:gender|addstr:"+"|addstr:wheelchair|addstr:"+"|addstr:married|addstr:"+"|addstr:kids|addstr:"+"|addstr:price|addstr:"+"|addstr:type|addstr:"+"|addstr:data as stemp%}
                     <div>
                     <input type="radio" name="feed" value="1" id="id_feed_0_{{forloop.counter}}"
                            {% for key, value in set_comments.items %}
@@ -494,17 +549,27 @@
                     <th>Age</th>
                     <th>Gender</th>
                     <th>Target Price</th>
-                    <th>Is Married</th>
+                    <th>Reason</th>
+                    <th>Traveling with partner</th>
                     <th>Wheelchair User</th>
-                    <th>Have Kids</th>
+                    <th>Traveling with kids</th>
+
                 </tr>
 
                 {% for l in S %}
                 <tr>
-                    <th><a href="{% url 'hotelrecommendation:result_user_rating' log age target_price physically_disabled is_married have_kids gender algo l.id%}">{{ l.user_firstname }} {{ l.user_lastname }}</a></th>
+                    <th><a href="{% url 'hotelrecommendation:result_user_rating' log age target_price physically_disabled is_married have_kids gender algo l.id type data%}">{{ l.user_firstname }} {{ l.user_lastname }}</a></th>
                     <th>{{ l.user_age }}</th>
                     <th>{{ l.gender  }}</th>
                     <th>{{ l.user_target_price|floatformat:"1"  }}</th>
+
+                    <th>
+                        {% if l.type == "B" %}
+                        Business
+                        {% else %}
+                        Leisure
+                        {% endif %}
+                    </th>
 
                     {% if l.user_is_married %}
                     <th><i class="fa fa-check-circle-o" aria-hidden="true" style="color: green;"></i></th>
@@ -524,6 +589,9 @@
                     {% else %}
                     <th><i class="fa fa-times-circle" aria-hidden="true" style="color: red;"></i></th>
                     {% endif %}
+
+
+
                 </tr>
                 {% endfor %}
             </table>

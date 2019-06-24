@@ -10,7 +10,7 @@ from .models import Rating
 
 
 class UserAdmin(admin.ModelAdmin):
-    list_display = ('id', 'user_firstname', "user_lastname", 'gender', 'user_age', 'user_disable', 'user_target_price', 'user_is_married', 'user_have_kids')
+    list_display = ('id', 'user_firstname', "user_lastname", 'gender', 'user_age', 'user_disable', 'user_target_price', 'user_is_married', 'user_have_kids','type')
     search_fields = ['id', 'user_firstname',"user_lastname"]
 admin.site.register(User,UserAdmin)
 
