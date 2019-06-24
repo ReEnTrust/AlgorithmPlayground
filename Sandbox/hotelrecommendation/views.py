@@ -31,7 +31,7 @@ item_clusters=4
 top_results=10
 
 #We fill the tabular for the reviews and build the dataframe
-for r in Rating.objects.all():
+for r in list(Rating.objects.filter(rating_type=0)):
     item_id.append(r.rating_hotel.id)
     user_id.append(r.rating_user.id)
     rating.append(r.rating_note)
