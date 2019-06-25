@@ -1,9 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="2246a057-1be7-49b2-8f14-705d66168e85" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/../Hotel_data_CSV/data.numbers" beforeDir="false" afterPath="$PROJECT_DIR$/../Hotel_data_CSV/data.numbers" afterDir="false" />
-    </list>
+    <list default="true" id="2246a057-1be7-49b2-8f14-705d66168e85" name="Default Changelist" comment="" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -12,11 +10,11 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file pinned="false" current-in-tab="false">
+      <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/hotelrecommendation/views.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="253">
-              <caret line="273" column="127" selection-start-line="273" selection-start-column="119" selection-end-line="273" selection-end-column="127" />
+            <state relative-caret-position="259">
+              <caret line="169" column="79" lean-forward="true" selection-start-line="169" selection-start-column="79" selection-end-line="169" selection-end-column="79" />
               <folding>
                 <element signature="e#0#35#0" expanded="true" />
               </folding>
@@ -36,10 +34,10 @@
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="true">
+      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/hotelrecommendation/templates/hotelrecommendation/results.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="219">
+            <state relative-caret-position="6375">
               <caret line="425" column="227" selection-start-line="425" selection-start-column="227" selection-end-line="425" selection-end-column="227" />
               <folding>
                 <element signature="n#style#0;n#img#0;n#span#0;n#header#0;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
@@ -235,12 +233,12 @@
         <option value="$PROJECT_DIR$/hotelrecommendation/forms.py" />
         <option value="$PROJECT_DIR$/hotelrecommendation/urls.py" />
         <option value="$PROJECT_DIR$/hotelrecommendation/templates/hotelrecommendation/rating_detail.html" />
-        <option value="$PROJECT_DIR$/hotelrecommendation/views.py" />
         <option value="$PROJECT_DIR$/hotelrecommendation/templates/hotelrecommendation/results.html" />
+        <option value="$PROJECT_DIR$/hotelrecommendation/views.py" />
       </list>
     </option>
   </component>
-  <component name="ProjectFrameBounds">
+  <component name="ProjectFrameBounds" extendedState="6">
     <option name="y" value="23" />
     <option name="width" value="1280" />
     <option name="height" value="725" />
@@ -299,7 +297,7 @@
     <property name="DefaultHtmlFileTemplate" value="HTML File" />
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="aspect.path.notification.shown" value="true" />
-    <property name="com.android.tools.idea.instantapp.provision.ProvisionBeforeRunTaskProvider.myTimeStamp" value="1561390147998" />
+    <property name="com.android.tools.idea.instantapp.provision.ProvisionBeforeRunTaskProvider.myTimeStamp" value="1561468659636" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$" />
     <property name="list.type.of.created.stylesheet" value="CSS" />
     <property name="nodejs_interpreter_path.stuck_in_default_project" value="undefined stuck path" />
@@ -388,16 +386,15 @@
       <workItem from="1560866989708" duration="632000" />
       <workItem from="1560960815341" duration="1781000" />
       <workItem from="1561035278630" duration="2972000" />
-      <workItem from="1561374264269" duration="6649000" />
+      <workItem from="1561374264269" duration="8090000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="153548000" />
+    <option name="totallyTimeSpent" value="154989000" />
   </component>
   <component name="ToolWindowManager">
-    <frame x="0" y="23" width="1280" height="725" extended-state="0" />
-    <editor active="true" />
+    <frame x="0" y="23" width="1280" height="725" extended-state="6" />
     <layout>
       <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.30371568" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
@@ -646,16 +643,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/hotelrecommendation/views.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="253">
-          <caret line="273" column="127" selection-start-line="273" selection-start-column="119" selection-end-line="273" selection-end-column="127" />
-          <folding>
-            <element signature="e#0#35#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/hotelrecommendation/templates/hotelrecommendation/rating_detail.html">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="49">
@@ -680,7 +667,7 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/hotelrecommendation/templates/hotelrecommendation/results.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="219">
+        <state relative-caret-position="6375">
           <caret line="425" column="227" selection-start-line="425" selection-start-column="227" selection-end-line="425" selection-end-column="227" />
           <folding>
             <element signature="n#style#0;n#img#0;n#span#0;n#header#0;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
@@ -727,6 +714,16 @@
             <element signature="n#style#0;n#i#0;n#th#7;n#tr#1;n#table#0;n#section#2;n#div#0;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
             <element signature="n#style#0;n#i#0;n#th#8;n#tr#1;n#table#0;n#section#2;n#div#0;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
             <element signature="n#style#0;n#i#0;n#th#9;n#tr#1;n#table#0;n#section#2;n#div#0;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/hotelrecommendation/views.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="259">
+          <caret line="169" column="79" lean-forward="true" selection-start-line="169" selection-start-column="79" selection-end-line="169" selection-end-column="79" />
+          <folding>
+            <element signature="e#0#35#0" expanded="true" />
           </folding>
         </state>
       </provider>

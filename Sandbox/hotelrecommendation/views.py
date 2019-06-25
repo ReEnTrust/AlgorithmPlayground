@@ -18,12 +18,10 @@ from .models import Rating
 
 
 #Initialising the tabular for the computation
-user_id = []
-rating = []
-item_id = []
 items = []
 cols = ['isSingle', 'isTwin', 'isDouble', 'isFamily', 'isAccessible', 'isGoodReviews', 'hasSwimmingPool', 'hasBreakfast', 'isMichelinRestaurant', 'price']
 feats = []
+ratings = []
 max_price_hotel = Hotel.objects.latest('hotel_night_price').hotel_night_price #This is the highest price
 
 #Other parameters
@@ -31,11 +29,15 @@ item_clusters=4
 top_results=10
 
 #We fill the tabular for the reviews and build the dataframe
-for r in list(Rating.objects.filter(rating_type=0)):
-    item_id.append(r.rating_hotel.id)
-    user_id.append(r.rating_user.id)
-    rating.append(r.rating_note)
-ratings = pd.DataFrame({'user_id':user_id,'item_id':item_id,'rating':rating})
+for i in range(0,4):
+    user_id = []
+    rating = []
+    item_id = []
+    for r in list(Rating.objects.filter(rating_type=i)):
+        item_id.append(r.rating_hotel.id)
+        user_id.append(r.rating_user.id)
+        rating.append(r.rating_note)
+    ratings.append(pd.DataFrame({'user_id':user_id,'item_id':item_id,'rating':rating}))
 
 
 #We take the list of items ID
@@ -53,19 +55,28 @@ for i in Hotel.objects.all():
     T.append(1 if i.hotel_breakfast_available else 0) #Breakfast
     T.append(1 if i.hotel_michelin_restaurant else 0) #Michelin restaurant
     T.append(i.hotel_night_price / max_price_hotel) #This correspond to the price
-
     feats.append(T)
 
 #We create the dataframe for the features
 item_df = pd.DataFrame(feats,index=items,columns=cols)
 
 #We fit the recommender system
-my_recommender1 = hybrid_recommender(item_clusters,top_results,ratings_weightage=1,content_weightage=1, null_rating_replace='mean') #can be replaced by 'zero', 'one' or 'min'
-my_recommender2 = hybrid_recommender(item_clusters,top_results,ratings_weightage=1,content_weightage=0.2, null_rating_replace='mean') #can be replaced by 'zero', 'one' or 'min'
-my_recommender3 = hybrid_recommender(item_clusters,top_results,ratings_weightage=0.2,content_weightage=1, null_rating_replace='mean') #can be replaced by 'zero', 'one' or 'min'
-my_recommender1.fit(ratings,item_df)
-my_recommender2.fit(ratings,item_df)
-my_recommender3.fit(ratings,item_df)
+my_recommender1 = []
+my_recommender2 = []
+my_recommender3 = []
+
+for i in range(0,4):
+    my_recommender1.append(hybrid_recommender(item_clusters,top_results,ratings_weightage=1,content_weightage=1, null_rating_replace='mean')) #can be replaced by 'zero', 'one' or 'min'
+    my_recommender1[i].fit(ratings[i],item_df)
+
+
+for i in range(0,4):
+    my_recommender2.append(hybrid_recommender(item_clusters,top_results,ratings_weightage=1,content_weightage=0.2, null_rating_replace='mean')) #can be replaced by 'zero', 'one' or 'min'
+    my_recommender2[i].fit(ratings[i],item_df)
+
+for i in range(0,4):
+    my_recommender3.append(hybrid_recommender(item_clusters,top_results,ratings_weightage=0.2,content_weightage=1, null_rating_replace='mean')) #can be replaced by 'zero', 'one' or 'min'
+    my_recommender3[i].fit(ratings[i],item_df)
 
 
 # def results(request, age):
@@ -152,11 +163,11 @@ class ResultView(View):
         set_predictions = []
         for o,s in zip(OldPresets,set_closest):
             if o['algo'] == 1:
-                set_predictions.append(my_recommender1.predict([s.id]).values.tolist())
+                set_predictions.append(my_recommender1[o['data']].predict([s.id]).values.tolist())
             elif o['algo'] == 2:
-                set_predictions.append(my_recommender2.predict([s.id]).values.tolist())
+                set_predictions.append(my_recommender2[o['data']].predict([s.id]).values.tolist())
             else:
-                set_predictions.append(my_recommender3.predict([s.id]).values.tolist())
+                set_predictions.append(my_recommender3[o['data']].predict([s.id]).values.tolist())
 
         #We take the hotels that correspond
         set_list_hotels = []
