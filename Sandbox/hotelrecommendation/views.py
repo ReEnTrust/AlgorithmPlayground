@@ -18,12 +18,10 @@ from .models import Rating
 
 
 #Initialising the tabular for the computation
-user_id = []
-rating = []
-item_id = []
 items = []
 cols = ['isSingle', 'isTwin', 'isDouble', 'isFamily', 'isAccessible', 'isGoodReviews', 'hasSwimmingPool', 'hasBreakfast', 'isMichelinRestaurant', 'price']
 feats = []
+ratings = []
 max_price_hotel = Hotel.objects.latest('hotel_night_price').hotel_night_price #This is the highest price
 
 #Other parameters
@@ -31,11 +29,15 @@ item_clusters=4
 top_results=10
 
 #We fill the tabular for the reviews and build the dataframe
-for r in Rating.objects.all():
-    item_id.append(r.rating_hotel.id)
-    user_id.append(r.rating_user.id)
-    rating.append(r.rating_note)
-ratings = pd.DataFrame({'user_id':user_id,'item_id':item_id,'rating':rating})
+for i in range(0,4):
+    user_id = []
+    rating = []
+    item_id = []
+    for r in list(Rating.objects.filter(rating_type=i)):
+        item_id.append(r.rating_hotel.id)
+        user_id.append(r.rating_user.id)
+        rating.append(r.rating_note)
+    ratings.append(pd.DataFrame({'user_id':user_id,'item_id':item_id,'rating':rating}))
 
 
 #We take the list of items ID
@@ -53,19 +55,28 @@ for i in Hotel.objects.all():
     T.append(1 if i.hotel_breakfast_available else 0) #Breakfast
     T.append(1 if i.hotel_michelin_restaurant else 0) #Michelin restaurant
     T.append(i.hotel_night_price / max_price_hotel) #This correspond to the price
-
     feats.append(T)
 
 #We create the dataframe for the features
 item_df = pd.DataFrame(feats,index=items,columns=cols)
 
 #We fit the recommender system
-my_recommender1 = hybrid_recommender(item_clusters,top_results,ratings_weightage=1,content_weightage=1, null_rating_replace='mean') #can be replaced by 'zero', 'one' or 'min'
-my_recommender2 = hybrid_recommender(item_clusters,top_results,ratings_weightage=1,content_weightage=0.2, null_rating_replace='mean') #can be replaced by 'zero', 'one' or 'min'
-my_recommender3 = hybrid_recommender(item_clusters,top_results,ratings_weightage=0.2,content_weightage=1, null_rating_replace='mean') #can be replaced by 'zero', 'one' or 'min'
-my_recommender1.fit(ratings,item_df)
-my_recommender2.fit(ratings,item_df)
-my_recommender3.fit(ratings,item_df)
+my_recommender1 = []
+my_recommender2 = []
+my_recommender3 = []
+
+for i in range(0,4):
+    my_recommender1.append(hybrid_recommender(item_clusters,top_results,ratings_weightage=1,content_weightage=1, null_rating_replace='mean')) #can be replaced by 'zero', 'one' or 'min'
+    my_recommender1[i].fit(ratings[i],item_df)
+
+
+for i in range(0,4):
+    my_recommender2.append(hybrid_recommender(item_clusters,top_results,ratings_weightage=1,content_weightage=0.2, null_rating_replace='mean')) #can be replaced by 'zero', 'one' or 'min'
+    my_recommender2[i].fit(ratings[i],item_df)
+
+for i in range(0,4):
+    my_recommender3.append(hybrid_recommender(item_clusters,top_results,ratings_weightage=0.2,content_weightage=1, null_rating_replace='mean')) #can be replaced by 'zero', 'one' or 'min'
+    my_recommender3[i].fit(ratings[i],item_df)
 
 
 # def results(request, age):
@@ -88,14 +99,14 @@ class IndexView(View):
         newLogAction = LogAction(log_instance_id= newLogInstance.id, log_action_description="User has logged in, redirecting to default page.")
         newLogAction.save()
 
-        return redirect('hotelrecommendation:result_view', newLogInstance.id, 18, 200, False,False,False,"M",1)
+        return redirect('hotelrecommendation:result_view', newLogInstance.id, 18, 200, False,False,False,"M",1, "L", 0)
 
 class ResultView(View):
 
-    def get(self, request,log, age, target_price,physically_disabled,is_married,have_kids,gender, algo):
+    def get(self, request,log, age, target_price,physically_disabled,is_married,have_kids,gender, algo,type, data):
 
         #We create a logAction that the page was shown to the user
-        newLogAction = LogAction(log_instance_id= log, log_action_description="User is shown the page (age,price,wheelchair,married,kids,gender,algo) = ("+str(age)+","+str(target_price)+","+str(physically_disabled)+","+str(is_married)+","+str(have_kids)+","+gender+","+str(algo)+").")
+        newLogAction = LogAction(log_instance_id= log, log_action_description="User is shown the page (age,price,wheelchair,married,kids,gender,algo,type,data) = ("+str(age)+","+str(target_price)+","+str(physically_disabled)+","+str(is_married)+","+str(have_kids)+","+gender+","+str(algo)+","+str(type)+","+str(data)+").")
         newLogAction.save()
 
         #We get the comments from the user
@@ -105,8 +116,8 @@ class ResultView(View):
                                           'log_comment' : c.log_comment,}
 
         #We have to find old instances of this user
-        OldActionsUpdate = [s for s in list(LogAction.objects.filter(log_instance_id=log)) if "User requested the page (age,price,wheelchair,married,kids,gender,algo)" in s.log_action_description]
-        OldPresetsString = [s.log_action_description[75:-2] for s in OldActionsUpdate]
+        OldActionsUpdate = [s for s in list(LogAction.objects.filter(log_instance_id=log)) if "User requested the page (age,price,wheelchair,married,kids,gender,algo,type,data)" in s.log_action_description]
+        OldPresetsString = [s.log_action_description[85:-2] for s in OldActionsUpdate]
         OldPresets = []
         for s in OldPresetsString:
             splitted = s.split(',')
@@ -118,6 +129,8 @@ class ResultView(View):
                 'kids': splitted[4] == "True",
                 'gender': splitted[5],
                 'algo': int(splitted[6]),
+                'type': splitted[7],
+                'data': int(splitted[8]),
             })
 
         #We get the users with the same status
@@ -125,7 +138,7 @@ class ResultView(View):
         for o in OldPresets:
             amplitude = 0
             while True:
-                relevant_users = User.objects.filter(user_disable = o['wheelchair'], user_is_married = o['married'], user_have_kids = o['kids'], gender= o['gender'], user_target_price__gte = o['price']-amplitude, user_target_price__lte = o['price']+amplitude)
+                relevant_users = User.objects.filter(type = o['type'],user_disable = o['wheelchair'], user_is_married = o['married'], user_have_kids = o['kids'], gender= o['gender'], user_target_price__gte = o['price']-amplitude, user_target_price__lte = o['price']+amplitude)
                 if not relevant_users:
                     amplitude=amplitude+5
                 else:
@@ -150,11 +163,11 @@ class ResultView(View):
         set_predictions = []
         for o,s in zip(OldPresets,set_closest):
             if o['algo'] == 1:
-                set_predictions.append(my_recommender1.predict([s.id]).values.tolist())
+                set_predictions.append(my_recommender1[o['data']].predict([s.id]).values.tolist())
             elif o['algo'] == 2:
-                set_predictions.append(my_recommender2.predict([s.id]).values.tolist())
+                set_predictions.append(my_recommender2[o['data']].predict([s.id]).values.tolist())
             else:
-                set_predictions.append(my_recommender3.predict([s.id]).values.tolist())
+                set_predictions.append(my_recommender3[o['data']].predict([s.id]).values.tolist())
 
         #We take the hotels that correspond
         set_list_hotels = []
@@ -247,12 +260,14 @@ class ResultView(View):
             'S' : similarUsers,
             'algo' : algo,
             'set_comments' : set_comments,
+            'type' : type,
+            'data' : data,
                   }
 
         return render(request, 'hotelrecommendation/results.html', context)
 
 
-    def post(self, request, log, age, target_price, physically_disabled, is_married, have_kids, gender, algo):
+    def post(self, request, log, age, target_price, physically_disabled, is_married, have_kids, gender, algo,type, data):
 
         if request.POST.__contains__('comment'): #This means that we are saving a comment
             form = FeedbackForm(data = request.POST)
@@ -290,18 +305,20 @@ class ResultView(View):
                 have_kids = form.cleaned_data.get('have_kids')
                 gender = form.cleaned_data.get('gender')
                 algo =  form.cleaned_data.get('algo')
+                type = form.cleaned_data.get('type')
+                data = form.cleaned_data.get('data')
             print(form.errors)
 
             #We create a logAction that the page was shown to the user
-            newLogAction = LogAction(log_instance_id= log, log_action_description="User requested the page (age,price,wheelchair,married,kids,gender,algo) = ("+str(age)+","+str(target_price)+","+str(physically_disabled)+","+str(is_married)+","+str(have_kids)+","+gender+","+str(algo)+").")
+            newLogAction = LogAction(log_instance_id= log, log_action_description="User requested the page (age,price,wheelchair,married,kids,gender,algo,type,data) = ("+str(age)+","+str(target_price)+","+str(physically_disabled)+","+str(is_married)+","+str(have_kids)+","+gender+","+str(algo)+","+str(type)+","+str(data)+").")
             newLogAction.save()
 
-        return redirect('hotelrecommendation:result_view', log, age, target_price, physically_disabled,is_married,have_kids,gender,algo)
+        return redirect('hotelrecommendation:result_view', log, age, target_price, physically_disabled,is_married,have_kids,gender,algo, type, data)
 
 
 
 class ResultRatingUser(View):
-    def get(self, request, log, age, target_price,physically_disabled,is_married,have_kids,gender,algo, id_user):
+    def get(self, request, log, age, target_price,physically_disabled,is_married,have_kids,gender,algo, id_user, type, data):
 
 
 
@@ -327,6 +344,8 @@ class ResultRatingUser(View):
             'gender': gender,
             'rater' : rater,
             'rater_rating': rater_rating,
+            'type' : type,
+            'data' : data,
                   }
 
         return render(request, 'hotelrecommendation/rating_detail.html', context)

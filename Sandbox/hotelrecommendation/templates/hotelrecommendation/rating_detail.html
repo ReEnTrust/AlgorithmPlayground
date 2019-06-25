@@ -36,7 +36,7 @@
         <!-- Content -->
         <section id="content" class="main">
             <ul class="actions special">
-                <li><a href="{% url 'hotelrecommendation:result_view' log age target_price physically_disabled is_married have_kids gender algo%}" class="button">Go Back</a></li>
+                <li><a href="{% url 'hotelrecommendation:result_view' log age target_price physically_disabled is_married have_kids gender algo type data%}" class="button">Go Back</a></li>
             </ul>
 
             <section id="intro" class="main">
@@ -56,6 +56,14 @@
                                     Female
                                     {% endif %} </li>
                                 <li>Ideal price for a night: {{rater.user_target_price|floatformat:"1"}} </li>
+                                <li>Reason for trip:
+                                    {% if rater.type == "B"%}
+                                    <th>Business</th>
+                                    {% else %}
+                                    <th>Leisure</th>
+                                    {% endif %}
+
+                                </li>
                                 <li>Wheelchair User:
                                     {% if rater.user_disable%}
                                     <th><i class="fa fa-check-circle-o" aria-hidden="true" style="color: green;"></i></th>
