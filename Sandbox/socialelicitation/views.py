@@ -12,17 +12,19 @@ import pickle
 #We fit the recommender system
 top_results=10
 
-pickle_off_1=open("pickle/Rec1.pickle","rb")
-my_recommender1 = pickle.load(pickle_off_1)
-
-pickle_off_2=open("pickle/Rec2.pickle","rb")
-my_recommender2 = pickle.load(pickle_off_2)
-
-pickle_off_3=open("pickle/Rec3.pickle","rb")
-my_recommender3 = pickle.load(pickle_off_3)
-
-
-
+def recommandation(algo, data, user_id):
+    if algo == 1:
+        pickle_off_1=open("pickle/Rec1.pickle","rb")
+        my_recommender1 = pickle.load(pickle_off_1)
+        return my_recommender1[data].predict([user_id]).values.tolist()
+    elif algo == 2:
+        pickle_off_2=open("pickle/Rec2.pickle","rb")
+        my_recommender2 = pickle.load(pickle_off_2)
+        return my_recommender2[data].predict([user_id]).values.tolist()
+    else:
+        pickle_off_3=open("pickle/Rec3.pickle","rb")
+        my_recommender3 = pickle.load(pickle_off_3)
+        return my_recommender3[data].predict([user_id]).values.tolist()
 
 class IndexView(View):
 
@@ -71,12 +73,7 @@ class IterView(View):
 
         set_predictions = []
         for s in algosData:
-            if s['algo'] == 1:
-                set_predictions.append(my_recommender1[s['data']].predict([randomUser.id]).values.tolist())
-            elif s['algo'] == 2:
-                set_predictions.append(my_recommender2[s['data']].predict([randomUser.id]).values.tolist())
-            else:
-                set_predictions.append(my_recommender3[s['data']].predict([randomUser.id]).values.tolist())
+            set_predictions.append(recommandation(s['algo'], s['data'], randomUser.id))
 
         #We take the hotels that correspond
         set_list_hotels = []
