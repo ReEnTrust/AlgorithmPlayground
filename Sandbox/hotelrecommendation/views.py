@@ -1,11 +1,9 @@
 from django.shortcuts import render
 from hybrid_recommender import hybrid_recommender
-import pandas as pd
 from decimal import *
 from django.shortcuts import redirect
 from django.db.models import Func, F
 from django.views import View
-from django.views.generic.edit import FormView
 from .forms import UserForm
 from .forms import FeedbackForm
 from .models import User
@@ -14,73 +12,21 @@ from .models import LogInstance
 from .models import LogComment
 from .models import LogAction
 from .models import Rating
-# Create your views here.
+import pickle
 
-
-#Initialising the tabular for the computation
-items = []
-cols = ['isSingle', 'isTwin', 'isDouble', 'isFamily', 'isAccessible', 'isGoodReviews', 'hasSwimmingPool', 'hasBreakfast', 'isMichelinRestaurant', 'price']
-feats = []
-ratings = []
-max_price_hotel = Hotel.objects.latest('hotel_night_price').hotel_night_price #This is the highest price
-
-#Other parameters
-item_clusters=4
-top_results=10
-
-#We fill the tabular for the reviews and build the dataframe
-for i in range(0,4):
-    user_id = []
-    rating = []
-    item_id = []
-    for r in list(Rating.objects.filter(rating_type=i)):
-        item_id.append(r.rating_hotel.id)
-        user_id.append(r.rating_user.id)
-        rating.append(r.rating_note)
-    ratings.append(pd.DataFrame({'user_id':user_id,'item_id':item_id,'rating':rating}))
-
-
-#We take the list of items ID
-for i in Hotel.objects.all():
-    items.append(i.id)
-    #We need to take out features
-    T = []
-    T.append(1 if i.hotel_room_type == "S" else 0) #Single
-    T.append(1 if i.hotel_room_type == "T" else 0) #Twin
-    T.append(1 if i.hotel_room_type == "D" else 0) #Double
-    T.append(1 if i.hotel_room_type == "F" else 0) #Family
-    T.append(1 if i.hotel_disability_access else 0) #Accessible for disable persons
-    T.append(1 if i.hotel_user_reviews >= 3 else 0) #Good reviews
-    T.append(1 if i.hotel_swimming_pool else 0) #Swimming pool
-    T.append(1 if i.hotel_breakfast_available else 0) #Breakfast
-    T.append(1 if i.hotel_michelin_restaurant else 0) #Michelin restaurant
-    T.append(i.hotel_night_price / max_price_hotel) #This correspond to the price
-    feats.append(T)
-
-#We create the dataframe for the features
-item_df = pd.DataFrame(feats,index=items,columns=cols)
 
 #We fit the recommender system
-my_recommender1 = []
-my_recommender2 = []
-my_recommender3 = []
+top_results=10
 
-for i in range(0,4):
-    my_recommender1.append(hybrid_recommender(item_clusters,top_results,ratings_weightage=1,content_weightage=1, null_rating_replace='mean')) #can be replaced by 'zero', 'one' or 'min'
-    my_recommender1[i].fit(ratings[i],item_df)
+pickle_off_1=open("pickle/Rec1.pickle","rb")
+my_recommender1 = pickle.load(pickle_off_1)
 
+pickle_off_2=open("pickle/Rec2.pickle","rb")
+my_recommender2 = pickle.load(pickle_off_2)
 
-for i in range(0,4):
-    my_recommender2.append(hybrid_recommender(item_clusters,top_results,ratings_weightage=1,content_weightage=0.2, null_rating_replace='mean')) #can be replaced by 'zero', 'one' or 'min'
-    my_recommender2[i].fit(ratings[i],item_df)
+pickle_off_3=open("pickle/Rec3.pickle","rb")
+my_recommender3 = pickle.load(pickle_off_3)
 
-for i in range(0,4):
-    my_recommender3.append(hybrid_recommender(item_clusters,top_results,ratings_weightage=0.2,content_weightage=1, null_rating_replace='mean')) #can be replaced by 'zero', 'one' or 'min'
-    my_recommender3[i].fit(ratings[i],item_df)
-
-
-# def results(request, age):
-#     return render(request, 'hotelrecommendation/results.html', {})
 
 
 class IndexView(View):

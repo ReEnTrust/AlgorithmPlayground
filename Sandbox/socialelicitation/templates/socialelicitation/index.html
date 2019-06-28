@@ -1,0 +1,116 @@
+<!DOCTYPE HTML>
+<!--
+	Strata by HTML5 UP
+	html5up.net | @ajlkn
+	Free for personal and commercial use under the CCA 3.0 license (html5up.net/license)
+-->
+{% load static %}
+<html>
+	<head>
+		<title>Social Elicitation</title>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+		<link rel="stylesheet" href="{% static 'socialelicitation/assets/css/main.css'%}" />
+	</head>
+	<body class="is-preload">
+
+		<!-- Header -->
+			<header id="header">
+				<div class="inner">
+					<a href="#" class="image avatar"><img src="{% static 'socialelicitation/images/avatar.png'%}" alt="" /></a>
+					<h1><strong>Social Elicitation</strong>, a super simple<br />
+					website for collecting user preferences<br />
+					on hotel recommendations!</h1>
+				</div>
+			</header>
+
+		<!-- Main -->
+			<div id="main">
+
+				<!-- One -->
+					<section id="one">
+						<header class="major">
+							<h2>A Social Experiment</h2>
+						</header>
+						<p>This website is aimed at collecting the general opinion of the society about which hotels should be recommended to a fictional user with respect to his characteristics (age, gender, ideal price, etc.).
+
+							</br></br>At each step, you will have to choose between two recommendations for a random user outputted by two different recommender systems.
+
+							</br></br>Please note that the data and the recommender systems used in this experiment are fictional.
+						</p>
+
+						<form method="post">
+							{% csrf_token %}
+							<button type="submit" class="button" style="font-size: 100%; width: 10em;" >Start</button>
+						</form>
+					</section>
+
+				<!-- Two -->
+					<!--<section id="two">-->
+						<!--<h2>Recent Work</h2>-->
+						<!--<div class="row">-->
+							<!--<article class="col-6 col-12-xsmall work-item">-->
+								<!--<a href="images/fulls/01.jpg" class="image fit thumb"><img src="{% static 'socialelicitation/images/thumbs/01.jpg'%}" alt="" /></a>-->
+								<!--<h3>Magna sed consequat tempus</h3>-->
+								<!--<p>Lorem ipsum dolor sit amet nisl sed nullam feugiat.</p>-->
+							<!--</article>-->
+							<!--<article class="col-6 col-12-xsmall work-item">-->
+								<!--<a href="images/fulls/02.jpg" class="image fit thumb"><img src="{% static 'socialelicitation/images/thumbs/02.jpg'%}" alt="" /></a>-->
+								<!--<h3>Ultricies lacinia interdum</h3>-->
+								<!--<p>Lorem ipsum dolor sit amet nisl sed nullam feugiat.</p>-->
+							<!--</article>-->
+
+						<!--</div>-->
+						<!--<ul class="actions">-->
+							<!--<li><a href="#" class="button">Full Portfolio</a></li>-->
+						<!--</ul>-->
+					<!--</section>-->
+
+				<!-- Three -->
+					<section id="three">
+						<h2>Get In Touch</h2>
+						<p>You have a question, you spotted a bug or you want to know more about the project, feel free to contact us!</p>
+
+							<div >
+								<ul class="labeled-icons">
+									<li>
+										<h3 class="icon solid fa-envelope"><span class="label">Email</span></h3>
+										<a href="mailto:bruno.yun@ed.ac.uk">bruno.yun@ed.ac.uk</a>
+									</li>
+									<li>
+										<h3 class="icon solid fa-link"><span class="label">Project</span></h3>
+										<a href="https://reentrust.wp.horizon.ac.uk" ><img src="{% static 'socialelicitation/images/reentrust-logo.png'%}"></a></li>
+								</ul>
+							</div>
+						</div>
+					</section>
+
+
+			</div>
+
+		<!-- Footer -->
+			<footer id="footer">
+				<div class="inner">
+					<ul class="icons">
+						<!--<li><a href="#" class="icon brands fa-twitter"><span class="label">Twitter</span></a></li>-->
+						<!--<li><a href="#" class="icon brands fa-github"><span class="label">Github</span></a></li>-->
+
+						<li><a href="https://reentrust.wp.horizon.ac.uk" class="icon solid fa-link"></a></li>
+						<li><a href="mailto:bruno.yun@ed.ac.uk" class="icon solid fa-envelope"><span class="label">Email</span></a></li>
+					</ul>
+					<ul class="copyright">
+						<li>&copy; Social Elicitation</li><li>Design: <a href="http://html5up.net">HTML5 UP</a></li>
+					</ul>
+				</div>
+			</footer>
+
+		<!-- Scripts -->
+			<script src="{% static 'socialelicitation/assets/js/jquery.min.js'%}"></script>
+			<script src="{% static 'socialelicitation/assets/js/jquery.poptrox.min.js'%}"></script>
+			<script src="{% static 'socialelicitation/assets/js/browser.min.js'%}"></script>
+			<script src="{% static 'socialelicitation/assets/js/breakpoints.min.js'%}"></script>
+			<script src="{% static 'socialelicitation/assets/js/util.js'%}"></script>
+			<script src="{% static 'socialelicitation/assets/js/main.js'%}"></script>
+
+	</body>
+</html>

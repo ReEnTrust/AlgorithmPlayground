@@ -7,6 +7,7 @@ from . import settings
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('hotelrecommendation/', include('hotelrecommendation.urls')),
+    path('socialelicitation/', include('socialelicitation.urls')),
 ]
 
 urlpatterns += staticfiles_urlpatterns()

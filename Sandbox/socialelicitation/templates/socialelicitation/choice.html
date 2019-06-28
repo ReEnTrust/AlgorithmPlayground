@@ -1,0 +1,227 @@
+<!DOCTYPE HTML>
+<!--
+	Strata by HTML5 UP
+	html5up.net | @ajlkn
+	Free for personal and commercial use under the CCA 3.0 license (html5up.net/license)
+-->
+{% load static %}
+{% load template_extra_toolkits %}
+<html>
+	<head>
+		<title>Social Elicitation</title>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+		<link rel="stylesheet" href="{% static 'socialelicitation/assets/css/main.css'%}" />
+	</head>
+	<body class="is-preload">
+
+		<!-- Header -->
+			<header id="header">
+				<div class="inner">
+					<a href="#" class="image avatar"><img src="{% static 'socialelicitation/images/avatar.png'%}" alt="" /></a>
+					<h2><strong>Social Elicitation</strong></h2>
+
+					<div style="text-align: left;">
+						<h1>The User</h1>
+					<ul style="list-style-position: inside">
+						<li>First name: {{randomUser.user_firstname}} </li>
+						<li>Last name: {{randomUser.user_lastname}} </li>
+						<li>Gender: {% if randomUser.gender == "M"%}Male{%else%}Female{%endif%} </li>
+						<li>Age: {{randomUser.user_age}} years old</li>
+						<li>Wheelchair user: {% if randomUser.user_disable%}Yes{%else%}No{%endif%} </li>
+						<li>Traveling with partner: {% if randomUser.user_is_married%}Yes{%else%}No{%endif%} </li>
+						<li>Traveling with kids: {% if randomUser.user_have_kids%}Yes{%else%}No{%endif%} </li>
+						<li>Reason for traveling: {% if randomUser.type == "B"%}Business{%else%}Leisure{%endif%} </li>
+						<li>Ideal price: £{{randomUser.user_target_price|floatformat:"1"}} </li>
+					</ul>
+					</div>
+
+                    <h2>Your contribution count: {{numbiter}}</h2>
+				</div>
+			</header>
+
+		<!-- Main -->
+			<div id="main">
+
+
+
+                {% for Z, P, averagePrice, averageReview ,percentageSingle ,percentageTwin ,percentageFamily ,percentageDouble ,percentageSwim ,percentageBreak ,percentageAccessible in L reversed %}
+                <section>
+
+                    <header class="major">
+                        <h2>Choice {{forloop.counter}}</h2>
+
+
+                        <h3>
+                            Algorithm {{P|key:'algo'}} with
+                            {% if P|key:'data' == 0 %}
+                            no preferences.
+                            {% elif P|key:'data' == 1 %}
+                            location preferred.
+                            {% elif P|key:'data' == 2 %}
+                            rating preferred.
+                            {% else %}
+                            price preferred.
+                            {% endif %}
+                        </h3>
+                    </header>
+
+                    <p>
+                        The average price per night for the recommended hotels is £{{averagePrice|floatformat:"1"}} and the average review is {{averageReview|floatformat:"1"}}/5.
+                    </p>
+
+
+
+                <div style="width: 100%; overflow: hidden; margin-bottom: 2em;">
+
+
+
+                        <div class="row gtr-uniform">
+                            {% if percentageSingle != 0 %}
+                            <div style="background: cadetblue; color: white; text-align: center; width: {{percentageSingle}}%;" title="{{percentageSingle}}%">
+                                Single
+                            </div>
+                            {% endif %}
+
+                            {% if percentageDouble != 0 %}
+                            <div style="background: #7ec3ee; color: white;text-align: center; width: {{percentageDouble}}%" title="{{percentageDouble}}%">
+                                Double
+                            </div>
+                            {% endif %}
+
+                            {% if percentageTwin != 0 %}
+                            <div style="background:#a89cc8; color: white;text-align: center; width: {{percentageTwin}}%" title="{{percentageTwin}}%">
+                                Twin
+                            </div>
+                            {% endif %}
+
+                            {% if percentageFamily != 0 %}
+                            <div style="background: #e37682; color: white;text-align: center; width: {{percentageFamily}}%" title="{{percentageFamily}}%">
+                                Family
+                            </div>
+                            {% endif %}
+                        </div>
+
+                        <p>The types of the recommended rooms are: Single ({{percentageSingle}}%), Double ({{percentageDouble}}%), Twin ({{percentageTwin}}%) and Family ({{percentageFamily}}%)</p>
+
+                        <div class="row gtr-uniform" style="margin-top: 1em;">
+                            {% if percentageAccessible != 0 %}
+                            <div style="text-align: center;background: aquamarine; text-align: center; width: {{percentageAccessible}}%; padding-top: 0;" title="{{percentageAccessible}}%">
+                                <span style="font-size: 2em; color: #444444; ">
+                                    <i class="fas fa-wheelchair"></i>
+                                </span>
+
+                            </div>
+                            {% endif %}
+
+                            {% if 100|subtract:percentageAccessible != 0 %}
+                            <div style="text-align: center;background:bisque; padding-top:0; width: {{100|subtract:percentageAccessible}}%" title="{{100|subtract:percentageAccessible}}%">
+                                <span style="font-size: 2em; color: #444444; ">
+                                    <i class="fas fa-wheelchair" style="position: relative;font-size: 80%;">
+                                        <i class="fa fa-ban"  style="top: -0.2em; left: -0.25em; position: absolute;font-size: 175%;color: #e37682;"></i>
+                                    </i>
+                                </span>
+                            </div>
+                            {% endif %}
+                        </div>
+                        <p>{{percentageAccessible}}% of the hotels recommended are wheelchair accessible and {{100|subtract:percentageAccessible}}% are not.</p>
+
+                    <div class="row gtr-uniform" style="margin-top: 1em;">
+                            {% if percentageSwim != 0 %}
+                            <div style="text-align: center;background: greenyellow; text-align: center; width: {{percentageSwim}}%;padding-top: 0;" title="{{percentageSwim}}%">
+                                <span style="font-size: 2em; color: #444444; ">
+                                    <i class="fas fa-swimming-pool"></i>
+                                </span>
+
+                            </div>
+                            {% endif %}
+
+                            {% if 100|subtract:percentageSwim != 0 %}
+                            <div style="text-align: center;background: aliceblue; padding-top:0;text-align: center; width: {{100|subtract:percentageSwim}}%" title="{{100|subtract:percentageSwim}}%">
+                                <span style="font-size: 2em; color: #444444; ">
+                                    <i class="fas fa-swimming-pool" style="position: relative;font-size: 80%;">
+                                        <i class="fa fa-ban ban-crossed" style="top: -0.2em; left: -0.07em; position: absolute;font-size: 175%;color: #e37682;"></i>
+                                    </i>
+                                </span>
+                            </div>
+                            {% endif %}
+                    </div>
+
+                    <p>{{percentageSwim}}% of the hotels recommended have a swimming pool and {{100|subtract:percentageSwim}}% have not.</p>
+
+                    <div class="row gtr-uniform" style="margin-top: 1em;">
+                            {% if percentageBreak != 0 %}
+                            <div style="text-align: center;background:violet; padding-top:0; text-align: center; width: {{percentageBreak}}%" title="{{percentageBreak}}%">
+                                <span style="font-size: 2em; color: #444444; ">
+                                    <i class="fas fa-coffee"></i>
+                                </span>
+                            </div>
+                            {% endif %}
+
+                            {% if 100|subtract:percentageBreak != 0 %}
+                            <div style="text-align: center;background: aquamarine; padding-top:0;text-align: center; width: {{100|subtract:percentageBreak}}%" title="{{100|subtract:percentageBreak}}%">
+                                <span style="font-size: 2em; color: #444444; ">
+                                    <i class="fas fa-coffee" style="position: relative;font-size: 80%;">
+                                        <i class="fa fa-ban ban-crossed" style="top: -0.2em; left: -0.07em; position: absolute;font-size: 175%;color: #e37682;"></i>
+                                    </i>
+                                </span>
+                            </div>
+                            {% endif %}
+                    </div>
+                    <p>{{percentageBreak}}% of the hotels recommended have a breakfast option and {{100|subtract:percentageBreak}}% have not.</p>
+                </div>
+
+
+                    <form method="post" id="form-choice-{{forloop.counter}}">
+                        {% csrf_token %}
+                        <input type="hidden" value="{{forloop.counter}}" name="choice">
+                        <input type="submit" value="Choose Choice {{forloop.counter}}">
+                    </form>
+
+                </section>
+                {% endfor %}
+            </div>
+
+		<!-- Footer -->
+			<footer id="footer">
+				<div class="inner">
+					<ul class="icons">
+                        <li><a href="https://reentrust.wp.horizon.ac.uk" class="icon solid fa-link"></a></li>
+						<li><a href="mailto:bruno.yun@ed.ac.uk" class="icon solid fa-envelope"><span class="label">Email</span></a></li>
+					</ul>
+					<ul class="copyright">
+						<li>&copy; Social Elicitation</li><li>Design: <a href="http://html5up.net">HTML5 UP</a></li>
+					</ul>
+				</div>
+			</footer>
+
+		<!-- Scripts -->
+			<script src="{% static 'socialelicitation/assets/js/jquery.min.js'%}"></script>
+			<script src="{% static 'socialelicitation/assets/js/jquery.poptrox.min.js'%}"></script>
+			<script src="{% static 'socialelicitation/assets/js/browser.min.js'%}"></script>
+			<script src="{% static 'socialelicitation/assets/js/breakpoints.min.js'%}"></script>
+			<script src="{% static 'socialelicitation/assets/js/util.js'%}"></script>
+			<script src="{% static 'socialelicitation/assets/js/main.js'%}"></script>
+
+        <!-- Script for hidding and showing the table -->
+        <script type="text/javascript">
+            var coll = document.getElementsByClassName("collapsible");
+            var i;
+
+            for (i = 0; i < coll.length; i++) {
+                coll[i].addEventListener("click", function() {
+                    this.classList.toggle("active-button-collapse");
+                    var content = this.parentNode.nextElementSibling;
+
+                    if (content.style.display === "block") {
+                        content.style.display = "none";
+                    } else {
+                        content.style.display = "block";
+                    }
+                });
+            }
+
+
+        </script>
+	</body>
+</html>

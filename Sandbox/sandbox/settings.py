@@ -32,6 +32,7 @@ ALLOWED_HOSTS = []
 
 INSTALLED_APPS = [
     'hotelrecommendation.apps.HotelrecommendationConfig',
+    'socialelicitation.apps.SocialelicitationConfig',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
