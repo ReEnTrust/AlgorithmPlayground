@@ -36,7 +36,7 @@
 					</ul>
 					</div>
 
-
+                    <h2>Your contribution count: {{numbiter}}</h2>
 				</div>
 			</header>
 
@@ -50,6 +50,8 @@
 
                     <header class="major">
                         <h2>Choice {{forloop.counter}}</h2>
+
+
                         <h3>
                             Algorithm {{P|key:'algo'}} with
                             {% if P|key:'data' == 0 %}
@@ -170,6 +172,11 @@
                 </div>
 
 
+                    <form method="post" id="form-choice-{{forloop.counter}}">
+                        {% csrf_token %}
+                        <input type="hidden" value="{{forloop.counter}}" name="choice">
+                        <input type="submit" value="Choose Choice {{forloop.counter}}">
+                    </form>
 
                 </section>
                 {% endfor %}
@@ -179,9 +186,7 @@
 			<footer id="footer">
 				<div class="inner">
 					<ul class="icons">
-						<!--<li><a href="#" class="icon brands fa-twitter"><span class="label">Twitter</span></a></li>-->
-						<!--<li><a href="#" class="icon brands fa-github"><span class="label">Github</span></a></li>-->
-						<!--<li><a href="#" class="icon brands fa-dribbble"><span class="label">Dribbble</span></a></li>-->
+                        <li><a href="https://reentrust.wp.horizon.ac.uk" class="icon solid fa-link"></a></li>
 						<li><a href="mailto:bruno.yun@ed.ac.uk" class="icon solid fa-envelope"><span class="label">Email</span></a></li>
 					</ul>
 					<ul class="copyright">

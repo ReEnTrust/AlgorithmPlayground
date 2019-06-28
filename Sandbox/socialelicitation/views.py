@@ -60,11 +60,17 @@ class IterView(View):
             while randomData1==randomData2:
                 randomData2 = random.randint(0,4)
 
+
+        #We create a logAction that the user is presented a user with 2 choices
+        newLogAction = LogAction(log_instance_id=log, log_action_description="We present the data of user "+str(randomUser.id)+" with Choice1=algo"+str(randomAlgo1)+"/data"+str(randomData1)+" and Choice2=algo"+str(randomAlgo2)+"/data"+str(randomData2))
+        newLogAction.save()
+
+
+
         algosData = [ {'algo' : randomAlgo1, 'data': randomData1}, {'algo' : randomAlgo2, 'data': randomData2}]
 
         set_predictions = []
         for s in algosData:
-            print(s)
             if s['algo'] == 1:
                 set_predictions.append(my_recommender1[s['data']].predict([randomUser.id]).values.tolist())
             elif s['algo'] == 2:
@@ -152,6 +158,7 @@ class IterView(View):
 
         context ={
             'randomUser' : randomUser,
+            'numbiter': numbiter-1,
             "L" : zip(set_list_hotels,algosData,set_averagePrice, set_averageReview ,set_percentageSingle ,set_percentageTwin ,set_percentageFamily ,set_percentageDouble ,set_percentageSwim ,set_percentageBreak ,set_percentageAccessible),
         }
 
@@ -160,5 +167,9 @@ class IterView(View):
 
     def post(self, request, log, numbiter):
 
-        return redirect('socialelicitation:iter_view', log, numbiter)
+        #We save the choice of the user
+        newLogAction = LogAction(log_instance_id=log, log_action_description="The user has choosen "+str(request.POST.get('choice'))+" for his contribution "+str(numbiter))
+        newLogAction.save()
+
+        return redirect('socialelicitation:iter_view', log, numbiter+1)
 
