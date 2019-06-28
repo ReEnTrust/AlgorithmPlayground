@@ -18,13 +18,13 @@ import pickle
 #We fit the recommender system
 top_results=10
 
-pickle_off_1=open("Rec1.pickle","rb")
+pickle_off_1=open("pickle/Rec1.pickle","rb")
 my_recommender1 = pickle.load(pickle_off_1)
 
-pickle_off_2=open("Rec2.pickle","rb")
+pickle_off_2=open("pickle/Rec2.pickle","rb")
 my_recommender2 = pickle.load(pickle_off_2)
 
-pickle_off_3=open("Rec3.pickle","rb")
+pickle_off_3=open("pickle/Rec3.pickle","rb")
 my_recommender3 = pickle.load(pickle_off_3)
 
 
