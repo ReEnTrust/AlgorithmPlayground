@@ -40,6 +40,7 @@ class Hotel(models.Model):
     hotel_address = models.CharField(max_length=200)
     hotel_location = models.CharField(max_length=200)
     hotel_latitude = models.DecimalField(max_digits=20, decimal_places=15)
+    hotel_location_score = models.DecimalField(max_digits=20, decimal_places=15, default=-1)
     hotel_longitude = models.DecimalField(max_digits=20, decimal_places=15)
     ROOM_TYPE_CHOICES = [
         ('D', 'Double'),

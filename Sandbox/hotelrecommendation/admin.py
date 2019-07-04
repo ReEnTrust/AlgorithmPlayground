@@ -28,7 +28,7 @@ admin.site.register(LogComment,LogCommentAdmin)
 
 
 class HotelAdmin(admin.ModelAdmin):
-    list_display = ('id', 'hotel_name', "hotel_address", 'hotel_location', 'hotel_room_type', 'hotel_night_price', 'hotel_swimming_pool', 'hotel_breakfast_available','hotel_disability_access',"hotel_michelin_restaurant",'hotel_user_reviews', 'hotel_latitude', 'hotel_longitude')
+    list_display = ('id', 'hotel_name', "hotel_location_score","hotel_address", 'hotel_location', 'hotel_room_type', 'hotel_night_price', 'hotel_swimming_pool', 'hotel_breakfast_available','hotel_disability_access',"hotel_michelin_restaurant",'hotel_user_reviews', 'hotel_latitude', 'hotel_longitude')
     search_fields = ['id', 'hotel_name']
 admin.site.register(Hotel,HotelAdmin)
 
