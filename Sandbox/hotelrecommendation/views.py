@@ -272,7 +272,7 @@ class ResultRatingUser(View):
         rater = User.objects.filter(id = id_user).first()
 
         #We need to get the hotels that he rated
-        rater_rating = Rating.objects.filter(rating_user = id_user)
+        rater_rating = Rating.objects.filter(rating_user = id_user, rating_type = data)
         rater_rating = list(rater_rating)
 
         #We create a logAction that the page was shown to the user
