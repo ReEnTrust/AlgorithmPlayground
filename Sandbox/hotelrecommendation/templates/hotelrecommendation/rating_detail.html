@@ -119,6 +119,7 @@
                             <th>Michelin</th>
                             <th>Disable Access</th>
                             <th>Rating</th>
+                            <th>Location Score</th>
                         </tr>
 
                         {% for r in rater_rating %}
@@ -162,6 +163,7 @@
                             {% endif %}
 
                             <th>{{r.rating_note}}</th>
+                            <th>{{r.rating_hotel.hotel_location_score|floatformat:"1"}}</th>
                         </tr>
                         {% endfor %}
                     </table>

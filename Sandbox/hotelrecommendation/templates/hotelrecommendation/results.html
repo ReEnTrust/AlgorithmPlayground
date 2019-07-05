@@ -360,6 +360,7 @@
                         <th>Breakfast Available</th>
                         <th>Reviews</th>
                         <th>Michelin Restaurant</th>
+                        <th>Location score</th>
                     </tr>
 
                     {% for l in Z %}
@@ -410,6 +411,8 @@
                         {% else %}
                         <th><i class="fa fa-times-circle" aria-hidden="true" style="color: red;"></i></th>
                         {% endif %}
+
+                        <th>{{l.hotel_location_score|floatformat:"1"}}</th>
                     </tr>
                     {% endfor %}
 

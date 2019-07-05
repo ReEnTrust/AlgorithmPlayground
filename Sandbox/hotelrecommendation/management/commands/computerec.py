@@ -17,7 +17,7 @@ class Command(BaseCommand):
     def handle(self, *args, **options):
         #Initialising the tabular for the computation
         items = []
-        cols = ['isSingle', 'isTwin', 'isDouble', 'isFamily', 'isAccessible', 'isGoodReviews', 'hasSwimmingPool', 'hasBreakfast', 'isMichelinRestaurant', 'price']
+        cols = ['isSingle', 'isTwin', 'isDouble', 'isFamily', 'isAccessible', 'isGoodReviews', 'hasSwimmingPool', 'hasBreakfast', 'isMichelinRestaurant', 'price', 'location_score']
         feats = []
         ratings = []
         max_price_hotel = Hotel.objects.latest('hotel_night_price').hotel_night_price #This is the highest price
@@ -49,11 +49,13 @@ class Command(BaseCommand):
             T.append(1 if i.hotel_room_type == "D" else 0) #Double
             T.append(1 if i.hotel_room_type == "F" else 0) #Family
             T.append(1 if i.hotel_disability_access else 0) #Accessible for disable persons
-            T.append(1 if i.hotel_user_reviews >= 3 else 0) #Good reviews
+            #T.append(1 if i.hotel_user_reviews >= 3 else 0) #Good reviews
+            T.append(i.hotel_user_reviews/5)
             T.append(1 if i.hotel_swimming_pool else 0) #Swimming pool
             T.append(1 if i.hotel_breakfast_available else 0) #Breakfast
             T.append(1 if i.hotel_michelin_restaurant else 0) #Michelin restaurant
             T.append(i.hotel_night_price / max_price_hotel) #This correspond to the price
+            T.append(i.hotel_location_score/5) #This is the location score
             feats.append(T)
 
         #We create the dataframe for the features
