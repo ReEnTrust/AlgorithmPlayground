@@ -13,6 +13,8 @@ from .models import LogComment
 from .models import LogAction
 from .models import Rating
 import pickle
+from sklearn.neighbors import NearestNeighbors
+import math
 
 
 #We fit the recommender system
@@ -79,30 +81,17 @@ class ResultView(View):
                 'data': int(splitted[8]),
             })
 
+        #closest user by weighted euclidean distance
+        nn_user = compute_neighbor(age,target_price,physically_disabled,is_married,have_kids,gender,type)
+
         #We get the users with the same status
         set_relevant_users = []
         for o in OldPresets:
-            amplitude = 0
-            while True:
-                relevant_users = User.objects.filter(type = o['type'],user_disable = o['wheelchair'], user_is_married = o['married'], user_have_kids = o['kids'], gender= o['gender'], user_target_price__gte = o['price']-amplitude, user_target_price__lte = o['price']+amplitude)
-                if not relevant_users:
-                    amplitude=amplitude+5
-                else:
-                    set_relevant_users.append(relevant_users)
-                    break
+            set_relevant_users.append(compute_neighbor(o['age'],o['price'],o['wheelchair'],o['married'],o['kids'],o['gender'],o['type']))
 
-        set_ordered_age = []
-        #We have to rank them and take the closest user and the similar users
-        for s in set_relevant_users:
-            set_ordered_age.append(s.annotate(age_diff=Func(F('user_age') - age, function='ABS')).order_by('age_diff'))
+        similarUsers = [set_relevant_users[-1]]
 
-        similarUsers = []
-        if set_ordered_age:
-            similarUsers = (list(set_ordered_age[-1][:5]))
-
-        set_closest = []
-        for s in set_ordered_age:
-            set_closest.append(s.last())
+        set_closest = set_relevant_users
 
 
         #We take the predictions for the closest user
@@ -241,7 +230,7 @@ class ResultView(View):
                 newLogAction = LogAction(log_instance_id= log, log_action_description="User updated his feedback for "+instance+".")
                 newLogAction.save()
 
-        elif request.POST.__contains__('algo'): #This means that we are changin a profile
+        elif request.POST.__contains__('algo'): #This means that we are changing a profile
             form = UserForm(data = request.POST)
             if form.is_valid():
                 age = form.cleaned_data.get('age')
@@ -295,4 +284,82 @@ class ResultRatingUser(View):
                   }
 
         return render(request, 'hotelrecommendation/rating_detail.html', context)
+
+
+
+
+
+
+
+##### MISC FUNCTIONS
+
+def int_bool(val):
+    if val:
+        return 1
+    return 0
+
+def int_gen(val):
+    if val=='M':
+        return 0
+    return 1
+
+def int_type(val):
+    if val=='B':
+        return 0
+    return 1
+
+def user_to_user_sample(u):
+    return (u.user_age,float(u.user_target_price),int_bool(u.user_disable),int_bool(u.user_is_married),int_bool(u.user_have_kids),int_gen(u.gender),int_type(u.type))
+
+def dist(a,b):
+    # a and b are two users with the following (numerical) parameters: age, target_price, physically_disabled, is_married, have_kids, gender, type
+
+    # weights on the parameters:
+    # age -> 1.5/7
+    # target_price -> 0.5/7
+    # physically disables -> 2/7
+    # is_married -> 0.25/7
+    # have_kids -> 0.5/7
+    # gender -> 2/7
+    # type -> 0.25/7
+
+    # weights array:
+    weights = [200,20,1000,20,30,200,20]
+
+    #euclidean distance:
+    d = math.sqrt(weights[0]*(a[0]-b[0])**2+weights[1]*(a[1]-b[1])**2+weights[2]*(a[2]-b[2])**2+weights[3]*(a[3]-b[3])**2+weights[4]*(a[4]-b[4])**2+weights[5]*(a[5]-b[5])**2+weights[6]*(a[6]-b[6])**2)
+
+    return d
+
+
+
+
+def compute_neighbor(age,target_price,physically_disabled,is_married,have_kids,gender,type):
+    target_user=[age,float(target_price),int_bool(physically_disabled),int_bool(is_married),int_bool(have_kids),int_gen(gender),int_type(type)]
+    samples=[]
+    tmp=()
+    dic_users={}
+    for u in User.objects.all():
+        tmp=user_to_user_sample(u)
+        samples.append(tmp)
+        dic_users[u.id]=tmp
+
+    rev_dic_users={value: key for key,value in dic_users.items()}
+
+    neigh = NearestNeighbors(n_neighbors=2, algorithm='ball_tree',metric=dist)
+    neigh.fit(samples)
+
+    kNeighb = neigh.kneighbors([target_user], 5, return_distance=False)
+
+    nn_id = rev_dic_users[samples[kNeighb[0][0]]]
+    nn = User.objects.filter(id = nn_id).first()
+
+    return nn
+
+
+
+
+
+
+
 

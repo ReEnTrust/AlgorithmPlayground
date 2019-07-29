@@ -6,7 +6,7 @@
 -->
 <html>
 <head>
-    <title>Hotel Recommender</title>
+    <title>Algorithm Playground</title>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
 
@@ -18,6 +18,7 @@
     <link rel="stylesheet" href="{% static 'hotelrecommendation/assets/css/main.css'%}" />
     <noscript><link rel="stylesheet" href="{% static 'hotelrecommendation/assets/css/noscript.css'%}" /></noscript>
 </head>
+
 <body class="is-preload">
 
 <!-- Wrapper -->
@@ -26,8 +27,8 @@
     <!-- Header -->
     <header id="header" class="alt">
         <span class="logo"><img src="{% static 'hotelrecommendation/images/paris.png'%}" alt="" style="width: 170px"/></span>
-        <h1>Hotel Recommender</h1>
-        <p>Personalised Booking System</p>
+        <h1>Algorithm Playground</h1>
+        <p>An experimental platform to explore recommender systems</p>
     </header>
 
     <!-- Nav -->
@@ -52,7 +53,9 @@
                     <div>
 
 
-
+                        <p style="background: #cccccc; width: 100%; margin-top: 2em;border-radius: 1em; padding: 1em;">
+                            In this form, you define the profile of the fictional customer for whom you wish to observe the recommendation.
+                        </p>
 
 
                         <form method="post">
@@ -140,31 +143,31 @@
 
                                 </div>
 
-                                <h2 style="width: 100%;">Algorithm selection:</h2>
+                                <h2 style="width: 100%;">Preference selection</h2>
 
-                                <div class="col-4 col-12-small">
-                                    <input type="radio" name="algo" value="1" id="id_algo_0" {% if algo == 1 %} checked {%endif %}>
-                                    <label for="id_algo_0"> Algorithm 1 </label>
+                                <div style="background: #cccccc; width: 100%; margin-top: 2em;border-radius: 1em; padding: 1em;">In this form, you have the possibility to prioritize one hotel criteria over the others.
+                                    <ul>
+                                        <li>
+                                            <b>No preferences:</b> The location, price and ratings will be considered equally.
+                                        </li>
+
+                                        <li>
+                                            <b>Location preferred:</b> Hotels that are closer to Paris city center will be preferred.
+                                        </li>
+
+                                        <li>
+                                            <b>Rating preferred:</b> Hotels with a high user rating will be preferred.
+                                        </li>
+
+                                        <li>
+                                            <b>Price preferred:</b> Hotels that are closer to the ideal price will be preferred.
+                                        </li>
+                                    </ul>
                                 </div>
-
-                                <div class="col-4 col-12-small">
-                                    <input type="radio" name="algo" value="2" id="id_algo_1" {% if algo == 2 %} checked {%endif %}>
-                                    <label for="id_algo_1">Algorithm 2</label>
-                                </div>
-
-                                <div class="col-4 col-12-small">
-                                    <input type="radio" name="algo" value="3" id="id_algo_2" {% if algo == 3 %} checked {%endif %}>
-                                    <label for="id_algo_2">Algorithm 3</label>
-                                </div>
-
-                                <p style="background: #cccccc; width: 100%; margin-top: 2em;border-radius: 1em; padding: 1em;" id="paragraph-explain-algo">
-                                </p>
-
-                                <h2 style="width: 100%;">Data selection:</h2>
 
                                 <div class="col-3 col-12-small">
                                     <input type="radio" name="data" value="0" id="id_data_0" {% if data == 0%} checked {%endif %}>
-                                    <label for="id_data_0"> No preference</label>
+                                    <label for="id_data_0"> No preferences</label>
                                 </div>
 
                                 <div class="col-3 col-12-small">
@@ -181,6 +184,29 @@
                                     <input type="radio" name="data" value="3" id="id_data_3" {% if data == 3 %} checked {%endif %}>
                                     <label for="id_data_3">Price preferred</label>
                                 </div>
+
+                                <h2 style="width: 100%;">Algorithm selection</h2>
+
+                                <p style="background: #cccccc; width: 100%; margin-top: 2em;border-radius: 1em; padding: 1em;" id="paragraph-explain-algo"></p>
+
+                                <div class="col-4 col-12-small">
+                                    <input type="radio" name="algo" value="1" id="id_algo_0" {% if algo == 1 %} checked {%endif %}>
+                                    <label for="id_algo_0"> Algorithm 1 </label>
+                                </div>
+
+                                <div class="col-4 col-12-small">
+                                    <input type="radio" name="algo" value="2" id="id_algo_1" {% if algo == 2 %} checked {%endif %}>
+                                    <label for="id_algo_1">Algorithm 2</label>
+                                </div>
+
+                                <div class="col-4 col-12-small">
+                                    <input type="radio" name="algo" value="3" id="id_algo_2" {% if algo == 3 %} checked {%endif %}>
+                                    <label for="id_algo_2">Algorithm 3</label>
+                                </div>
+
+
+
+
 
                                 <div class="col-12" id="update-button-div">
                                     <input type="submit" value="Update" class="primary" style="margin-top: 1em;">
@@ -682,9 +708,9 @@
     //This part is for explaining the algo at refreshing the page
     var paraExplain = document.getElementById("paragraph-explain-algo");
     var radios = document.getElementsByName('algo');
-    var explanationAlgo1 = "This algorithm uses both the ratings on hotels from the users and the similarity between hotels to recommend the best hotels. <br/><b>The importance of the ratings and the similarity between hotels is equal with this algorithm.</b>";
-    var explanationAlgo2 = "This algorithm uses both the ratings on hotels from the users and the similarity between hotels to recommend the best hotels. <br/><b>The importance of the ratings is higher than the importance of the similarity between hotels with this algorithm.</b>";
-    var explanationAlgo3 = "This algorithm uses both the ratings on hotels from the users and the similarity between hotels to recommend the best hotels. <br/><b>The importance of the ratings is lower than the importance of the similarity between hotels with this algorithm.</b>";
+    var explanationAlgo1 = "In this form, you choose the algorithm that you want to use for the recommendation.<br/>The following algorithms use both the ratings on hotels from the users and the similarity between hotels to recommend hotels. <br/><b>Algorithm 1: The importance of the ratings and the similarity between hotels is equal with this algorithm.</b>";
+    var explanationAlgo2 = "In this form, you choose the algorithm that you want to use for the recommendation.<br/>The following algorithms use both the ratings on hotels from the users and the similarity between hotels to recommend hotels. <br/><b>Algorithm 2: The importance of the ratings is higher than the importance of the similarity between hotels with this algorithm.</b>";
+    var explanationAlgo3 = "In this form, you choose the algorithm that you want to use for the recommendation.<br/>The following algorithms use both the ratings on hotels from the users and the similarity between hotels to recommend hotels. <br/><b>Algorithm 3: The importance of the ratings is lower than the importance of the similarity between hotels with this algorithm.</b>";
 
     for (var i = 0, length = radios.length; i < length; i++)
     {

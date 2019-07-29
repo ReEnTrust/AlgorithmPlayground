@@ -1,12 +1,8 @@
 <!DOCTYPE HTML>
-<!--
-	Stellar by HTML5 UP
-	html5up.net | @ajlkn
-	Free for personal and commercial use under the CCA 3.0 license (html5up.net/license)
--->
+
 <html>
 <head>
-    <title>Hotel Recommender</title>
+    <title>Algorithm Playground</title>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
 
@@ -26,8 +22,8 @@
     <!-- Header -->
     <header id="header">
         <span class="logo"><img src="{% static 'hotelrecommendation/images/paris.png'%}" alt="" style="width: 170px"/></span>
-        <h1>Hotel Recommender</h1>
-        <p>Personalised Booking System</p>
+        <h1>Algorithm Playground</h1>
+        <p>An experimental platform to explore recommender systems</p>
     </header>
 
     <!-- Main -->
@@ -46,10 +42,13 @@
                 </header>
 
                 <div>
-                    <p>Welcome to the Hotel Recommender! A platform for gathering a human perspective on decisions made by recommender algorithms.
+                    <p>Welcome to the Algorithm Playground! This experimental tool is about making algorithms more trustworthy. It aims at bringing a human perspective on decisions made by recommender systems.
                     </p>
 
-                    <p>You can compute lists of recommended hotels for several users with different genders and traits. As an outside observer, you <b>judge</b> whether the outcome is acceptable or not. You have the possibility to switch between several recommendation algorithms.
+                    <p>This is a platform developed by the Edinburgh Team involved in the <a href="https://reentrust.org/about-us/">ReEnTrust Project</a>. This project is about how platform could behave to rebuild user trust. The philosophy of this project is to provide tools for a responsible and transparent using of data and algorithms.
+                    </p>
+
+                    <p>This platform gives you the chance to discover how the algorithms influence your choice when looking for a hotel to book. You can compute lists of recommended hotels for several users with different genders and traits. As an outside observer, you can play with the inputs and watch the changings in the outcome. You have the possibility to switch between several recommendation algorithms to see how this choice is crucial for any recommender system.
                     </p>
 
                 </div>
@@ -57,6 +56,14 @@
                 <header class="major">
                     <h2>How it works?</h2>
                 </header>
+
+
+                <p>The Algorithm Playground makes you explore different versions of a recommendation algorithm. It is based on a so-called hybrid system to specifically recommend hotels. Such systems are based on the ratings from former users to determine a quality score for each hotel.
+
+                    The given recommendation is computed in two steps. First, a form is proposed to be filled, aiming at giving personal details about a fictional customer. Thus, the platform has enough information to search, in the database, which former user is the most similar.
+
+                    Then, the finale result is a recommendation based on the similar user ratings, which are stored in a database consulted by the algorithm to compute which hotels should be recommended to any fictional customer similar to this user.
+                </p>
 
                 <ul class="statistics">
                     <li class="style1">
@@ -81,10 +88,6 @@
                     </li>
                 </ul>
 
-                <p>
-                    The system is using a hybrid recommendation system. It means that it takes into account both the ratings on hotels from the users in our database and how similar hotels are from each others. This ensures that you get a personalised hotel recommendation.
-
-                </p>
 
                 <img src="{% static 'hotelrecommendation/images/recommendation.png'%}" alt="" style="width: 100%;margin-left: auto; margin-right: auto;display: block;"/>
 
@@ -113,7 +116,7 @@
     <footer id="footer">
         <section>
             <h2>What is this tool?</h2>
-            <p>Hotel Recommender is a tool that recommends hotels by using your personal details. Your profile will be compared with thousands of other users. Our database of ratings and hotels will make sure that you find the perfect match.</p>
+            <p>Algorithm Playground is a tool that allows to play with a hybrid recommencer system for hotel recommendation, by using personal details. The filled profile will be compared with thousands of other users. A database of ratings and hotels is used to compute the most accurate recommendation.</p>
 
         </section>
         <section>
@@ -125,14 +128,14 @@
                 <dd><a href="https://reentrust.wp.horizon.ac.uk"><img src="{% static 'hotelrecommendation/images/reentrust-logo.png'%}"></a></dd>
             </dl>
             <!--<ul class="icons">-->
-                <!--<li><a href="#" class="icon fa-twitter alt"><span class="label">Twitter</span></a></li>-->
-                <!--<li><a href="#" class="icon fa-facebook alt"><span class="label">Facebook</span></a></li>-->
-                <!--<li><a href="#" class="icon fa-instagram alt"><span class="label">Instagram</span></a></li>-->
-                <!--<li><a href="#" class="icon fa-github alt"><span class="label">GitHub</span></a></li>-->
-                <!--<li><a href="#" class="icon fa-dribbble alt"><span class="label">Dribbble</span></a></li>-->
+            <!--<li><a href="#" class="icon fa-twitter alt"><span class="label">Twitter</span></a></li>-->
+            <!--<li><a href="#" class="icon fa-facebook alt"><span class="label">Facebook</span></a></li>-->
+            <!--<li><a href="#" class="icon fa-instagram alt"><span class="label">Instagram</span></a></li>-->
+            <!--<li><a href="#" class="icon fa-github alt"><span class="label">GitHub</span></a></li>-->
+            <!--<li><a href="#" class="icon fa-dribbble alt"><span class="label">Dribbble</span></a></li>-->
             <!--</ul>-->
         </section>
-        <p class="copyright">&copy; Hotel Recommendation.</p>
+        <p class="copyright">&copy; Algorithm Playground</p>
     </footer>
 
 </div>
