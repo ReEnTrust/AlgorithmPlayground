@@ -89,7 +89,9 @@ class ResultView(View):
         for o in OldPresets:
             set_relevant_users.append(compute_neighbor(o['age'],o['price'],o['wheelchair'],o['married'],o['kids'],o['gender'],o['type']))
 
-        similarUsers = [set_relevant_users[-1]]
+        similarUsers = []
+        if set_relevant_users:
+            similarUsers.append(set_relevant_users[-1])
 
         set_closest = set_relevant_users
 
