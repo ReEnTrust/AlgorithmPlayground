@@ -574,7 +574,7 @@
             {% if S|length > 0 %}
             <table style="width:100%; border: solid;">
                 <tr>
-                    <th>Name</th>
+                    <th>User ID</th>
                     <th>Age</th>
                     <th>Gender</th>
                     <th>Target Price</th>
@@ -587,7 +587,7 @@
 
                 {% for l in S %}
                 <tr>
-                    <th><a href="{% url 'hotelrecommendation:result_user_rating' log age target_price physically_disabled is_married have_kids gender algo l.id type data%}">{{ l.user_firstname }} {{ l.user_lastname }}</a></th>
+                    <th><a href="{% url 'hotelrecommendation:result_user_rating' log age target_price physically_disabled is_married have_kids gender algo l.id type data%}">{{ l.id }}</a></th>
                     <th>{{ l.user_age }}</th>
                     <th>{{ l.gender  }}</th>
                     <th>{{ l.user_target_price|floatformat:"1"  }}</th>
