@@ -20,15 +20,19 @@ import math
 #We fit the recommender system
 top_results=10
 
-pickle_off_1=open("pickle/Rec1.pickle","rb")
-my_recommender1 = pickle.load(pickle_off_1)
-
-pickle_off_2=open("pickle/Rec2.pickle","rb")
-my_recommender2 = pickle.load(pickle_off_2)
-
-pickle_off_3=open("pickle/Rec3.pickle","rb")
-my_recommender3 = pickle.load(pickle_off_3)
-
+def recommandation(algo, data, user_id):
+    if algo == 1:
+        pickle_off_1=open("pickle/Rec1.pickle","rb")
+        my_recommender1 = pickle.load(pickle_off_1)
+        return my_recommender1[data].predict([user_id]).values.tolist()
+    elif algo == 2:
+        pickle_off_2=open("pickle/Rec2.pickle","rb")
+        my_recommender2 = pickle.load(pickle_off_2)
+        return my_recommender2[data].predict([user_id]).values.tolist()
+    else:
+        pickle_off_3=open("pickle/Rec3.pickle","rb")
+        my_recommender3 = pickle.load(pickle_off_3)
+        return my_recommender3[data].predict([user_id]).values.tolist()
 
 
 class IndexView(View):
@@ -99,12 +103,8 @@ class ResultView(View):
         #We take the predictions for the closest user
         set_predictions = []
         for o,s in zip(OldPresets,set_closest):
-            if o['algo'] == 1:
-                set_predictions.append(my_recommender1[o['data']].predict([s.id]).values.tolist())
-            elif o['algo'] == 2:
-                set_predictions.append(my_recommender2[o['data']].predict([s.id]).values.tolist())
-            else:
-                set_predictions.append(my_recommender3[o['data']].predict([s.id]).values.tolist())
+            set_predictions.append(recommandation(o['algo'],o['data'],s.id))
+
 
         #We take the hotels that correspond
         set_list_hotels = []
