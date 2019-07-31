@@ -1,16 +1,9 @@
 import pickle
 from django.core.management.base import BaseCommand, CommandError
-from hotelrecommendation.models import User, Hotel, LogInstance, LogComment, LogAction, Rating
-from django.shortcuts import render
+from hotelrecommendation.models import Hotel, Rating
 from hybrid_recommender import hybrid_recommender
 import pandas as pd
 from decimal import *
-from django.shortcuts import redirect
-from django.db.models import Func, F
-from django.views import View
-from django.views.generic.edit import FormView
-#from .forms import UserForm
-#from .forms import FeedbackForm
 
 class Command(BaseCommand):
 

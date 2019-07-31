@@ -1,8 +1,6 @@
 from django.shortcuts import render
-from hybrid_recommender import hybrid_recommender
 from decimal import *
 from django.shortcuts import redirect
-from django.db.models import Func, F
 from django.views import View
 from .forms import UserForm
 from .forms import FeedbackForm
@@ -34,6 +32,10 @@ def recommandation(algo, data, user_id):
         my_recommender3 = pickle.load(pickle_off_3)
         return my_recommender3[data].predict([user_id]).values.tolist()
 
+def neighbors():
+    pickle_off_neigh = open("pickle/Neigh.pickle","rb")
+    neigh = pickle.load(pickle_off_neigh)
+    return neigh
 
 class IndexView(View):
 
@@ -313,28 +315,6 @@ def int_type(val):
 def user_to_user_sample(u):
     return (u.user_age,float(u.user_target_price),int_bool(u.user_disable),int_bool(u.user_is_married),int_bool(u.user_have_kids),int_gen(u.gender),int_type(u.type))
 
-def dist(a,b):
-    # a and b are two users with the following (numerical) parameters: age, target_price, physically_disabled, is_married, have_kids, gender, type
-
-    # weights on the parameters:
-    # age -> 1.5/7
-    # target_price -> 0.5/7
-    # physically disables -> 2/7
-    # is_married -> 0.25/7
-    # have_kids -> 0.5/7
-    # gender -> 2/7
-    # type -> 0.25/7
-
-    # weights array:
-    weights = [200,20,1000,20,30,200,20]
-
-    #euclidean distance:
-    d = math.sqrt(weights[0]*(a[0]-b[0])**2+weights[1]*(a[1]-b[1])**2+weights[2]*(a[2]-b[2])**2+weights[3]*(a[3]-b[3])**2+weights[4]*(a[4]-b[4])**2+weights[5]*(a[5]-b[5])**2+weights[6]*(a[6]-b[6])**2)
-
-    return d
-
-
-
 
 def compute_neighbor(age,target_price,physically_disabled,is_married,have_kids,gender,type):
     target_user=[age,float(target_price),int_bool(physically_disabled),int_bool(is_married),int_bool(have_kids),int_gen(gender),int_type(type)]
@@ -348,10 +328,7 @@ def compute_neighbor(age,target_price,physically_disabled,is_married,have_kids,g
 
     rev_dic_users={value: key for key,value in dic_users.items()}
 
-    neigh = NearestNeighbors(n_neighbors=2, algorithm='ball_tree',metric=dist)
-    neigh.fit(samples)
-
-    kNeighb = neigh.kneighbors([target_user], 5, return_distance=False)
+    kNeighb = neighbors().kneighbors([target_user], 5, return_distance=False)
 
     nn_id = rev_dic_users[samples[kNeighb[0][0]]]
     nn = User.objects.filter(id = nn_id).first()
