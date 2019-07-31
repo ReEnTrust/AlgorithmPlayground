@@ -87,9 +87,6 @@ class ResultView(View):
                 'data': int(splitted[8]),
             })
 
-        #closest user by weighted euclidean distance
-        nn_user = compute_neighbor(age,target_price,physically_disabled,is_married,have_kids,gender,type)
-
         #We get the users with the same status
         set_relevant_users = []
         for o in OldPresets:
