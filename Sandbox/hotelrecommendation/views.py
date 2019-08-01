@@ -7,6 +7,7 @@ from .forms import FeedbackForm
 from .models import User
 from .models import Hotel
 from .models import LogInstance
+from django.db.models import Func, F
 from .models import LogComment
 from .models import LogAction
 from .models import Rating
@@ -17,6 +18,8 @@ import math
 
 #We fit the recommender system
 top_results=10
+#0 for filtering and 1 for euclidian
+closest_user_function= 0
 
 def recommandation(algo, data, user_id):
     if algo == 1:
@@ -85,14 +88,39 @@ class ResultView(View):
 
         #We get the users with the same status
         set_relevant_users = []
-        for o in OldPresets:
-            set_relevant_users.append(compute_neighbor(o['age'],o['price'],o['wheelchair'],o['married'],o['kids'],o['gender'],o['type']))
-
         similarUsers = []
-        if set_relevant_users:
-            similarUsers.append(set_relevant_users[-1])
+        set_closest = []
 
-        set_closest = set_relevant_users
+
+        if closest_user_function == 1:
+            for o in OldPresets:
+                set_relevant_users.append(compute_neighbor(o['age'],o['price'],o['wheelchair'],o['married'],o['kids'],o['gender'],o['type']))
+
+            if set_relevant_users:
+                similarUsers.append(set_relevant_users[-1])
+
+            set_closest = set_relevant_users
+        else:
+            for o in OldPresets:
+                amplitude = 0
+                while True:
+                    relevant_users = User.objects.filter(type = o['type'],user_disable = o['wheelchair'], user_is_married = o['married'], user_have_kids = o['kids'], gender= o['gender'], user_target_price__gte = o['price']-amplitude, user_target_price__lte = o['price']+amplitude)
+                    if not relevant_users:
+                        amplitude=amplitude+10
+                    else:
+                        set_relevant_users.append(relevant_users)
+                        break
+
+            set_ordered_age = []
+            #We have to rank them and take the closest user and the similar users
+            for s in set_relevant_users:
+                set_ordered_age.append(s.annotate(age_diff=Func(F('user_age') - age, function='ABS')).order_by('age_diff'))
+
+            if set_ordered_age:
+                similarUsers = (list(set_ordered_age[-1][:5]))
+
+            for s in set_ordered_age:
+                set_closest.append(s.last())
 
 
         #We take the predictions for the closest user
@@ -322,7 +350,7 @@ def dist(a,b):
     # type -> 0.25/7
 
     # weights array:
-    weights = [200,20,1000,20,30,200,20]
+    weights = [200,0.5,1000,20,30,200,20]
 
     #euclidean distance:
     d = math.sqrt(weights[0]*(a[0]-b[0])**2+weights[1]*(a[1]-b[1])**2+weights[2]*(a[2]-b[2])**2+weights[3]*(a[3]-b[3])**2+weights[4]*(a[4]-b[4])**2+weights[5]*(a[5]-b[5])**2+weights[6]*(a[6]-b[6])**2)
