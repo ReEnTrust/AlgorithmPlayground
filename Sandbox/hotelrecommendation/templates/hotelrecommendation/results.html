@@ -62,7 +62,7 @@
                             {% csrf_token %}
                             <div class="row gtr-uniform">
 
-                                <div class="col-4 col-12-small">
+                                <div class="col-4 col-12-small user-input-parameter" style="padding: 1em; margin-top: 1em;">
                                     <label for="id_gender">Gender:</label>
                                     <select name="gender" id="id_gender">
                                         {% if gender == "M" %}
@@ -81,7 +81,7 @@
                                     </select>
                                 </div>
 
-                                <div class="col-4 col-12-small">
+                                <div class="col-4 col-12-small user-input-parameter" style="padding: 1em; margin-top: 1em;">
                                     <label for="id_type">Reason for trip:</label>
                                     <select name="type" id="id_type">
                                         {% if type == "L" %}
@@ -98,14 +98,14 @@
                                     </select>
                                 </div>
 
-                                <div class="col-4 col-12-small ">
+                                <div class="col-4 col-12-small user-input-parameter" style="padding: 1em; margin-top: 1em;">
                                     <label for="id_age">Age:</label>
                                     <input type="number" name="age" required="" id="id_age" min="18" value={{age}}>
                                 </div>
 
 
 
-                                <div class="col-4 col-12-small">
+                                <div class="col-4 col-12-small user-input-parameter" style="padding: 1em; margin-top: 1em;">
                                     {% if physically_disabled == "True"%}
                                     <input type="checkbox" name="physically_disabled" id="id_physically_disabled" checked>
                                     {% else %}
@@ -116,7 +116,7 @@
 
 
 
-                                <div class="col-4 col-12-small">
+                                <div class="col-4 col-12-small user-input-parameter" style="padding: 1em; margin-top: 1em;">
                                     {% if is_married == "True"%}
                                     <input type="checkbox" name="is_married" id="id_is_married" checked>
                                     {% else %}
@@ -125,7 +125,7 @@
                                     <label for="id_is_married">Traveling with partner</label>
                                 </div>
 
-                                <div class="col-4 col-12-small">
+                                <div class="col-4 col-12-small user-input-parameter" style="padding: 1em; margin-top: 1em;">
                                     {% if have_kids == "True" %}
                                     <input type="checkbox" name="have_kids" id="id_have_kids" checked>
                                     {% else %}
@@ -134,7 +134,7 @@
                                     <label for="id_have_kids">Traveling with kids</label>
                                 </div>
 
-                                <div class="col-12 col-12-small slidecontainer">
+                                <div class="col-12 col-12-small slidecontainer user-input-parameter" style="padding: 1em; margin-top: 1em;">
                                     <label for="id_target_price">Ideal price per night & per person (£ <span id="span-range-target-price"></span>)</label>
 
                                     <!--<input type="number" name="target_price" required="" id="id_target_price" min="60" max="400" value={{target_price}}>-->
@@ -142,6 +142,8 @@
                                     <input type="range" min="60" max="400" value={{target_price}} class="slider" id="id_target_price" name="target_price">
 
                                 </div>
+
+
 
                                 <h2 style="width: 100%;">Preference selection</h2>
 
@@ -185,6 +187,7 @@
                                     <label for="id_data_3">Price preferred</label>
                                 </div>
 
+
                                 <h2 style="width: 100%;">Algorithm selection</h2>
 
                                 <p style="background: #cccccc; width: 100%; margin-top: 2em;border-radius: 1em; padding: 1em;" id="paragraph-explain-algo"></p>
@@ -225,62 +228,53 @@
             <div>
                 {% for Z, P, averagePrice, averageReview ,percentageSingle ,percentageTwin ,percentageFamily ,percentageDouble ,percentageSwim ,percentageBreak ,percentageAccessible in L reversed %}
 
+                <p style="background: #cccccc; width: 100%; margin-top: 2em;border-radius: 1em; padding: 1em; text-align: left;">
+                    Algorithm {{P|key:'algo'}} with
+                    {% if P|key:'data' == 0 %}
+                    no preferences,
+                    {% elif P|key:'data' == 1 %}
+                    location preferred,
+                    {% elif P|key:'data' == 2 %}
+                    rating preferred,
+                    {% else %}
+                    price preferred,
+                    {% endif %}
+                    gives the following recommendation for a {{P|key:'age'}} years old
+                    {% if P|key:'gender' == "M" %}
+                    male
+                    {% else %}
+                    female
+                    {% endif %}
+                    person that
+                    {% if P|key:'wheelchair' == True %}
+                    is
+                    {% else %}
+                    is not
+                    {% endif %}
+                    a wheelchair user, is traveling for
+                    {% if P|key:'type' == "B"%}
+                    business,
+                    {% else %}
+                    leisure,
+                    {% endif %}
+                    {% if P|key:'married' == True %}
+                    is
+                    {% else %}
+                    is not
+                    {% endif %}
+                    traveling with a partner,
+                    {% if P|key:'kids' == True %}
+                    is
+                    {% else %}
+                    is not
+                    {% endif %}
+                    traveling with kids and have an ideal price of £{{P|key:'price'}}.
+
+                </p>
+
                 <div style="width: 100%; overflow: hidden; margin-bottom: 2em;">
-                    <div style="width: 30%;float: left; padding-top: 3em;">
 
-                        <p>
-                            Algorithm {{P|key:'algo'}} with
-                            {% if P|key:'data' == 0 %}
-                            no preferences,
-                            {% elif P|key:'data' == 1 %}
-                            location preferred,
-                            {% elif P|key:'data' == 2 %}
-                            rating preferred,
-                            {% else %}
-                            price preferred,
-                            {% endif %}
-                            gives the following recommendation for a {{P|key:'age'}} years old
-                            {% if P|key:'gender' == "M" %}
-                            male
-                            {% else %}
-                            female
-                            {% endif %}
-                            person that
-                            {% if P|key:'wheelchair' == True %}
-                            is
-                            {% else %}
-                            is not
-                            {% endif %}
-                            a wheelchair user, is traveling for
-                            {% if P|key:'type' == "B"%}
-                            business,
-                            {% else %}
-                            leisure,
-                            {% endif %}
-                            {% if P|key:'married' == True %}
-                            is
-                            {% else %}
-                            is not
-                            {% endif %}
-                            married,
-                            {% if P|key:'kids' == True %}
-                            does
-                            {% else %}
-                            does not
-                            {% endif %}
-                            have kids and have an ideal price of £{{P|key:'price'}}.
-
-                        </p>
-
-                        <p>
-                            The average price per night for the recommended hotels is £{{averagePrice|floatformat:"1"}} and the average review is {{averageReview|floatformat:"1"}}/5.
-                        </p>
-                    </div>
-
-                    <div style="margin-left: 35%; margin-top: 5em;">
-
-
-                        <div class="row gtr-uniform">
+                    <div class="row gtr-uniform">
                             {% if percentageSingle != 0 %}
                             <div style="background: cadetblue; text-align: center; width: {{percentageSingle}}%;" title="{{percentageSingle}}%">
                                 Single
@@ -305,6 +299,10 @@
                             </div>
                             {% endif %}
 
+                            <p>
+                                In the recommended hotels, there are {{percentageSingle}}% of single rooms, {{percentageDouble}}% of double rooms, {{percentageTwin}}% of twin rooms and {{percentageFamily}}% of family rooms.
+                            </p>
+
                             {% if percentageAccessible != 0 %}
                             <div style="background: aquamarine; text-align: center; width: {{percentageAccessible}}%; padding-top: 0;" title="{{percentageAccessible}}%">
                                 <span style="font-size: 2em; color: #444444; ">
@@ -323,6 +321,10 @@
                                 </span>
                             </div>
                             {% endif %}
+
+                            <p>
+                                In the recommended hotels, {{percentageAccessible}}% were accessible for wheelchair users and {{100|subtract:percentageAccessible}}% were not.
+                            </p>
 
                             {% if percentageSwim != 0 %}
                             <div style="background: greenyellow; text-align: center; width: {{percentageSwim}}%;padding-top: 0;" title="{{percentageSwim}}%">
@@ -343,6 +345,10 @@
                             </div>
                             {% endif %}
 
+                            <p>
+                                In the recommended hotels, {{percentageSwim}}% had a swimming pool and {{100|subtract:percentageSwim}}% had not.
+                            </p>
+
                             {% if percentageBreak != 0 %}
                             <div style="background:violet; padding-top:0; text-align: center; width: {{percentageBreak}}%" title="{{percentageBreak}}%">
                                 <span style="font-size: 2em; color: #444444; ">
@@ -361,10 +367,17 @@
                             </div>
                             {% endif %}
 
+                            <p>
+                                In the recommended hotels, {{percentageBreak}}% had an option for breakfast and {{100|subtract:percentageBreak}}% had not.
+                            </p>
 
 
-                        </div>
                     </div>
+
+                    <p>
+                        The average price per night for the recommended hotels is £{{averagePrice|floatformat:"1"}} and the average review is {{averageReview|floatformat:"1"}}/5.
+                    </p>
+
                 </div>
 
 
@@ -757,6 +770,34 @@
             }
         });
     }
+
+
+    //We add the highlight ability
+    $(".user-input-parameter").hover(
+        function(){
+            $(this).css("border-radius", "25px");
+            $(this).css("-webkit-box-shadow", "3px 3px 5px 6px #ccc");
+            $(this).css("-moz-box-shadow", "3px 3px 5px 6px #ccc");
+            $(this).css("box-shadow", "3px 3px 5px 6px #ccc");
+            },
+        function(){
+            $(this).css("-webkit-box-shadow", "0px 0px 0px 0px #ccc");
+            $(this).css("-moz-box-shadow", "0px 0px 0px 0px #ccc");
+            $(this).css("box-shadow", "0px 0px 0px 0px #ccc");
+        });
+
+    $(".user-input-parameter").dblclick(
+        function(){
+            if($(this).css("background-color")=="rgb(255, 127, 80)"){
+                $(this).find('*').attr('disabled', false);
+                $(this).css("background-color", "White");
+            }
+            else{
+                $(this).find('*').attr('disabled', true);
+                $(this).css("background-color", "Coral");
+            }
+
+    });
 
 </script>
 
