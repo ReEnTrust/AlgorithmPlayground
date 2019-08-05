@@ -19,7 +19,7 @@ import math
 #We fit the recommender system
 top_results=10
 #0 for filtering and 1 for euclidian
-closest_user_function= 0
+closest_user_function= 1
 
 def recommandation(algo, data, user_id):
     if algo == 1:
@@ -148,6 +148,7 @@ class ResultView(View):
         set_percentageSwim = []
         set_percentageBreak = []
         set_percentageAccessible = []
+        set_percentageMicheling = []
 
         for Q in set_list_hotels:
             averagePrice = 0
@@ -158,7 +159,9 @@ class ResultView(View):
             percentageDouble = 0
             percentageSwim = 0
             percentageBreak = 0
+            percentageMichelin =0
             percentageAccessible = 0
+
             for l in Q:
                 averagePrice += l.hotel_night_price
                 averageReview +=l.hotel_user_reviews
@@ -180,8 +183,14 @@ class ResultView(View):
                 if l.hotel_breakfast_available:
                     percentageBreak = percentageBreak +1
 
+                if l.hotel_michelin_restaurant:
+                    percentageMichelin = percentageMichelin +1
+
             percentageAccessible /= (top_results/100)
             set_percentageAccessible.append(percentageAccessible)
+
+            percentageMichelin /= (top_results/100)
+            set_percentageMicheling.append(percentageMichelin)
 
             percentageSingle /= (top_results/100)
             set_percentageSingle.append(percentageSingle)
@@ -216,7 +225,7 @@ class ResultView(View):
             'age' : age,
             'log' : log,
             'gender': gender,
-            "L" : zip(set_list_hotels,OldPresets,set_averagePrice, set_averageReview ,set_percentageSingle ,set_percentageTwin ,set_percentageFamily ,set_percentageDouble ,set_percentageSwim ,set_percentageBreak ,set_percentageAccessible),
+            "L" : zip(set_list_hotels,OldPresets,set_averagePrice, set_averageReview ,set_percentageSingle ,set_percentageTwin ,set_percentageFamily ,set_percentageDouble ,set_percentageSwim ,set_percentageBreak ,set_percentageAccessible,set_percentageMicheling),
             'S' : similarUsers,
             'algo' : algo,
             'set_comments' : set_comments,
@@ -257,6 +266,15 @@ class ResultView(View):
 
         elif request.POST.__contains__('algo'): #This means that we are changing a profile
             form = UserForm(data = request.POST)
+
+            status_gender = request.POST.__getitem__('enabled-gender')
+            status_purpose = request.POST.__getitem__('enabled-purpose')
+            status_age = request.POST.__getitem__('enabled-age')
+            status_wheelchair = request.POST.__getitem__('enabled-wheelchair')
+            status_partner = request.POST.__getitem__('enabled-partner')
+            status_kids = request.POST.__getitem__('enabled-kids')
+            status_price = request.POST.__getitem__('enabled-price')
+
             if form.is_valid():
                 age = form.cleaned_data.get('age')
                 target_price = form.cleaned_data.get('target_price')
@@ -350,10 +368,10 @@ def dist(a,b):
     # type -> 0.25/7
 
     # weights array:
-    weights = [200,0.5,1000,20,30,200,20]
+    weights = [200,1,100000000,100000000,100000000,100000000,100000000]
 
     #euclidean distance:
-    d = math.sqrt(weights[0]*(a[0]-b[0])**2+weights[1]*(a[1]-b[1])**2+weights[2]*(a[2]-b[2])**2+weights[3]*(a[3]-b[3])**2+weights[4]*(a[4]-b[4])**2+weights[5]*(a[5]-b[5])**2+weights[6]*(a[6]-b[6])**2)
+    d = math.sqrt(weights[0]*((a[0]-b[0])**2)+weights[1]*((a[1]-b[1])**2)+weights[2]*((a[2]-b[2])**2)+weights[3]*((a[3]-b[3])**2)+weights[4]*((a[4]-b[4])**2)+weights[5]*((a[5]-b[5])**2)+weights[6]*((a[6]-b[6])**2))
 
     return d
 

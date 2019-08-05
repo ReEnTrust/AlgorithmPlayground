@@ -67,30 +67,31 @@ class Command(BaseCommand):
 
         print("We computed the recommender for algorithm 1")
 
-        for i in range(0,4):
-            my_recommender2.append(hybrid_recommender(item_clusters,top_results,ratings_weightage=1,content_weightage=0.2, null_rating_replace='mean')) #can be replaced by 'zero', 'one' or 'min'
-            my_recommender2[i].fit(ratings[i],item_df)
-
-        print("We computed the recommender for algorithm 2")
-
-        for i in range(0,4):
-            my_recommender3.append(hybrid_recommender(item_clusters,top_results,ratings_weightage=0.2,content_weightage=1, null_rating_replace='mean')) #can be replaced by 'zero', 'one' or 'min'
-            my_recommender3[i].fit(ratings[i],item_df)
-
-        print("We computed the recommender for algorithm 3")
-
-
         print("We are writing the first file")
         pickle_on_1=open("Rec1.pickle","wb")
         pickle.dump(my_recommender1,pickle_on_1)
         pickle_on_1.close()
         print("Done.")
 
+
+        for i in range(0,4):
+            my_recommender2.append(hybrid_recommender(item_clusters,top_results,ratings_weightage=1,content_weightage=0.2, null_rating_replace='mean')) #can be replaced by 'zero', 'one' or 'min'
+            my_recommender2[i].fit(ratings[i],item_df)
+
+        print("We computed the recommender for algorithm 2")
+
         print("We are writing the second file")
         pickle_on_2=open("Rec2.pickle","wb")
         pickle.dump(my_recommender2,pickle_on_2)
         pickle_on_2.close()
         print("Done.")
+
+
+        for i in range(0,4):
+            my_recommender3.append(hybrid_recommender(item_clusters,top_results,ratings_weightage=0.2,content_weightage=1, null_rating_replace='mean')) #can be replaced by 'zero', 'one' or 'min'
+            my_recommender3[i].fit(ratings[i],item_df)
+
+        print("We computed the recommender for algorithm 3")
 
         print("We are writing the third file")
         pickle_on_3=open("Rec3.pickle","wb")

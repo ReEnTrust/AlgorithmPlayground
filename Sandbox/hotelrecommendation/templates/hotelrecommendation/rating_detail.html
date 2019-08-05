@@ -71,15 +71,15 @@
                                     {% endif %}
 
                                 </li>
-                                <Li>Is married:
-                                    {% if rater.is_married%}
+                                <Li>Traveling with partner:
+                                    {% if rater.user_is_married%}
                                     <th><i class="fa fa-check-circle-o" aria-hidden="true" style="color: green;"></i></th>
                                     {% else %}
                                     <th><i class="fa fa-times-circle" aria-hidden="true" style="color: red;"></i></th>
                                     {% endif %}
                                 </Li>
-                                <li>Have kids:
-                                    {% if rater.have_kids%}
+                                <li>Traveling with kids:
+                                    {% if rater.user_have_kids%}
                                     <th><i class="fa fa-check-circle-o" aria-hidden="true" style="color: green;"></i></th>
                                     {% else %}
                                     <th><i class="fa fa-times-circle" aria-hidden="true" style="color: red;"></i></th>

@@ -60,9 +60,18 @@
 
                         <form method="post">
                             {% csrf_token %}
+
+                            <input type="hidden" value="" name="enabled-gender">
+                            <input type="hidden" value="" name="enabled-purpose">
+                            <input type="hidden" value="" name="enabled-age">
+                            <input type="hidden" value="" name="enabled-wheelchair">
+                            <input type="hidden" value="" name="enabled-partner">
+                            <input type="hidden" value="" name="enabled-kids">
+                            <input type="hidden" value="" name="enabled-price">
+
                             <div class="row gtr-uniform">
 
-                                <div class="col-4 col-12-small user-input-parameter" style="padding: 1em; margin-top: 1em;">
+                                <div class="col-4 col-12-small user-input-parameter gender-class" style="padding: 1em; margin-top: 1em;">
                                     <label for="id_gender">Gender:</label>
                                     <select name="gender" id="id_gender">
                                         {% if gender == "M" %}
@@ -81,7 +90,7 @@
                                     </select>
                                 </div>
 
-                                <div class="col-4 col-12-small user-input-parameter" style="padding: 1em; margin-top: 1em;">
+                                <div class="col-4 col-12-small user-input-parameter purpose-class" style="padding: 1em; margin-top: 1em;">
                                     <label for="id_type">Reason for trip:</label>
                                     <select name="type" id="id_type">
                                         {% if type == "L" %}
@@ -98,14 +107,14 @@
                                     </select>
                                 </div>
 
-                                <div class="col-4 col-12-small user-input-parameter" style="padding: 1em; margin-top: 1em;">
+                                <div class="col-4 col-12-small user-input-parameter age-class" style="padding: 1em; margin-top: 1em;">
                                     <label for="id_age">Age:</label>
                                     <input type="number" name="age" required="" id="id_age" min="18" value={{age}}>
                                 </div>
 
 
 
-                                <div class="col-4 col-12-small user-input-parameter" style="padding: 1em; margin-top: 1em;">
+                                <div class="col-4 col-12-small user-input-parameter wheelchair-class" style="padding: 1em; margin-top: 1em;">
                                     {% if physically_disabled == "True"%}
                                     <input type="checkbox" name="physically_disabled" id="id_physically_disabled" checked>
                                     {% else %}
@@ -116,7 +125,7 @@
 
 
 
-                                <div class="col-4 col-12-small user-input-parameter" style="padding: 1em; margin-top: 1em;">
+                                <div class="col-4 col-12-small user-input-parameter partner-class" style="padding: 1em; margin-top: 1em;">
                                     {% if is_married == "True"%}
                                     <input type="checkbox" name="is_married" id="id_is_married" checked>
                                     {% else %}
@@ -125,7 +134,7 @@
                                     <label for="id_is_married">Traveling with partner</label>
                                 </div>
 
-                                <div class="col-4 col-12-small user-input-parameter" style="padding: 1em; margin-top: 1em;">
+                                <div class="col-4 col-12-small user-input-parameter kids-class" style="padding: 1em; margin-top: 1em;">
                                     {% if have_kids == "True" %}
                                     <input type="checkbox" name="have_kids" id="id_have_kids" checked>
                                     {% else %}
@@ -134,7 +143,7 @@
                                     <label for="id_have_kids">Traveling with kids</label>
                                 </div>
 
-                                <div class="col-12 col-12-small slidecontainer user-input-parameter" style="padding: 1em; margin-top: 1em;">
+                                <div class="col-12 col-12-small slidecontainer user-input-parameter price-class" style="padding: 1em; margin-top: 1em;">
                                     <label for="id_target_price">Ideal price per night & per person (£ <span id="span-range-target-price"></span>)</label>
 
                                     <!--<input type="number" name="target_price" required="" id="id_target_price" min="60" max="400" value={{target_price}}>-->
@@ -226,7 +235,7 @@
                 <h2>Recommendations</h2>
             </header>
             <div>
-                {% for Z, P, averagePrice, averageReview ,percentageSingle ,percentageTwin ,percentageFamily ,percentageDouble ,percentageSwim ,percentageBreak ,percentageAccessible in L reversed %}
+                {% for Z, P, averagePrice, averageReview ,percentageSingle ,percentageTwin ,percentageFamily ,percentageDouble ,percentageSwim ,percentageBreak ,percentageAccessible, percentageMichelin in L reversed %}
 
                 <p style="background: #cccccc; width: 100%; margin-top: 2em;border-radius: 1em; padding: 1em; text-align: left;">
                     Algorithm {{P|key:'algo'}} with
@@ -313,7 +322,7 @@
                             {% endif %}
 
                             {% if 100|subtract:percentageAccessible != 0 %}
-                            <div style="background:bisque; padding-top:0; width: {{100|subtract:percentageAccessible}}%" title="{{100|subtract:percentageAccessible}}%">
+                            <div style="background:aliceblue; padding-top:0; width: {{100|subtract:percentageAccessible}}%" title="{{100|subtract:percentageAccessible}}%">
                                 <span style="font-size: 2em; color: #444444; ">
                                     <i class="fas fa-wheelchair to-be-crossed-icon">
                                         <i class="fa fa-ban ban-crossed" style="top: -0.2em; left: -0.2em;"></i>
@@ -358,7 +367,7 @@
                             {% endif %}
 
                             {% if 100|subtract:percentageBreak != 0 %}
-                            <div style="background: aquamarine; padding-top:0;text-align: center; width: {{100|subtract:percentageBreak}}%" title="{{100|subtract:percentageBreak}}%">
+                            <div style="background: aliceblue; padding-top:0;text-align: center; width: {{100|subtract:percentageBreak}}%" title="{{100|subtract:percentageBreak}}%">
                                 <span style="font-size: 2em; color: #444444; ">
                                     <i class="fas fa-coffee to-be-crossed-icon">
                                         <i class="fa fa-ban ban-crossed" style="top: -0.2em; left: -0.07em;"></i>
@@ -367,10 +376,33 @@
                             </div>
                             {% endif %}
 
-                            <p>
-                                In the recommended hotels, {{percentageBreak}}% had an option for breakfast and {{100|subtract:percentageBreak}}% had not.
-                            </p>
+                        <p>
+                            In the recommended hotels, {{percentageBreak}}% of the hotels had an option for breakfast and {{100|subtract:percentageBreak}}% of the hotels had not.
+                        </p>
 
+
+
+                        {% if 100|subtract:percentageMichelin != 0 %}
+                        <div style="background: aliceblue; padding-top:0;text-align: center; width: {{100|subtract:percentageMichelin}}%" title="{{100|subtract:percentageMichelin}}%">
+                                <span style="font-size: 2em; color: #444444; ">
+                                    <i class="fas fa-utensils to-be-crossed-icon">
+                                        <i class="fa fa-ban ban-crossed" style="top: -0.2em; left: -0.2em;"></i>
+                                    </i>
+                                </span>
+                        </div>
+                        {% endif %}
+
+                        {% if percentageMichelin != 0 %}
+                        <div style="background:#9bb2e1; padding-top:0; text-align: center; width: {{percentageMichelin}}%" title="{{percentageMichelin}}%">
+                                <span style="font-size: 2em; color: #444444; ">
+                                    <i class="fas fa-utensils"></i>
+                                </span>
+                        </div>
+                        {% endif %}
+
+                        <p>
+                            In the recommended hotels, {{percentageMichelin}}% had an option for Michelin restaurant and {{100|subtract:percentageMichelin}}% had not.
+                        </p>
 
                     </div>
 
@@ -789,12 +821,52 @@
     $(".user-input-parameter").dblclick(
         function(){
             if($(this).css("background-color")=="rgb(255, 127, 80)"){
-                $(this).find('*').attr('disabled', false);
                 $(this).css("background-color", "White");
+
+                if($(this)[0].classList.contains("gender-class"))
+                    $("[name='enabled-gender']")[0].value = "enabled";
+
+                if($(this)[0].classList.contains("purpose-class"))
+                    $("[name='enabled-purpose']")[0].value = "enabled";
+
+                if($(this)[0].classList.contains("age-class"))
+                    $("[name='enabled-age']")[0].value = "enabled";
+
+                if($(this)[0].classList.contains("wheelchair-class"))
+                    $("[name='enabled-wheelchair']")[0].value = "enabled";
+
+                if($(this)[0].classList.contains("partner-class"))
+                    $("[name='enabled-partner']")[0].value = "enabled";
+
+                if($(this)[0].classList.contains("kids-class"))
+                    $("[name='enabled-kids']")[0].value = "enabled";
+
+                if($(this)[0].classList.contains("price-class"))
+                    $("[name='enabled-price']")[0].value = "enabled";
             }
             else{
-                $(this).find('*').attr('disabled', true);
                 $(this).css("background-color", "Coral");
+
+                if($(this)[0].classList.contains("gender-class"))
+                    $("[name='enabled-gender']")[0].value = "disabled";
+
+                if($(this)[0].classList.contains("purpose-class"))
+                    $("[name='enabled-purpose']")[0].value = "disabled";
+
+                if($(this)[0].classList.contains("age-class"))
+                    $("[name='enabled-age']")[0].value = "disabled";
+
+                if($(this)[0].classList.contains("wheelchair-class"))
+                    $("[name='enabled-wheelchair']")[0].value = "disabled";
+
+                if($(this)[0].classList.contains("partner-class"))
+                    $("[name='enabled-partner']")[0].value = "disabled";
+
+                if($(this)[0].classList.contains("kids-class"))
+                    $("[name='enabled-kids']")[0].value = "disabled";
+
+                if($(this)[0].classList.contains("price-class"))
+                    $("[name='enabled-price']")[0].value = "disabled";
             }
 
     });
