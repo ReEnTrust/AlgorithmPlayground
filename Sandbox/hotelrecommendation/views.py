@@ -21,6 +21,18 @@ top_results=10
 #0 for filtering and 1 for euclidian
 closest_user_function= 1
 
+max_user_rating = Rating.objects.all().order_by('rating_note').last().rating_note
+min_user_rating = Rating.objects.all().order_by('rating_note').first().rating_note
+
+def averageNote(hotel):
+    list_ratings = list(Rating.objects.filter(rating_hotel = hotel))
+    result = 0
+    for r in list_ratings:
+        result+= r.rating_note
+    result /= len(list_ratings)
+    result = (result - min_user_rating) / (max_user_rating- min_user_rating) * 5
+    return result
+
 def recommandation(algo, data, user_id):
     if algo == 1:
         pickle_off_1=open("pickle/Rec1.pickle","rb")
@@ -134,9 +146,19 @@ class ResultView(View):
         for s in set_predictions:
             listHotelT = []
             for l in s:
-                listHotelT.append(Hotel.objects.filter(id = l[0]).first())
+                listHotelT.append(Hotel.objects.get(id = l[0]))
             set_list_hotels.append(listHotelT)
-
+        #We take the scores that correspond
+        set_list_averageScore = []
+        for l in set_list_hotels:
+            listScore = []
+            for z in l:
+                listScore.append(averageNote(z))
+            set_list_averageScore.append(listScore)
+        #We merge them together
+        set_list_hotel_score = []
+        for l,z in zip(set_list_hotels,set_list_averageScore):
+            set_list_hotel_score.append(zip(l,z))
 
         #We take statistics on those hotels
         set_averagePrice = []
@@ -225,7 +247,7 @@ class ResultView(View):
             'age' : age,
             'log' : log,
             'gender': gender,
-            "L" : zip(set_list_hotels,OldPresets,set_averagePrice, set_averageReview ,set_percentageSingle ,set_percentageTwin ,set_percentageFamily ,set_percentageDouble ,set_percentageSwim ,set_percentageBreak ,set_percentageAccessible,set_percentageMicheling),
+            "L" : zip(set_list_hotel_score,OldPresets,set_averagePrice, set_averageReview ,set_percentageSingle ,set_percentageTwin ,set_percentageFamily ,set_percentageDouble ,set_percentageSwim ,set_percentageBreak ,set_percentageAccessible,set_percentageMicheling),
             'S' : similarUsers,
             'algo' : algo,
             'set_comments' : set_comments,

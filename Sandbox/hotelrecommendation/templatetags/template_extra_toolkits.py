@@ -15,3 +15,6 @@ subtract = register.filter('subtract', subtract)
 def addstr(arg1, arg2):
     """concatenate arg1 & arg2"""
     return str(arg1) + str(arg2)
+
+
+

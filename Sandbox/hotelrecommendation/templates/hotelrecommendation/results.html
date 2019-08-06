@@ -10,8 +10,9 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
 
-    {% load static %}
     {% load template_extra_toolkits %}
+    {% load static %}
+
 
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.9.0/css/all.css">
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.9.0/css/v4-shims.css">
@@ -414,7 +415,7 @@
 
 
                 <div style="margin: 2em;">
-                <a class="collapsible">See the hotels</a>
+                <a class="collapsible">See top pick hotels</a>
                 </div>
 
                 <table class="content-hotel" style="width:100%; border: solid;margin-top: 2em;">
@@ -422,19 +423,19 @@
                     <tr>
                         <th>#</th>
                         <th>Hotel Name</th>
-                        <!--<th>Address</th>-->
-                        <!--<th>City</th>-->
                         <th>Night Price</th>
                         <th>Room Type</th>
                         <th>Wheelchair Accessible</th>
                         <th>Swimming Pool</th>
                         <th>Breakfast Available</th>
-                        <th>Reviews</th>
+                        <th>Stars</th>
                         <th>Michelin Restaurant</th>
+                        <th>Review Score</th>
                         <th>Location score</th>
                     </tr>
 
-                    {% for l in Z %}
+
+                    {% for l , q in Z %}
                     <tr>
                         <th>{{ forloop.counter}}</th>
                         <th>{{ l.hotel_name }}</th>
@@ -483,6 +484,7 @@
                         <th><i class="fa fa-times-circle" aria-hidden="true" style="color: red;"></i></th>
                         {% endif %}
 
+                        <th>{{q|floatformat:"1"}}</th>
                         <th>{{l.hotel_location_score|floatformat:"1"}}</th>
                     </tr>
                     {% endfor %}
