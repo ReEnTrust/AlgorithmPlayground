@@ -4,6 +4,7 @@ from django.shortcuts import redirect
 from django.views import View
 from .forms import UserForm
 from .forms import FeedbackForm
+from .forms import LogForm
 from .models import User
 from .models import Hotel
 from .models import LogInstance
@@ -55,14 +56,19 @@ class IndexView(View):
 
     def post(self,request):
 
+        form = LogForm(data = request.POST)
+        if form.is_valid():
+            dataInstance = form.cleaned_data.get('dataInstance')
+        print(form.errors)
+
+
         #We create a new instance
-        newLogInstance = LogInstance()
+        newLogInstance = LogInstance(log_identification_string=dataInstance)
         newLogInstance.save()
 
         #We create a logAction that the user has logged In
-        newLogAction = LogAction(log_instance_id= newLogInstance.id, log_action_description="User has logged in, redirecting to default page.")
+        newLogAction = LogAction(log_instance_id= newLogInstance.id, log_action_description="User has logged in, with the following identification code:"+dataInstance)
         newLogAction.save()
-
         return redirect('hotelrecommendation:result_view', newLogInstance.id, 18, 200, False,False,False,"M",1, "L", 0)
 
 class ResultView(View):

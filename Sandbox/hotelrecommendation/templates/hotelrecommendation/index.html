@@ -94,7 +94,13 @@
                 <footer class="major">
                     <form method="post">
                         {% csrf_token %}
-                        <button type="submit" style="font-size: 100%;" >Begin here!</button>
+
+                        <div class="col-4 col-12-small user-input-parameter age-class" style="padding: 1em; margin-top: 1em;">
+                            <label for="id_dataInstance">IDENTIFICATION CODE</label>
+                            <input type="text" name="dataInstance" required="" id="id_dataInstance">
+                        </div>
+
+                        <button type="submit" style="font-size: 100%;" >BEGIN!</button>
                     </form>
                 </footer>
 

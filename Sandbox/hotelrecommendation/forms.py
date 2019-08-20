@@ -32,6 +32,9 @@ class UserForm(forms.Form):
     ]
     data = forms.ChoiceField(choices = DATA_CHOICES, label="data", widget=forms.RadioSelect, required=True)
 
+class LogForm(forms.Form):
+    dataInstance = forms.CharField(label='DataInstance')
+
 
 class FeedbackForm(forms.Form):
     comment= forms.CharField(widget=forms.Textarea, required=False)

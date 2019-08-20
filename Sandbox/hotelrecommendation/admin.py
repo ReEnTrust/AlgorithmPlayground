@@ -15,7 +15,7 @@ class UserAdmin(admin.ModelAdmin):
 admin.site.register(User,UserAdmin)
 
 class LogInstanceAdmin(admin.ModelAdmin):
-    list_display = ('id', 'log_instance_creation_date')
+    list_display = ('id', 'log_instance_creation_date','log_identification_string')
 admin.site.register(LogInstance,LogInstanceAdmin)
 
 class LogActionAdmin(admin.ModelAdmin):

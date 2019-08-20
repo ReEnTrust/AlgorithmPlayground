@@ -76,6 +76,7 @@ class Rating(models.Model):
 
 class LogInstance(models.Model):
     log_instance_creation_date = models.DateTimeField(auto_now_add=True)
+    log_identification_string = models.CharField(max_length=200, default='not provided')
     def __str__(self):
         return str(self.id)+" "+str(self.log_instance_creation_date)
 
