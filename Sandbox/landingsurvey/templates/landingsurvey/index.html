@@ -1,0 +1,109 @@
+<!DOCTYPE HTML>
+
+<html>
+<head>
+    <title>Landing Survey</title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+
+
+    {% load static %}
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.9.0/css/all.css">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.9.0/css/v4-shims.css">
+
+    <link rel="stylesheet" href="{% static 'landingsurvey/assets/css/main.css'%}" />
+    <noscript><link rel="stylesheet" href="{% static 'landingsurvey/assets/css/noscript.css'%}" /></noscript>
+</head>
+<body class="is-preload">
+
+<!-- Wrapper -->
+<div id="wrapper">
+
+    <!-- Header -->
+    <header id="header">
+        <span class="logo"><img src="{% static 'landingsurvey/images/paris.png'%}" alt="" style="width: 170px"/></span>
+        <h1>Landing Survey</h1>
+        <p>Start the survey</p>
+    </header>
+
+    <!-- Main -->
+    <div id="main">
+
+        <!-- Content -->
+        <section id="content" class="main">
+
+
+            <section id="first" class="main special">
+
+                <header class="major">
+                    <h2>Introduction</h2>
+                </header>
+
+                <div>
+                    <h1>Welcome to our study</h1>
+
+                    <p> Please click on the button below to enter our survey
+                    </p>
+
+                    <p style="font-weight: bold; color: red;">NOTE: You will need your prolific user ID to complete the two different parts of the survey</p>
+                </div>
+
+
+                {% if returnedURL %}
+                <a href="{{returnedURL}}">{{returnedURL}}</a>
+                {% else %}
+                <footer class="major">
+                    <form method="post">
+                        {% csrf_token %}
+
+                        <button type="submit" style="font-size: 100%;" >GO TO THE SURVEY!</button>
+                    </form>
+                </footer>
+                {% endif %}
+
+
+
+            </section>
+
+
+
+
+
+
+        </section>
+
+    </div>
+
+    <footer id="footer">
+        <section>
+            <h2>What is this page?</h2>
+            <p>You are in the landing page of the experiment. This page will redirect you to the corresponding survey.</p>
+
+        </section>
+        <section>
+            <h2>A problem? Contact Us</h2>
+            <dl class="alt">
+                <dt>Email</dt>
+                <dd><a href="mailto: ybruno@ed.ac.uk">ybruno@ed.ac.uk</a></dd>
+                <dt>Project</dt>
+                <dd><a href="https://reentrust.wp.horizon.ac.uk"><img src="{% static 'hotelrecommendation/images/reentrust-logo.png'%}"></a></dd>
+            </dl>
+
+        </section>
+        <p class="copyright">&copy; Landing Survey</p>
+    </footer>
+
+</div>
+
+
+<!-- Scripts -->
+<script src="{% static 'landingsurvey/assets/js/jquery.min.js'%}"></script>
+<script src="{% static 'landingsurvey/assets/js/jquery.scrollex.min.js'%}"></script>
+<script src="{% static 'landingsurvey/assets/js/jquery.scrolly.min.js'%}"></script>
+<script src="{% static 'landingsurvey/assets/js/browser.min.js'%}"></script>
+<script src="{% static 'landingsurvey/assets/js/breakpoints.min.js'%}"></script>
+<script src="{% static 'landingsurvey/assets/js/util.js'%}"></script>
+<script src="{% static 'landingsurvey/assets/js/main.js'%}"></script>
+
+</body>
+</html>
