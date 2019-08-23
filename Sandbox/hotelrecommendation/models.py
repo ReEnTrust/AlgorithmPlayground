@@ -1,5 +1,5 @@
 from django.db import models
-
+from django.core.validators import int_list_validator
 # Create your models here.
 
 class User(models.Model):
@@ -94,3 +94,13 @@ class LogComment(models.Model):
     log_about = models.CharField(max_length=2000)
     def __str__(self):
         return str(self.log_instance_id)+"|"+str(self.log_comment)+"|"+str(self.log_radio1)+"|"+str(self.log_about)
+
+class CacheRecommendation(models.Model):
+    cache_recommendation_hotel = models.CharField(validators=[int_list_validator], max_length=100)
+    cache_user = models.ForeignKey(User, on_delete=models.CASCADE)
+    cache_description = models.CharField(max_length=2000)
+
+class CacheClosest(models.Model):
+    cache_user = models.ForeignKey(User, on_delete=models.CASCADE)
+    cache_description = models.CharField(max_length=2000)
+    cache_method = models.IntegerField()

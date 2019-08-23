@@ -12,6 +12,8 @@ from django.db.models import Func, F
 from .models import LogComment
 from .models import LogAction
 from .models import Rating
+from .models import CacheRecommendation
+from .models import CacheClosest
 import pickle
 from sklearn.neighbors import NearestNeighbors
 import math
@@ -35,18 +37,37 @@ def averageNote(hotel):
     return result
 
 def recommandation(algo, data, user_id):
-    if algo == 1:
-        pickle_off_1=open("pickle/Rec1.pickle","rb")
-        my_recommender1 = pickle.load(pickle_off_1)
-        return my_recommender1[data].predict([user_id]).values.tolist()
-    elif algo == 2:
-        pickle_off_2=open("pickle/Rec2.pickle","rb")
-        my_recommender2 = pickle.load(pickle_off_2)
-        return my_recommender2[data].predict([user_id]).values.tolist()
+
+    description = str(algo)+"+"+str(data)
+    corresponding_user = User.objects.filter(id=user_id)[0]
+    db_cache_rec = CacheRecommendation.objects.filter(cache_user = corresponding_user, cache_description= description)
+
+    if not db_cache_rec:
+        result = []
+        if algo == 1:
+            pickle_off_1=open("pickle/Rec1.pickle","rb")
+            my_recommender1 = pickle.load(pickle_off_1)
+            result= my_recommender1[data].predict([user_id]).values.tolist()
+        elif algo == 2:
+            pickle_off_2=open("pickle/Rec2.pickle","rb")
+            my_recommender2 = pickle.load(pickle_off_2)
+            result= my_recommender2[data].predict([user_id]).values.tolist()
+        else:
+            pickle_off_3=open("pickle/Rec3.pickle","rb")
+            my_recommender3 = pickle.load(pickle_off_3)
+            result= my_recommender3[data].predict([user_id]).values.tolist()
+        CacheRecommendation(cache_user = corresponding_user, cache_description = description, cache_recommendation_hotel= result).save()
+        return result
     else:
-        pickle_off_3=open("pickle/Rec3.pickle","rb")
-        my_recommender3 = pickle.load(pickle_off_3)
-        return my_recommender3[data].predict([user_id]).values.tolist()
+        converted = CacheRecommendation.objects.filter(cache_user = corresponding_user, cache_description = description)[0].cache_recommendation_hotel[1:-1].split("], [")
+        result = []
+        for l in converted:
+            result.append([int(l.split(',')[0].replace('[', '')[1:-1])])
+
+        return result
+
+
+
 
 class IndexView(View):
 
@@ -112,7 +133,17 @@ class ResultView(View):
 
         if closest_user_function == 1:
             for o in OldPresets:
-                set_relevant_users.append(compute_neighbor(o['age'],o['price'],o['wheelchair'],o['married'],o['kids'],o['gender'],o['type']))
+                description = str(o['age'])+"+"+str(o['price'])+"+"+str(o['wheelchair'])+"+"+str(o['married'])+"+"+str(o['kids'])+"+"+str(o['gender'])+"+"+str(o['type'])
+                db_closest = CacheClosest.objects.filter(cache_description = description)
+
+                if db_closest:
+                    closest_neigh_db = db_closest[0].cache_user
+                    set_relevant_users.append(closest_neigh_db)
+                else:
+                    closest_neigh_db = compute_neighbor(o['age'],o['price'],o['wheelchair'],o['married'],o['kids'],o['gender'],o['type'])
+                    CacheClosest(cache_user = closest_neigh_db, cache_description= description, cache_method= 1).save()
+                    set_relevant_users.append(closest_neigh_db)
+
 
             if set_relevant_users:
                 similarUsers.append(set_relevant_users[-1])

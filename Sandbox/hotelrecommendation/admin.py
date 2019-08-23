@@ -7,6 +7,8 @@ from .models import LogInstance
 from .models import LogAction
 from .models import LogComment
 from .models import Rating
+from .models import CacheClosest
+from .models import CacheRecommendation
 
 
 class UserAdmin(admin.ModelAdmin):
@@ -21,6 +23,16 @@ admin.site.register(LogInstance,LogInstanceAdmin)
 class LogActionAdmin(admin.ModelAdmin):
     list_display = ('log_instance_id','log_action_date','log_action_description')
 admin.site.register(LogAction,LogActionAdmin)
+
+
+
+class CacheRecommendationAdmin(admin.ModelAdmin):
+    list_display = ('cache_recommendation_hotel','cache_user','cache_description')
+admin.site.register(CacheRecommendation,CacheRecommendationAdmin)
+
+class CacheClosestAdmin(admin.ModelAdmin):
+    list_display = ('cache_method','cache_description','cache_user')
+admin.site.register(CacheClosest,CacheClosestAdmin)
 
 class LogCommentAdmin(admin.ModelAdmin):
     list_display = ('id','log_about','log_comment', 'log_radio1', 'log_instance_id')
