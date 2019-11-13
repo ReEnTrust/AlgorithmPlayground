@@ -132,7 +132,7 @@
                                     {% else %}
                                     <input type="checkbox" name="is_married" id="id_is_married">
                                     {% endif %}
-                                    <label for="id_is_married">Traveling with partner</label>
+                                    <label for="id_is_married">Travelling with partner</label>
                                 </div>
 
                                 <div class="col-4 col-12-small user-input-parameter kids-class" style="padding: 1em; margin-top: 1em;">
@@ -141,7 +141,7 @@
                                     {% else %}
                                     <input type="checkbox" name="have_kids" id="id_have_kids">
                                     {% endif %}
-                                    <label for="id_have_kids">Traveling with kids</label>
+                                    <label for="id_have_kids">Travelling with kids</label>
                                 </div>
 
                                 <div class="col-12 col-12-small slidecontainer user-input-parameter price-class" style="padding: 1em; margin-top: 1em;">
@@ -261,7 +261,7 @@
                     {% else %}
                     is not
                     {% endif %}
-                    a wheelchair user, is traveling for
+                    a wheelchair user, is travelling for
                     {% if P|key:'type' == "B"%}
                     business,
                     {% else %}
@@ -272,13 +272,13 @@
                     {% else %}
                     is not
                     {% endif %}
-                    traveling with a partner,
+                    travelling with a partner,
                     {% if P|key:'kids' == True %}
                     is
                     {% else %}
                     is not
                     {% endif %}
-                    traveling with kids and have an ideal price of £{{P|key:'price'}}.
+                    travelling with kids and have an ideal price of £{{P|key:'price'}}.
 
                 </p>
 
@@ -309,8 +309,8 @@
                             </div>
                             {% endif %}
 
-                            <p>
-                                In the recommended hotels, there are {{percentageSingle}}% of single rooms, {{percentageDouble}}% of double rooms, {{percentageTwin}}% of twin rooms and {{percentageFamily}}% of family rooms.
+                        <p style="width: 100%; text-align: left;">
+                                {{percentageSingle}}% of single rooms, {{percentageDouble}}% of double rooms, {{percentageTwin}}% of twin rooms and {{percentageFamily}}% of family rooms.
                             </p>
 
                             {% if percentageAccessible != 0 %}
@@ -332,8 +332,8 @@
                             </div>
                             {% endif %}
 
-                            <p>
-                                In the recommended hotels, there are {{percentageAccessible}}% of wheelchair accessible hotels and {{100|subtract:percentageAccessible}}% of not wheelchair accessible hotels.
+                        <p style="width: 100%; text-align: left;">
+                                {{percentageAccessible}}% of the hotels are wheelchair accessible.
                             </p>
 
                             {% if percentageSwim != 0 %}
@@ -355,8 +355,8 @@
                             </div>
                             {% endif %}
 
-                            <p>
-                                In the recommended hotels, there are {{percentageSwim}}% of hotels with a swimming pool and {{100|subtract:percentageSwim}}% of hotels without a swimming pool.
+                            <p style="width: 100%; text-align: left;">
+                                {{percentageSwim}}% of the hotels have a swimming pool.
                             </p>
 
                             {% if percentageBreak != 0 %}
@@ -377,8 +377,8 @@
                             </div>
                             {% endif %}
 
-                        <p>
-                            In the recommended hotels, {{percentageBreak}}% of the hotels had an option for breakfast and {{100|subtract:percentageBreak}}% of the hotels had not.
+                        <p style="width: 100%; text-align: left;">
+                            {{percentageBreak}}% of the hotels have an option for breakfast.
                         </p>
 
 
@@ -401,13 +401,13 @@
                         </div>
                         {% endif %}
 
-                        <p>
-                            In the recommended hotels, {{percentageMichelin}}% had an option for Michelin restaurant and {{100|subtract:percentageMichelin}}% had not.
+                        <p style="width: 100%; text-align: left;">
+                            {{percentageMichelin}}% of the hotels have a Michelin restaurant.
                         </p>
 
                     </div>
 
-                    <p>
+                    <p style="width: 100%;">
                         The average price per night for the recommended hotels is £{{averagePrice|floatformat:"1"}} and the average review is {{averageReview|floatformat:"1"}}/5.
                     </p>
 
@@ -626,9 +626,9 @@
                     <th>Gender</th>
                     <th>Target Price</th>
                     <th>Reason</th>
-                    <th>Traveling with partner</th>
+                    <th>Travelling with partner</th>
                     <th>Wheelchair User</th>
-                    <th>Traveling with kids</th>
+                    <th>Travelling with kids</th>
 
                 </tr>
 

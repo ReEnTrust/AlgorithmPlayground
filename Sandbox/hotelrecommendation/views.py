@@ -124,6 +124,7 @@ class ResultView(View):
                 'data': int(splitted[8]),
             })
 
+        OldPresets = OldPresets[-4:]
 
         #We get the users with the same status
         set_relevant_users = []
