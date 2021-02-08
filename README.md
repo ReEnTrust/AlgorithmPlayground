@@ -5,6 +5,8 @@ This git repository contains a system that enables an end-user to:
 - manipulate the input of an algorithm by choosing different presets
 - discuss and personalise the selected algorithm by going through a mediation process
 
+Some large files are not imported here and can be found on the original git repository (https://github.com/brunoyun/ReEnTrust-Mediation).
+
 
 ## Sandbox
 
